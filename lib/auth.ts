@@ -24,7 +24,17 @@ export async function getCurrentUser(): Promise<User | null> {
   if (!userId) return null;
 
   const existing = await db.user.findUnique({ where: { clerkId: userId } });
-  if (existing) return existing;
+  if (existing) {
+    // Reconciliación de bootstrap: si el email está en ADMIN_EMAILS pero el
+    // usuario no es ADMIN (p.ej. se creó antes de configurar la env), promover.
+    if (existing.role !== "ADMIN" && adminEmails().includes(existing.email)) {
+      return db.user.update({
+        where: { id: existing.id },
+        data: { role: "ADMIN" },
+      });
+    }
+    return existing;
+  }
 
   const cu = await currentUser();
   const email = cu?.primaryEmailAddress?.emailAddress?.toLowerCase() ?? "";
