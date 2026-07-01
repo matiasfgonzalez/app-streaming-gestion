@@ -1,0 +1,67 @@
+// Viva La Mañana — esquema Prisma.
+// Fase 2: núcleo (User, ClientProfile, SiteSetting, taxonomías).
+// Los módulos (News, Event, Package, etc.) se agregan en sus fases. Ver docs/03.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7: la URL de conexión vive en prisma.config.ts (migraciones) y en el
+// driver adapter en runtime (lib/db.ts). El schema solo declara el provider.
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  CLIENTE
+  VISITANTE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  role      Role     @default(CLIENTE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientProfile ClientProfile?
+
+  @@index([role])
+}
+
+model ClientProfile {
+  id      String  @id @default(cuid())
+  userId  String  @unique
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company String?
+  phone   String?
+  taxId   String?
+  notes   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Configuración global y flags de secciones (key/value JSON). Ver docs/02 §8.
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+}

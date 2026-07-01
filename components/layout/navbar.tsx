@@ -4,6 +4,7 @@ import { Menu, Radio } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { neuButton } from "@/components/glass/neu-button";
 import { Container } from "@/components/glass/section";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
 
   return (
     <header className="safe-top sticky top-0 z-40 w-full">
@@ -49,12 +51,16 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/publicidad"
-              className={cn(neuButton({ variant: "primary", size: "sm" }), "hidden sm:inline-flex")}
-            >
-              Contratar
-            </Link>
+            {isSignedIn ? (
+              <UserButton appearance={{ elements: { avatarBox: "size-9" } }} />
+            ) : (
+              <Link
+                href="/sign-in"
+                className={cn(neuButton({ variant: "primary", size: "sm" }), "hidden sm:inline-flex")}
+              >
+                Ingresar
+              </Link>
+            )}
             <ThemeToggle />
             <button
               type="button"

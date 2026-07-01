@@ -20,20 +20,26 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - [x] `npm run build` y `npm run lint` OK.
 - **Entregable:** layout base mobile-first con dark/light funcionando. ✅
 
-## Fase 1 — Landing pública (primer MVP visible) ← arranque
-- [ ] Todas las secciones (ver [01](01-vision-y-prompt.md#21-secciones-de-la-landing)) con contenido **seed/hardcodeado**.
-- [ ] Identidad visual completa aplicada.
-- [ ] Mobile-first: bottom-nav, drawer, skeletons, animaciones, safe-area.
-- [ ] Streaming = embed YouTube; Radio = reproductor placeholder; Estadísticas = contadores.
-- [ ] Formulario de contacto (front, sin persistencia aún o a `ContactMessage` simple).
-- **Entregable:** landing navegable, responsive, dark/light, desplegable en Vercel.
+## Fase 1 — Landing pública (primer MVP visible) ✅
+- [x] Secciones con contenido **seed** (`lib/landing-data.ts`): hero, stats, qué es, radio, streaming, noticias, eventos, cobertura deportiva, publicidad+paquetes, sponsors, galería, videos, testimonios, FAQ, contacto+mapa.
+- [x] Identidad visual aplicada (glass/neu/aurora/glow) + animaciones (`Reveal`, waveform, marquee).
+- [x] Mobile-first: bottom-nav, drawer, safe-area, `Reveal` respeta reduced-motion.
+- [x] Streaming = embed YouTube; Radio = reproductor placeholder (play/pausa visual); Estadísticas = contadores.
+- [x] Formulario de contacto (front, sin persistencia — Fase 4/8).
+- [x] Placeholders de imagen por gradiente (`MediaPlaceholder`), sin assets externos.
+- [x] `npm run build` y `npm run lint` OK.
+- **Entregable:** landing navegable, responsive, dark/light. ✅
+- Pendiente menor: rutas internas (`/noticias`, `/eventos`, `/radio`, `/publicidad`) aún 404 — se crean en sus fases.
 
-## Fase 2 — Base de datos + Auth + RBAC
-- [ ] Prisma + Neon conectados; esquema núcleo (User, ClientProfile, SiteSetting, taxonomías).
-- [ ] `src/lib/db.ts`, `src/lib/auth.ts` (`getCurrentUser`, `requireRole`).
-- [ ] Clerk: sign-in/up, `middleware.ts`, webhook sync → `User`.
-- [ ] `AdminShell` (dashboard-first) protegido por rol.
-- **Entregable:** login real, roles, admin vacío accesible solo a ADMIN/EDITOR.
+## Fase 2 — Base de datos + Auth + RBAC ✅
+- [x] Prisma **7** + Neon conectados; esquema núcleo (User, ClientProfile, SiteSetting, Category, Tag) + enum Role. Migración `init` aplicada.
+- [x] `lib/db.ts` (singleton con driver adapter `@prisma/adapter-pg`), `lib/auth.ts` (`getCurrentUser` con lazy-sync, `requireRole`, `hasRole`).
+- [x] Clerk: sign-in/up (`app/(auth)`), `proxy.ts` (protege /admin, /cliente), provider en root layout (localización esES), controles en navbar.
+- [x] `AdminShell` (dashboard-first, sidebar+drawer) protegido por rol; `/admin` dashboard con KPIs.
+- [x] `npm run build` y `npm run lint` OK.
+- **Entregable:** login real, roles, admin accesible solo a ADMIN/EDITOR. ✅
+- **Bootstrap admin:** agregar `ADMIN_EMAILS="tu@mail.com"` en `.env` para que ese usuario se cree como ADMIN al primer login.
+- **Deviaciones vs plan:** Prisma 7 (URL en `prisma.config.ts` + driver adapter, no en schema); `middleware.ts`→`proxy.ts` (deprecación Next 16); Clerk v7 (sin `SignedIn/SignedOut`, se usa `useUser`). Webhook de sync pospuesto: se usa **lazy-sync** en `getCurrentUser` (no requiere URL pública).
 
 ## Fase 3 — Noticias (primer CRUD end-to-end)
 - [ ] CRUD admin (TanStack Table, RHF + Zod, UploadThing portada/galería).

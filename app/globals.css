@@ -196,3 +196,9 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-aurora { animation: none; }
 }
+
+/* Marquee for sponsors strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

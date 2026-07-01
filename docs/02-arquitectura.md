@@ -75,8 +75,18 @@ prisma/
   seed.ts
 
 components.json        # config ShadCN
-middleware.ts          # Clerk: protege /admin y /(cliente)
+prisma.config.ts       # Prisma 7: config CLI (datasource.url para migraciones)
+proxy.ts               # (ex middleware.ts) Clerk: protege /admin y /(cliente)
 ```
+
+> **Prisma 7 / Clerk v7 (notas de versión):**
+> - La URL de conexión NO va en `schema.prisma`: va en `prisma.config.ts`
+>   (`datasource.url = env("DIRECT_URL")`, usada por migraciones) y en el
+>   **driver adapter** (`@prisma/adapter-pg` con `DATABASE_URL`/pooler) en `lib/db.ts`.
+> - En Next 16 `middleware.ts` está deprecado → archivo `proxy.ts` (mismo API).
+> - Clerk v7 ya no exporta `SignedIn`/`SignedOut`; usar `useUser()` (cliente) o
+>   `auth()` (servidor). Sync Clerk→DB por **lazy-sync** en `getCurrentUser`
+>   (el webhook queda para cuando haya URL pública).
 
 ## 3. RBAC
 
