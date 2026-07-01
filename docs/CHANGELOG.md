@@ -6,6 +6,30 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 3] 2026-07-01 — Módulo Noticias (CRUD end-to-end)
+- Deps: `uploadthing`, `@uploadthing/react`, `zod`, `react-hook-form`,
+  `@hookform/resolvers`. Creado `.env.example`.
+- Schema: enum `ContentStatus` + modelo `News` (portada, video, podcast, estado,
+  featured/breaking, views, publishedAt, autor, categorías/tags M:N). Migración
+  `news` aplicada. Back-relations en User/Category/Tag.
+- UploadThing: `app/api/uploadthing/core.ts` (route `newsImage`, solo ADMIN/EDITOR)
+  + `route.ts` + helpers cliente `lib/uploadthing.ts`. `next.config.ts` con
+  remotePatterns (`**.ufs.sh`, `utfs.io`).
+- Utils: `lib/slug.ts` (slugify + parseCsv), `lib/format.ts` (fecha es-AR, hue),
+  `lib/validations/news.ts` (zod v4, `z.url()`).
+- Server: `server/queries/news.ts` (publicadas, breaking, por slug, relacionadas,
+  admin, por id) + `server/actions/news.ts` (create/update/delete con slug único,
+  connectOrCreate de taxonomías, revalidatePath).
+- Admin: `/admin/noticias` (lista + borrar), `/admin/noticias/nueva`,
+  `/admin/noticias/[id]/editar`; `components/admin/news-form.tsx` (RHF+zod+UploadButton)
+  y `delete-news-button.tsx`.
+- Público: `app/(public)/noticias` (listado) y `/noticias/[slug]` (detalle con
+  SEO/OpenGraph, contador de vistas, relacionadas). `components/news/news-card.tsx`
+  reutilizable; landing `LatestNews` conectada a DB (fallback a seed si vacío).
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores.
+- **Nota:** tabla admin simple (no TanStack aún); solo portada (galería luego).
+  **Siguiente:** Fase 4 — Eventos + solicitud de presupuesto (Resend).
+
 ## [Fase 2] 2026-07-01 — DB + Auth + RBAC
 - Deps: `@clerk/nextjs` (v7), `@clerk/localizations`, `prisma` (v7),
   `@prisma/client`, `@prisma/adapter-pg`, `dotenv`.

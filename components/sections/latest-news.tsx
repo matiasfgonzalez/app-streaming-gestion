@@ -1,13 +1,35 @@
-import { ArrowRight, Newspaper } from "lucide-react";
 import Link from "next/link";
-import { GlassCard } from "@/components/glass/glass-card";
-import { MediaPlaceholder } from "@/components/glass/media-placeholder";
 import { neuButton } from "@/components/glass/neu-button";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
+import { NewsCard, type CardNews } from "@/components/news/news-card";
 import { NEWS } from "@/lib/landing-data";
+import { formatDate, hueFrom } from "@/lib/format";
+import { getPublishedNews } from "@/server/queries/news";
 
-export function LatestNews() {
+export async function LatestNews() {
+  const dbNews = await getPublishedNews(3);
+
+  // Si todavía no hay noticias reales, mostramos el seed para no dejar el bloque vacío.
+  const items: CardNews[] =
+    dbNews.length > 0
+      ? dbNews.map((n) => ({
+          slug: n.slug,
+          title: n.title,
+          excerpt: n.excerpt,
+          category: n.categories[0]?.name ?? "Noticias",
+          date: formatDate(n.publishedAt),
+          coverUrl: n.coverUrl,
+          hue: hueFrom(n.slug),
+        }))
+      : NEWS.map((n) => ({
+          title: n.title,
+          excerpt: n.excerpt,
+          category: n.category,
+          date: n.date,
+          hue: n.hue,
+        }));
+
   return (
     <Section id="noticias">
       <Container>
@@ -17,27 +39,9 @@ export function LatestNews() {
           subtitle="Lo que pasa en el programa, los eventos y el deporte de la ciudad."
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {NEWS.map((n, i) => (
-            <Reveal key={n.id} delay={i * 0.08}>
-              <GlassCard className="flex h-full flex-col gap-4 p-4 hover:-translate-y-1">
-                <MediaPlaceholder hue={n.hue} icon={Newspaper} className="aspect-video">
-                  <span className="glass absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-medium">
-                    {n.category}
-                  </span>
-                </MediaPlaceholder>
-                <div className="flex flex-1 flex-col">
-                  <p className="text-xs text-muted-foreground">{n.date}</p>
-                  <h3 className="mt-1 font-display font-semibold text-balance">
-                    {n.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                    {n.excerpt}
-                  </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                    Leer más <ArrowRight className="size-4" />
-                  </span>
-                </div>
-              </GlassCard>
+          {items.map((n, i) => (
+            <Reveal key={n.slug ?? n.title} delay={i * 0.08}>
+              <NewsCard news={n} />
             </Reveal>
           ))}
         </div>

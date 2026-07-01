@@ -41,12 +41,16 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Bootstrap admin:** agregar `ADMIN_EMAILS="tu@mail.com"` en `.env` para que ese usuario se cree como ADMIN al primer login.
 - **Deviaciones vs plan:** Prisma 7 (URL en `prisma.config.ts` + driver adapter, no en schema); `middleware.ts`→`proxy.ts` (deprecación Next 16); Clerk v7 (sin `SignedIn/SignedOut`, se usa `useUser`). Webhook de sync pospuesto: se usa **lazy-sync** en `getCurrentUser` (no requiere URL pública).
 
-## Fase 3 — Noticias (primer CRUD end-to-end)
-- [ ] CRUD admin (TanStack Table, RHF + Zod, UploadThing portada/galería).
-- [ ] Categorías y tags.
-- [ ] Render público: listado `/noticias`, detalle `/noticias/[slug]`, destacadas/breaking en landing.
-- [ ] Tests Vitest de actions/validaciones.
-- **Entregable:** EDITOR crea noticia → aparece en landing y en `/noticias`.
+## Fase 3 — Noticias (primer CRUD end-to-end) ✅
+- [x] CRUD admin (RHF + Zod, UploadThing para portada). Lista + nueva + editar + borrar.
+- [x] Categorías y tags (CSV con `connectOrCreate` por slug).
+- [x] Render público: listado `/noticias`, detalle `/noticias/[slug]` (SEO/OpenGraph, vistas, relacionadas), landing conectada a DB (con fallback a seed).
+- [x] Server Actions (`server/actions/news.ts`) + queries (`server/queries/news.ts`), slug único, `revalidatePath`.
+- [x] `.env.example` con todas las variables.
+- [x] `npm run build` OK; `npm run lint` 0 errores (1 warning esperado de RHF `watch`).
+- [ ] Tests Vitest — pendientes (se agregan junto con Fase 4/5).
+- **Entregable:** EDITOR/ADMIN crea noticia → aparece en landing y en `/noticias`. ✅
+- **Deviaciones:** tabla admin simple (lista) en vez de TanStack (se evalúa cuando haga falta ordenamiento/filtros); galería de imágenes por noticia pospuesta (solo portada por ahora); zod v4 (`z.url()`), UploadThing v7 (`file.ufsUrl`).
 
 ## Fase 4 — Eventos + Presupuestos
 - [ ] CRUD eventos (estados, galería, mapa) + render público.
