@@ -24,6 +24,32 @@ enum ContentStatus {
   PUBLISHED
 }
 
+enum EventStatus {
+  UPCOMING
+  LIVE
+  FINISHED
+}
+
+enum QuoteStatus {
+  NEW
+  IN_REVIEW
+  QUOTED
+  CLOSED
+}
+
+enum QuoteService {
+  INTERNET
+  STREAMING
+  FOTOS
+  VIDEOS
+  CONDUCTOR
+  PUBLICIDAD
+  REDES
+  COMMUNITY_MANAGER
+  ENTREVISTAS
+  COBERTURA
+}
+
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -100,4 +126,48 @@ model News {
 
   @@index([status, publishedAt])
   @@index([featured])
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String
+  venue       String?
+  address     String?
+  lat         Float?
+  lng         Float?
+  startsAt    DateTime
+  endsAt      DateTime?
+  status      EventStatus @default(UPCOMING)
+  coverUrl    String?
+  artists     String[]    @default([])
+  hosts       String[]    @default([])
+  views       Int         @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quotes QuoteRequest[]
+
+  @@index([status, startsAt])
+}
+
+model QuoteRequest {
+  id       String         @id @default(cuid())
+  name     String
+  contact  String
+  services QuoteService[] @default([])
+  venue    String?
+  dates    String?
+  schedule String?
+  details  String?
+  status   QuoteStatus    @default(NEW)
+
+  eventId String?
+  event   Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
 }

@@ -52,11 +52,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** EDITOR/ADMIN crea noticia → aparece en landing y en `/noticias`. ✅
 - **Deviaciones:** tabla admin simple (lista) en vez de TanStack (se evalúa cuando haga falta ordenamiento/filtros); galería de imágenes por noticia pospuesta (solo portada por ahora); zod v4 (`z.url()`), UploadThing v7 (`file.ufsUrl`).
 
-## Fase 4 — Eventos + Presupuestos
-- [ ] CRUD eventos (estados, galería, mapa) + render público.
-- [ ] Formulario público "Solicitar presupuesto" → `QuoteRequest`.
-- [ ] Email a admin (Resend) + bandeja de solicitudes en admin.
-- **Entregable:** evento publicado + presupuesto solicitable y gestionable.
+## Fase 4 — Eventos + Presupuestos ✅
+- [x] CRUD eventos (estados UPCOMING/LIVE/FINISHED, portada, mapa embed, artistas/conductores) + render público (`/eventos`, `/eventos/[slug]`).
+- [x] Formulario público "Solicitar presupuesto" (checkboxes de servicios) → `QuoteRequest`.
+- [x] Email a admin (Resend, tolerante a fallos) + bandeja `/admin/presupuestos` con cambio de estado.
+- [x] Landing `UpcomingEvents` conectada a DB (fallback a seed). Dashboard con conteos reales.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** evento publicado + presupuesto solicitable y gestionable. ✅
+- **Deviaciones:** galería/sponsors por evento pospuestos (portada + mapa por ahora); mapa vía embed de Google sin API key.
 
 ## Fase 5 — Publicidad: Paquetes, Contratación, Pagos
 - [ ] Paquetes editables (precios definidos) + sección pública.

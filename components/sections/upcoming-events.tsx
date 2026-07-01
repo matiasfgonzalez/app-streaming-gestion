@@ -1,20 +1,39 @@
-import { CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
-import { GlassCard } from "@/components/glass/glass-card";
-import { MediaPlaceholder } from "@/components/glass/media-placeholder";
 import { neuButton } from "@/components/glass/neu-button";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
+import { EventCard, type CardEvent } from "@/components/events/event-card";
 import { EVENTS } from "@/lib/landing-data";
-import { cn } from "@/lib/utils";
+import { formatDateTime, hueFrom } from "@/lib/format";
+import { getUpcomingEvents } from "@/server/queries/events";
 
-const STATUS_STYLE: Record<string, string> = {
-  "En vivo": "bg-primary text-primary-foreground",
-  Próximamente: "glass text-foreground",
-  Finalizado: "bg-muted text-muted-foreground",
-};
+export async function UpcomingEvents() {
+  const dbEvents = await getUpcomingEvents(3);
 
-export function UpcomingEvents() {
+  const items: CardEvent[] =
+    dbEvents.length > 0
+      ? dbEvents.map((e) => ({
+          slug: e.slug,
+          name: e.name,
+          venue: e.venue,
+          dateLabel: formatDateTime(e.startsAt),
+          status: e.status,
+          coverUrl: e.coverUrl,
+          hue: hueFrom(e.slug),
+        }))
+      : EVENTS.map((e) => ({
+          name: e.name,
+          venue: e.venue,
+          dateLabel: e.date,
+          status:
+            e.status === "En vivo"
+              ? "LIVE"
+              : e.status === "Finalizado"
+                ? "FINISHED"
+                : "UPCOMING",
+          hue: e.hue,
+        }));
+
   return (
     <Section id="eventos">
       <Container>
@@ -24,29 +43,9 @@ export function UpcomingEvents() {
           subtitle="Dónde vamos a estar. ¿Tenés un evento? Pedí tu presupuesto de cobertura."
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {EVENTS.map((e, i) => (
-            <Reveal key={e.id} delay={i * 0.08}>
-              <GlassCard className="flex h-full flex-col gap-4 p-4 hover:-translate-y-1">
-                <MediaPlaceholder hue={e.hue} icon={CalendarDays} className="aspect-[4/3]">
-                  <span
-                    className={cn(
-                      "absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-medium",
-                      STATUS_STYLE[e.status],
-                    )}
-                  >
-                    {e.status}
-                  </span>
-                </MediaPlaceholder>
-                <div className="flex flex-1 flex-col">
-                  <h3 className="font-display font-semibold">{e.name}</h3>
-                  <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <MapPin className="size-4" /> {e.venue}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <CalendarDays className="size-4" /> {e.date}
-                  </p>
-                </div>
-              </GlassCard>
+          {items.map((e, i) => (
+            <Reveal key={e.slug ?? e.name} delay={i * 0.08}>
+              <EventCard event={e} />
             </Reveal>
           ))}
         </div>

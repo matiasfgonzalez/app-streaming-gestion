@@ -1,17 +1,22 @@
-import { Newspaper, CalendarDays, Users, Megaphone } from "lucide-react";
+import { Newspaper, CalendarDays, Users, FileText } from "lucide-react";
 import { GlassCard } from "@/components/glass/glass-card";
 import { requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export default async function AdminDashboard() {
   const user = await requireRole("ADMIN", "EDITOR");
-  const usersCount = await db.user.count();
+  const [usersCount, newsCount, eventsCount, newQuotes] = await Promise.all([
+    db.user.count(),
+    db.news.count(),
+    db.event.count(),
+    db.quoteRequest.count({ where: { status: "NEW" } }),
+  ]);
 
   const kpis = [
     { label: "Usuarios", value: usersCount, icon: Users },
-    { label: "Noticias", value: 0, icon: Newspaper },
-    { label: "Eventos", value: 0, icon: CalendarDays },
-    { label: "Publicidades", value: 0, icon: Megaphone },
+    { label: "Noticias", value: newsCount, icon: Newspaper },
+    { label: "Eventos", value: eventsCount, icon: CalendarDays },
+    { label: "Presupuestos nuevos", value: newQuotes, icon: FileText },
   ];
 
   return (

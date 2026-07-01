@@ -6,6 +6,26 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 4] 2026-07-01 — Eventos + Presupuestos + Resend
+- Dep: `resend`. Agregada `RESEND_API_KEY` (y opcional `EMAIL_FROM`) al `.env`.
+- Schema: enums `EventStatus`, `QuoteStatus`, `QuoteService`; modelos `Event`
+  (portada, lugar/dirección, lat/lng, inicio/fin, estado, artistas/hosts, views)
+  y `QuoteRequest` (servicios[], contacto, lugar/días/horarios, detalles, estado,
+  evento opcional). Migración `events_quotes`.
+- Constantes `lib/events.ts` (labels de servicios/estados, `mapEmbedUrl`),
+  validaciones `lib/validations/{event,quote}.ts`.
+- Emails: `server/emails/resend.ts` (`sendEmailSafe` tolerante a fallos) +
+  `templates.ts` (email de nueva solicitud al admin).
+- Queries/actions: `server/{queries,actions}/{events,quotes}.ts` (CRUD eventos,
+  crear presupuesto público + email, cambiar estado).
+- Admin: `/admin/eventos` (lista/nuevo/editar con `EventForm`), `/admin/presupuestos`
+  (bandeja con `QuoteStatusSelect`). Nav actualizado. Dashboard con conteos reales.
+- Público: `/eventos` (en vivo/próximos/finalizados + sección presupuesto),
+  `/eventos/[slug]` (mapa embed, SEO, vistas). `EventCard` + `QuoteForm`
+  reutilizables. Landing `UpcomingEvents` conectada a DB.
+- **Verificado:** `npm run build` OK (con `prisma generate` posterior a migrar),
+  `npm run lint` 0 errores. **Siguiente:** Fase 5 — Paquetes + contratación + pagos.
+
 ## [Fase 3] 2026-07-01 — Módulo Noticias (CRUD end-to-end)
 - Deps: `uploadthing`, `@uploadthing/react`, `zod`, `react-hook-form`,
   `@hookform/resolvers`. Creado `.env.example`.
