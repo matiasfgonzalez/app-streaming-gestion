@@ -1,26 +1,198 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+/* Dark mode driven by a `.dark` class on <html> (set by next-themes) */
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens — Viva La Mañana
+   Identidad: Glassmorphism + Neumorphism + Aurora + Cyberpunk suave.
+   Todo en CSS variables para migrar al theme-engine editable (Fase 9).
+--------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 0.9rem;
+
+  /* Base surfaces (warm, "mañana") */
+  --background: oklch(0.99 0.006 95);
+  --foreground: oklch(0.22 0.02 265);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 265);
+
+  /* Brand: sunrise orange primary, cyber-cyan accent, violet secondary */
+  --primary: oklch(0.70 0.19 47);
+  --primary-foreground: oklch(0.99 0.01 90);
+  --secondary: oklch(0.62 0.19 300);
+  --secondary-foreground: oklch(0.99 0.01 300);
+  --accent: oklch(0.80 0.13 205);
+  --accent-foreground: oklch(0.22 0.03 250);
+
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.50 0.02 260);
+
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 90);
+
+  --border: oklch(0.90 0.01 260);
+  --input: oklch(0.90 0.01 260);
+  --ring: oklch(0.70 0.19 47);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 14px;
+
+  /* Neumorphism (dual shadow) */
+  --neu-shadow: 7px 7px 16px rgba(13, 20, 40, 0.12),
+    -7px -7px 16px rgba(255, 255, 255, 0.9);
+  --neu-shadow-inset: inset 5px 5px 12px rgba(13, 20, 40, 0.12),
+    inset -5px -5px 12px rgba(255, 255, 255, 0.9);
+
+  /* Aurora gradient stops */
+  --aurora-1: oklch(0.75 0.18 47 / 0.55);
+  --aurora-2: oklch(0.70 0.17 300 / 0.5);
+  --aurora-3: oklch(0.80 0.13 205 / 0.5);
+
+  /* Cyberpunk-suave glow */
+  --glow: oklch(0.80 0.13 205);
 }
 
+.dark {
+  --background: oklch(0.17 0.02 265);
+  --foreground: oklch(0.95 0.01 250);
+
+  --card: oklch(0.21 0.025 265);
+  --card-foreground: oklch(0.95 0.01 250);
+  --popover: oklch(0.21 0.025 265);
+  --popover-foreground: oklch(0.95 0.01 250);
+
+  --primary: oklch(0.74 0.19 52);
+  --primary-foreground: oklch(0.18 0.02 60);
+  --secondary: oklch(0.66 0.19 300);
+  --secondary-foreground: oklch(0.98 0.01 300);
+  --accent: oklch(0.78 0.14 205);
+  --accent-foreground: oklch(0.18 0.02 250);
+
+  --muted: oklch(0.26 0.02 265);
+  --muted-foreground: oklch(0.68 0.02 260);
+
+  --destructive: oklch(0.64 0.21 25);
+  --destructive-foreground: oklch(0.98 0.01 90);
+
+  --border: oklch(0.30 0.02 265);
+  --input: oklch(0.30 0.02 265);
+  --ring: oklch(0.74 0.19 52);
+
+  --glass-bg: rgba(18, 24, 40, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 16px;
+
+  --neu-shadow: 7px 7px 16px rgba(0, 0, 0, 0.5),
+    -7px -7px 16px rgba(255, 255, 255, 0.03);
+  --neu-shadow-inset: inset 5px 5px 12px rgba(0, 0, 0, 0.5),
+    inset -5px -5px 12px rgba(255, 255, 255, 0.03);
+
+  --aurora-1: oklch(0.68 0.18 47 / 0.45);
+  --aurora-2: oklch(0.60 0.18 300 / 0.45);
+  --aurora-3: oklch(0.72 0.14 205 / 0.4);
+
+  --glow: oklch(0.78 0.14 205);
+}
+
+/* Map tokens to Tailwind theme (utilities like bg-primary, text-muted, etc.) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 14px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* Safe-area friendly base (mobile-first) */
+    min-height: 100dvh;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------------------------------------------------------------------------
+   Identity utility classes (used by components/glass/*)
+--------------------------------------------------------------------------- */
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+  .neu {
+    background: var(--color-background);
+    box-shadow: var(--neu-shadow);
+  }
+  .neu-inset {
+    background: var(--color-background);
+    box-shadow: var(--neu-shadow-inset);
+  }
+  .text-glow {
+    text-shadow: 0 0 14px color-mix(in oklch, var(--glow) 70%, transparent);
+  }
+  .ring-glow {
+    box-shadow: 0 0 0 1px color-mix(in oklch, var(--glow) 40%, transparent),
+      0 0 22px color-mix(in oklch, var(--glow) 35%, transparent);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Aurora background animation */
+@keyframes aurora-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3%, -4%, 0) scale(1.15); }
+}
+.animate-aurora {
+  animation: aurora-drift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora { animation: none; }
 }

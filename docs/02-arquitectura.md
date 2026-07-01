@@ -27,47 +27,54 @@
 
 ## 2. Estructura de carpetas
 
+> **Nota:** el alias de TypeScript es `@/*` → `./*` (raíz, sin `src/`). Por eso
+> `lib/`, `components/`, `server/`, `hooks/` viven a nivel raíz junto a `app/`,
+> dando imports limpios tipo `@/components/...`, `@/lib/...`. Esto se decidió en
+> Fase 0 para alinear con ShadCN (`components.json`).
+
 ```
 app/
   (public)/            # sitio público
+    layout.tsx         # navbar + bottom-nav + footer públicos
     page.tsx           # landing
     noticias/
     eventos/
     radio/
     sponsors/
     contacto/
-    layout.tsx         # navbar + bottom-nav + footer públicos
   (auth)/              # sign-in / sign-up (Clerk)
   (cliente)/           # portal del cliente (contratar, pagos, presupuestos)
   admin/               # panel CMS (Dashboard-First)
   api/
     webhooks/clerk/    # sync Clerk -> DB
     uploadthing/       # file router
-  layout.tsx           # root layout: providers (theme, clerk)
+  layout.tsx           # root layout: providers (ThemeProvider), fuentes, metadata
   globals.css          # design tokens Tailwind v4 @theme
 
-src/
-  lib/
-    db.ts              # PrismaClient singleton
-    auth.ts            # getCurrentUser(), requireRole(), hasRole()
-    uploads.ts         # abstracción de storage (UploadThing hoy, R2 mañana)
-    validations/       # Zod schemas (compartidos cliente/servidor)
-    utils.ts
-  server/
-    actions/           # Server Actions (mutaciones)
-    queries/           # lecturas reutilizables
-  components/
-    ui/                # ShadCN generado
-    glass/             # componentes de identidad visual (GlassCard, etc.)
-    sections/          # secciones de landing
-    layout/            # Navbar, BottomNav, Drawer, Footer
-  hooks/
-  types/
+lib/
+  db.ts                # PrismaClient singleton
+  auth.ts              # getCurrentUser(), requireRole(), hasRole()
+  uploads.ts           # abstracción de storage (UploadThing hoy, R2 mañana)
+  validations/         # Zod schemas (compartidos cliente/servidor)
+  utils.ts             # cn() (creado en Fase 0)
+server/
+  actions/             # Server Actions (mutaciones)
+  queries/             # lecturas reutilizables
+components/
+  ui/                  # ShadCN generado
+  glass/               # identidad visual: GlassCard, NeuButton, AuroraBackground, Section
+  layout/              # Navbar, BottomNav, MobileDrawer, Footer, nav-links
+  sections/            # secciones de landing (Fase 1)
+  theme-provider.tsx   # wrapper de next-themes
+  theme-toggle.tsx     # toggle claro/oscuro
+hooks/
+types/
 
 prisma/
   schema.prisma
   seed.ts
 
+components.json        # config ShadCN
 middleware.ts          # Clerk: protege /admin y /(cliente)
 ```
 

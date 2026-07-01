@@ -8,15 +8,17 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 
 ---
 
-## Fase 0 — Fundaciones
-- [ ] Docs `docs/` creados (Entregable 0).
-- [ ] Config Tailwind v4 + design tokens (CSS variables) en `globals.css`.
-- [ ] ShadCN/UI inicializado.
-- [ ] Framer Motion instalado.
-- [ ] Theme provider (dark/light, sin flash) en root layout.
-- [ ] Fuentes (display + texto) configuradas.
-- [ ] Componentes base: `GlassCard`, `NeuButton`, `AuroraBackground`, `Navbar`, `BottomNav`, `MobileDrawer`, `Footer`.
-- **Entregable:** layout base mobile-first con dark/light funcionando.
+## Fase 0 — Fundaciones ✅
+- [x] Docs `docs/` creados (Entregable 0).
+- [x] Config Tailwind v4 + design tokens (CSS variables) en `globals.css`.
+- [x] ShadCN/UI listo (`components.json` + `cn()`); componentes se agregan on-demand.
+- [x] Framer Motion instalado.
+- [x] Theme provider (dark/light, sin flash con `next-themes`) en root layout.
+- [x] Fuentes: Space Grotesk (display) + Inter (texto).
+- [x] Componentes base: `GlassCard`, `NeuButton`, `AuroraBackground`, `Section/Container/SectionHeading`, `ThemeToggle`, `Navbar`, `BottomNav`, `MobileDrawer`, `Footer`.
+- [x] Route group `(public)` con layout (Navbar + BottomNav + Footer) + home demo.
+- [x] `npm run build` y `npm run lint` OK.
+- **Entregable:** layout base mobile-first con dark/light funcionando. ✅
 
 ## Fase 1 — Landing pública (primer MVP visible) ← arranque
 - [ ] Todas las secciones (ver [01](01-vision-y-prompt.md#21-secciones-de-la-landing)) con contenido **seed/hardcodeado**.
