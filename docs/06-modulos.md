@@ -1,0 +1,75 @@
+# Módulos — especificación funcional
+
+Detalle de cada módulo: qué hace el público, qué gestiona el admin y notas clave. Ver datos en [03-modelo-de-datos.md](03-modelo-de-datos.md).
+
+---
+
+## Noticias
+**Público:** listado con filtros por categoría/tag, detalle con galería/video/podcast, compartir en redes, comentarios (moderados), relacionadas, breaking news destacada, SEO (metadata + OpenGraph por nota).
+**Admin (ADMIN/EDITOR):** CRUD con editor de contenido, portada y galería (UploadThing), categorías/tags, flags `featured`/`breaking`, estado DRAFT/PUBLISHED, `publishedAt`, SEO por nota, moderación de comentarios.
+**Notas:** slug único; `views` para analytics; destacadas alimentan la landing.
+
+## Eventos
+**Público:** listado por estado (Próximamente/En vivo/Finalizado), detalle con lugar+mapa, galería, videos, sponsors, artistas, conductores, cobertura. Botón **Solicitar presupuesto**.
+**Admin:** CRUD, cambio de estado, asociación de sponsors/media, geolocalización (lat/lng).
+**Notas:** el estado puede derivarse de fechas o setearse manualmente (LIVE).
+
+## Presupuestos (Quote Requests)
+**Público:** formulario con servicios seleccionables (Internet, Streaming, Fotos, Videos/Reels, Conductor/Animador, Publicidad, Redes, Community Manager, Entrevistas, Cobertura Periodística) + lugar, días, horarios, detalles.
+**Admin:** bandeja con estados (Nueva/En revisión/Presupuestada/Cerrada), ver detalle, marcar estado.
+**Notas:** al crear → email a admin (Resend). Puede vincularse a un `Event`.
+
+## Publicidad — Paquetes y Contratación
+**Público / Cliente:** ver paquetes y precios; contratar → completar título/descripción/redes → subir logo e imágenes → informar pago.
+**Admin:** CRUD de paquetes y precios (mensual/semanal/día); gestionar contratos; aprobar/rechazar; **crear publicidad sin solicitud** (venta de palabra); definir vigencia (inicio/fin).
+**Flujo:** DRAFT → PENDING → (admin) ACTIVE / REJECTED → EXPIRED por fecha.
+**Precios base:** Radio L–V 8–11 $30.000 · Fútbol $15.000 · Streamings semanales $30.000 · Paquete completo $60.000 (todos editables, mensuales por defecto).
+
+## Pagos (manual)
+**Cliente:** registrar pago (monto, método TRANSFER/CASH, fecha, **comprobante**), ver histórico y estado.
+**Admin:** ver pagos pendientes, **aprobar/rechazar** con nota; al resolver → email al cliente.
+**Notas:** sin pasarela por ahora; campo reservado para Mercado Pago/tienda a futuro.
+
+## Sponsors
+**Público:** grilla/marquee de logos ("confían en nosotros"), link a sitio/redes; registrar clicks/impresiones.
+**Admin:** CRUD (logo, descripción, redes, sitio, paquete, vigencia, estado), métricas.
+
+## Banners
+**Público:** render según `placement` (home, noticias, eventos, sidebar, footer, header, popup, entre notas, landing); registrar clicks/impresiones.
+**Admin:** CRUD con ubicación, vigencia, activo/inactivo, orden.
+
+## Radio
+**Público:** programación (grilla semanal), conductores, programas, horarios, invitados, programas anteriores, podcasts, repeticiones.
+**Admin:** CRUD de programas y horarios (`RadioProgram` / `RadioSchedule`).
+**Notas:** reproductor placeholder al inicio; transmisión propia = backlog.
+
+## Streaming
+**Público:** embed de YouTube (en vivo / últimos videos).
+**Admin:** gestionar URL/canal del stream.
+**Notas:** transmisión propia desde la plataforma = backlog.
+
+## Galería / Videos / Podcast
+Media reutilizable (`MediaItem`) asociable a noticias/eventos o standalone. Admin sube y organiza; público navega.
+
+## Contacto
+**Público:** formulario (nombre, email, teléfono, asunto, mensaje) → `ContactMessage`.
+**Admin:** bandeja, marcar leído, (opcional) email de aviso.
+
+## Configuración / Settings
+**Admin (ADMIN):** logo, título, descripción, tipografías, paleta, modo claro/oscuro, navbar, footer, redes, dirección, email, teléfono, Google Maps, SEO/OpenGraph, favicon, loader, animaciones. Persistido en `SiteSetting`.
+**Notas:** datos/contacto/SEO editables en Fase 8; colores/tipografías (theme-engine) en Fase 9.
+
+## CMS de Landing
+**Admin:** habilitar/deshabilitar y (a futuro) reordenar secciones; editar textos/CTAs de cada sección. Flags en `SiteSetting`.
+
+## Analytics (Fase 10)
+**Admin:** usuarios, visitas, noticias/eventos/sponsors más vistos, CTR publicidad, ingresos, conversiones, ventas, presupuestos, clientes nuevos (Tremor/Recharts).
+
+## Auditoría / Logs (Fase 10)
+**Admin:** `AuditLog` de acciones sensibles (quién, qué, cuándo).
+
+## Usuarios / Roles
+**Admin:** CRUD de usuarios, asignación de rol (ADMIN/EDITOR/CLIENTE), ver perfiles de cliente.
+
+## Tienda (preparada, inactiva)
+Modelos y UI base (productos, categorías, stock, pedidos, cupones, envíos, facturas, pago manual). Detrás de feature flag; activación y Mercado Pago = futuro.
