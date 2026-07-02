@@ -1,9 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { LayoutDashboard, LogIn, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { neuButton } from "@/components/glass/neu-button";
 import { NAV_LINKS } from "./nav-links";
 import { cn } from "@/lib/utils";
 
@@ -11,11 +13,14 @@ import { cn } from "@/lib/utils";
 export function MobileDrawer({
   open,
   onClose,
+  isStaff = false,
 }: {
   open: boolean;
   onClose: () => void;
+  isStaff?: boolean;
 }) {
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
 
   return (
     <AnimatePresence>
@@ -49,6 +54,7 @@ export function MobileDrawer({
                 <X className="size-5" />
               </button>
             </div>
+
             {NAV_LINKS.map(({ href, label, icon: Icon }) => {
               const active = pathname === href;
               return (
@@ -58,9 +64,7 @@ export function MobileDrawer({
                   onClick={onClose}
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-colors",
-                    active
-                      ? "bg-primary/15 text-primary"
-                      : "hover:bg-muted",
+                    active ? "bg-primary/15 text-primary" : "hover:bg-muted",
                   )}
                 >
                   <Icon className="size-5" />
@@ -68,6 +72,38 @@ export function MobileDrawer({
                 </Link>
               );
             })}
+
+            {/* Cuenta / acceso */}
+            <div className="mt-auto space-y-2 border-t border-border pt-4">
+              {isSignedIn ? (
+                <>
+                  {isStaff && (
+                    <Link
+                      href="/admin"
+                      onClick={onClose}
+                      className={cn(neuButton({ size: "md" }), "w-full")}
+                    >
+                      <LayoutDashboard className="size-4" /> Administración
+                    </Link>
+                  )}
+                  <Link
+                    href="/cliente"
+                    onClick={onClose}
+                    className={cn(neuButton({ variant: "glass", size: "md" }), "w-full")}
+                  >
+                    <User className="size-4" /> Mi cuenta
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  onClick={onClose}
+                  className={cn(neuButton({ size: "md" }), "w-full")}
+                >
+                  <LogIn className="size-4" /> Ingresar
+                </Link>
+              )}
+            </div>
           </motion.aside>
         </>
       )}

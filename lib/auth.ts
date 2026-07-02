@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import type { Role, User } from "@prisma/client";
 import { db } from "@/lib/db";
 
@@ -19,7 +20,7 @@ function adminEmails(): string[] {
  * si está autenticado en Clerk pero no existe en la DB, lo crea (lazy sync).
  * Rol inicial: ADMIN si el email está en ADMIN_EMAILS, si no CLIENTE.
  */
-export async function getCurrentUser(): Promise<User | null> {
+export const getCurrentUser = cache(async (): Promise<User | null> => {
   const { userId } = await auth();
   if (!userId) return null;
 
@@ -45,7 +46,7 @@ export async function getCurrentUser(): Promise<User | null> {
   return db.user.create({
     data: { clerkId: userId, email, name, role },
   });
-}
+});
 
 export function hasRole(user: User | null, ...roles: Role[]): boolean {
   return !!user && roles.includes(user.role);
