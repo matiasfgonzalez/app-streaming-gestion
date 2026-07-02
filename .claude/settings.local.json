@@ -11,7 +11,8 @@
       "PowerShell(npx --yes skills --help 2>&1)",
       "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --help 2>&1)",
       "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --global --yes)",
-      "PowerShell(npx --yes skills ls -g -a claude-code)"
+      "PowerShell(npx --yes skills ls -g -a claude-code)",
+      "Bash(npm run *)"
     ]
   }
 }

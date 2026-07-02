@@ -1,4 +1,4 @@
-import { Pencil, Plus } from "lucide-react";
+import { Handshake, Pencil, Plus } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -6,15 +6,9 @@ import { DeleteSponsorButton } from "@/components/admin/delete-sponsor-button";
 import { requireRole } from "@/lib/auth";
 import { getAllSponsorsAdmin } from "@/server/queries/banners";
 import { SPONSOR_STATUS_LABEL } from "@/lib/banners";
-import { cn } from "@/lib/utils";
+import { Badge, EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Sponsors" };
-
-const STATUS_CLS: Record<string, string> = {
-  ACTIVE: "bg-primary/15 text-primary",
-  INACTIVE: "bg-muted text-muted-foreground",
-  EXPIRED: "bg-destructive/10 text-destructive",
-};
 
 export default async function AdminSponsorsPage() {
   await requireRole("ADMIN");
@@ -33,8 +27,17 @@ export default async function AdminSponsorsPage() {
       </div>
 
       {sponsors.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay sponsors.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={Handshake}
+            title="Todavía no hay sponsors"
+            description="Sumá el primero para mostrarlo en la landing y medir sus clicks."
+            action={
+              <Link href="/admin/sponsors/nuevo" className={neuButton()}>
+                <Plus /> Nuevo sponsor
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <GlassCard className="p-0">
@@ -50,9 +53,17 @@ export default async function AdminSponsorsPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="truncate font-medium">{s.name}</p>
-                    <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", STATUS_CLS[s.status])}>
+                    <Badge
+                      variant={
+                        s.status === "ACTIVE"
+                          ? "success"
+                          : s.status === "EXPIRED"
+                            ? "danger"
+                            : "neutral"
+                      }
+                    >
                       {SPONSOR_STATUS_LABEL[s.status]}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {s.clicks} clicks · {s.impressions} impresiones

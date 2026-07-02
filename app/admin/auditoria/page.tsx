@@ -3,16 +3,19 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { requireRole } from "@/lib/auth";
 import { getAuditLogs } from "@/server/queries/analytics";
 import { formatDateTime } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { Badge, EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Auditoría" };
 
-const ACTION_CLS: Record<string, string> = {
-  create: "bg-primary/15 text-primary",
-  update: "bg-accent/20 text-accent-foreground",
-  approve: "bg-primary/15 text-primary",
-  reject: "bg-destructive/10 text-destructive",
-  delete: "bg-destructive/10 text-destructive",
+const ACTION_VARIANT: Record<
+  string,
+  "primary" | "secondary" | "success" | "danger"
+> = {
+  create: "primary",
+  update: "secondary",
+  approve: "success",
+  reject: "danger",
+  delete: "danger",
 };
 
 export default async function AdminAuditPage() {
@@ -29,23 +32,24 @@ export default async function AdminAuditPage() {
       </div>
 
       {logs.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          <ShieldCheck className="mx-auto mb-2 size-8 text-primary" />
-          Todavía no hay registros.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={ShieldCheck}
+            title="Todavía no hay registros"
+            description="Las acciones sensibles (pagos, configuración, roles) se registrarán acá."
+          />
         </GlassCard>
       ) : (
         <GlassCard className="p-0">
           <ul className="divide-y divide-border">
             {logs.map((l) => (
               <li key={l.id} className="flex items-start gap-3 p-4">
-                <span
-                  className={cn(
-                    "mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
-                    ACTION_CLS[l.action] ?? "bg-muted text-muted-foreground",
-                  )}
+                <Badge
+                  variant={ACTION_VARIANT[l.action] ?? "neutral"}
+                  className="mt-0.5 shrink-0"
                 >
                   {l.action}
-                </span>
+                </Badge>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm">{l.summary}</p>
                   <p className="text-xs text-muted-foreground">

@@ -155,6 +155,18 @@
    Identity utility classes (used by components/glass/*)
 --------------------------------------------------------------------------- */
 @layer components {
+  /* Elevation scale — usar con intención (no todo glass):
+     surface (plano, denso) → glass (flotante) → glow (destacado).
+     `surface` es para contextos anidados/densos donde glass-sobre-glass se ensucia
+     (filas de tabla, cards internas, popovers sobre glass). */
+  .surface {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+  }
+  .surface-muted {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+  }
   .glass {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -181,6 +193,19 @@
   }
   .safe-top {
     padding-top: env(safe-area-inset-top);
+  }
+
+  /* Typography helpers — escala consistente para labels/datos/eyebrows */
+  .text-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  /* Números tabulares (KPIs, precios, contadores) sin repetir la utility */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
 

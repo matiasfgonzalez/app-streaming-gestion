@@ -3,8 +3,7 @@
 import { ImagePlus, X } from "lucide-react";
 import { UploadButton } from "@/lib/uploadthing";
 import { IMAGE_HINTS } from "@/lib/ads";
-
-const labelCls = "mb-1.5 block text-sm font-medium";
+import { labelCls } from "@/components/ui";
 
 /**
  * Editor de creatividades (logo + imágenes) controlado.

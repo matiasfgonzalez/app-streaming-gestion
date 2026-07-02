@@ -11,9 +11,7 @@ import { podcastSchema, type PodcastInput } from "@/lib/validations/radio";
 import { createPodcast, updatePodcast } from "@/server/actions/radio";
 import { cn } from "@/lib/utils";
 
-const inputCls =
-  "w-full rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring";
-const labelCls = "mb-1.5 block text-sm font-medium";
+import { inputCls, labelCls } from "@/components/ui";
 
 export function PodcastForm({
   podcastId,

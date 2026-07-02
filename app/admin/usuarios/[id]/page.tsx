@@ -8,7 +8,7 @@ import { requireRole } from "@/lib/auth";
 import { getUserById } from "@/server/queries/users";
 import { ROLE_CLS, ROLE_LABEL } from "@/lib/users";
 import { formatDate } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui";
 
 export const metadata = { title: "Usuario" };
 
@@ -40,9 +40,7 @@ export default async function AdminUserDetailPage({
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="font-display text-2xl font-bold">{u.name ?? "Sin nombre"}</h1>
-            <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", ROLE_CLS[u.role])}>
-              {ROLE_LABEL[u.role]}
-            </span>
+            <Badge className={ROLE_CLS[u.role]}>{ROLE_LABEL[u.role]}</Badge>
           </div>
           <p className="text-sm text-muted-foreground">{u.email}</p>
           <p className="text-xs text-muted-foreground">
@@ -82,9 +80,9 @@ export default async function AdminUserDetailPage({
                     {c.package.name} · {formatDate(c.createdAt)}
                   </p>
                 </div>
-                <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs">
+                <Badge className="shrink-0">
                   {CONTRACT_LABEL[c.status] ?? c.status}
-                </span>
+                </Badge>
               </li>
             ))}
           </ul>

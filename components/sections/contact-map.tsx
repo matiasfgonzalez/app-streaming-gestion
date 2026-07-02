@@ -7,8 +7,7 @@ import { neuButton } from "@/components/glass/neu-button";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { DEFAULT_SITE_CONFIG, type SiteConfig } from "@/lib/site-config";
 
-const inputCls =
-  "w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring";
+import { inputCls } from "@/components/ui";
 
 export function ContactMap({
   contact = DEFAULT_SITE_CONFIG.contact,

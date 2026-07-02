@@ -32,12 +32,12 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 
 ### 2.1 Críticos (bloquean la sensación "premium")
 
-- [ ] **C1 · No hay capa de componentes UI — todo es Tailwind repetido.**
-  `components/ui/` no existe (ShadCN figura como "listo" pero nunca se agregaron primitivos).
-  El string `inputCls`/`labelCls` está **redefinido a mano en 17 formularios**, hay **15
-  `<select>` nativos crudos**, y el markup de badge de estado está duplicado en 5+ páginas
-  admin. Sin `Input`, `Select`, `Badge`, `Table`, `Field` compartidos, cualquier refinamiento
-  visual hay que hacerlo 17 veces. **Causa raíz de la inconsistencia.** → Capa 12.1
+- [x] **C1 · No hay capa de componentes UI — todo es Tailwind repetido.** ✅ Resuelto en 12.1:
+  `components/ui/` creado (Input, Textarea, Select, Label/Field, Checkbox, Badge, Skeleton,
+  Table, EmptyState) con barrel. `inputCls`/`labelCls` ahora tienen **fuente única** e importada
+  en los 18 formularios (0 definiciones locales), y el badge de estado se unificó en `<Badge>`.
+  Pendiente menor (12.1b): adopción a nivel de elemento de `<Select>`/`<Checkbox>`/`<Field>`
+  (hoy los controles nativos ya usan el estilo compartido refinado).
 - [ ] **C2 · Cero estados de carga.**
   No hay ni un `loading.tsx` en toda la app, pese a que el DS exige "Skeletons en toda carga
   de datos". Cada página admin/pública bloquea sin feedback. → Capa 12.2
@@ -86,23 +86,30 @@ Ordenado para que cada capa habilite la siguiente. **Regla de cierre de capa:** 
 y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y marcar aquí +
 [registro de avance](#registro-de-avance).
 
-### Capa 12.1 — Fundaciones del Design System `[ ]`
+### Capa 12.1 — Fundaciones del Design System `[~]`
 > Elimina la causa raíz (C1). Habilita todo lo demás. Sin esto, cada refinamiento se duplica ×17.
 
-- [ ] Crear `components/ui/` con primitivos tipados sobre los tokens actuales:
-  - [ ] `Input`, `Textarea` (reemplazan `inputCls`).
-  - [ ] `Label` / `Field` (label + control + error + hint; reemplaza `labelCls` y el patrón de error inline).
-  - [ ] `Select` (estilado, reemplaza los 15 `<select>` crudos).
-  - [ ] `Checkbox` / `Switch` accesibles (target ≥44px).
-  - [ ] `Badge` (variantes de estado: success/warning/danger/neutral/primary) — reemplaza el badge duplicado.
-  - [ ] `Skeleton` (base para 12.2).
-  - [ ] `Table` (thead/tbody/row/cell con densidad y hover) + `EmptyState`.
-- [ ] Escala de **elevación** en tokens: `surface` (plano) → `glass` → `glow`, con clases de uso
-      intencional (no todo glass). Documentar cuándo usar cada una.
-- [ ] Escala **tipográfica** afinada (display/heading/body/caption/data) con pesos y `tabular-nums`
-      centralizado; revisar el patrón de eyebrow para que no lea como plantilla.
-- [ ] Migrar los 17 formularios y las páginas con badges a los nuevos primitivos (sin cambiar lógica).
-- [ ] Resuelve: **C1**, y sienta base de **A4**, **M1**.
+- [x] Crear `components/ui/` con primitivos tipados sobre los tokens actuales:
+  - [x] `Input`, `Textarea` (sobre `inputBase` compartido; target ≥44px con `min-h-11`).
+  - [x] `Label` / `Field` / `FieldError` / `FieldHint` (label AA + control + error + hint).
+  - [x] `Select` (nativo estilado con chevron propio, `appearance-none`).
+  - [x] `Checkbox` (área táctil ≥44px, `size-5`, forwardea `register`).
+  - [x] `Badge` (variantes primary/secondary/neutral/success/warning/danger/outline + `dot`).
+  - [x] `Skeleton` (respeta `prefers-reduced-motion`; base para 12.2).
+  - [x] `Table` (Table/THead/TBody/TR con densidad y hover) + `EmptyState` (con CTA).
+  - [x] Barrel `components/ui/index.ts` (fuente única de imports).
+- [x] Escala de **elevación** en tokens (`globals.css`): utilidades `.surface` / `.surface-muted`
+      junto a `.glass` / `.ring-glow`, con guía de uso (no todo glass) en comentarios.
+- [x] Escala **tipográfica**: utilidades `.text-eyebrow` (eyebrow consistente sin depender de glow)
+      y `.tnum` (números tabulares) centralizadas.
+- [x] Single-source de `inputCls`/`labelCls` en los **18 formularios** (0 defs locales). Verificado por grep.
+- [x] Páginas con badges (noticias, eventos, sponsors, usuarios, auditoría) → `<Badge>` +
+      `EmptyState` con CTA en los estados vacíos de listas.
+- [ ] **12.1b** — Adopción a nivel de elemento de `<Input>`/`<Textarea>`/`<Select>`/`<Checkbox>`/
+      `<Field>` dentro de los formularios (hoy usan el estilo compartido refinado vía `inputCls`/
+      `labelCls`; falta conmutar los tags para ganar chevron propio y checkbox ≥44px en todos).
+- [x] `npm run build` OK y `npm run lint` 0 errores (solo warnings RHF `watch` esperados).
+- Resuelve: **C1** ✅; sienta base de **A4** (elevación) y **M1** (eyebrow/tnum). 12.1b cierra la capa.
 
 ### Capa 12.2 — Feedback (carga, error, vacío, notificaciones) `[ ]`
 > Cierra los huecos de UX más visibles.
@@ -151,5 +158,18 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 > Al cerrar cada capa: fecha, qué se hizo y cómo se verificó (mismo criterio que
 > [CHANGELOG.md](CHANGELOG.md)).
 
-- _(pendiente — se completa al cerrar 12.1)_
+### 2026-07-02 — Capa 12.1 (fundaciones, parte a)
+- **Design System real:** creado `components/ui/` (`input`, `select`, `field`, `checkbox`,
+  `badge`, `skeleton`, `table`, `empty-state`) + barrel `index.ts`. Estilo base en `inputBase`
+  (foco/ring refinado, ≥44px, contraste AA en labels).
+- **Tokens (`globals.css`):** utilidades de elevación `.surface` / `.surface-muted` (para contextos
+  densos donde glass-sobre-glass se ensucia) y tipografía `.text-eyebrow` / `.tnum`.
+- **C1 resuelto:** `inputCls`/`labelCls` con fuente única, importados en los 18 formularios
+  (admin + cliente + eventos + contacto). Verificado por grep: 0 definiciones locales.
+- **Badges + vacíos:** `noticias`, `eventos`, `sponsors`, `usuarios/[id]`, `auditoria` migrados a
+  `<Badge>` (variantes semánticas) y `EmptyState` con CTA en los estados vacíos de listas.
+- **Verificado:** `npm run build` OK (todas las rutas compilan), `npm run lint` 0 errores
+  (6 warnings RHF `watch`, preexistentes y esperados).
+- **Pendiente (12.1b):** conmutar los tags nativos de los forms a `<Input>/<Select>/<Checkbox>/<Field>`
+  para chevron propio y checkbox ≥44px en todas las pantallas. Luego seguir con Capa 12.2 (feedback).
 </content>

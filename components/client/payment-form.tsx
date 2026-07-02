@@ -11,9 +11,7 @@ import { paymentSchema, type PaymentInput } from "@/lib/validations/ads";
 import { createPayment } from "@/server/actions/payments";
 import { cn } from "@/lib/utils";
 
-const inputCls =
-  "w-full rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring";
-const labelCls = "mb-1.5 block text-sm font-medium";
+import { inputCls, labelCls } from "@/components/ui";
 
 export function PaymentForm({
   contractId,

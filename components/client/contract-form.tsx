@@ -9,6 +9,7 @@ import { neuButton } from "@/components/glass/neu-button";
 import { CreativesUploader } from "@/components/client/creatives-uploader";
 import { contractSchema } from "@/lib/validations/ads";
 import { createClientContract } from "@/server/actions/contracts";
+import { inputCls, labelCls } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
 
@@ -19,10 +20,6 @@ const fieldsSchema = contractSchema.pick({
   socials: true,
 });
 type FieldsInput = z.infer<typeof fieldsSchema>;
-
-const inputCls =
-  "w-full rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring";
-const labelCls = "mb-1.5 block text-sm font-medium";
 
 export function ClientContractForm({ packageId }: { packageId: string }) {
   const [logoUrl, setLogoUrl] = useState("");
