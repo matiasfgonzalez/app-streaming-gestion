@@ -12,7 +12,7 @@ export function Sports() {
         <div className="glass relative overflow-hidden rounded-2xl p-6 sm:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <Reveal>
-              <span className="text-glow mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-widest text-accent uppercase">
+              <span className="text-eyebrow mb-3 inline-flex items-center gap-2 text-accent">
                 <Trophy className="size-4" /> Cobertura deportiva
               </span>
               <h2 className="font-display text-3xl font-bold text-balance sm:text-4xl">

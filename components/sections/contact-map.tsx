@@ -69,24 +69,25 @@ export function ContactMap({
           </GlassCard>
 
           <div className="flex flex-col gap-4">
+            {/* Datos puntuales en surface plano: el form (glass) es el protagonista */}
             <div className="grid gap-3 sm:grid-cols-1">
               {contact.email && (
-                <GlassCard className="flex items-center gap-3">
+                <div className="surface flex items-center gap-3 rounded-xl p-5">
                   <Mail className="size-5 text-primary" />
                   <a href={`mailto:${contact.email}`} className="text-sm hover:text-primary">{contact.email}</a>
-                </GlassCard>
+                </div>
               )}
               {contact.phone && (
-                <GlassCard className="flex items-center gap-3">
+                <div className="surface flex items-center gap-3 rounded-xl p-5">
                   <Phone className="size-5 text-primary" />
                   <span className="text-sm">{contact.phone}</span>
-                </GlassCard>
+                </div>
               )}
               {contact.address && (
-                <GlassCard className="flex items-center gap-3">
+                <div className="surface flex items-center gap-3 rounded-xl p-5">
                   <MapPin className="size-5 text-primary" />
                   <span className="text-sm">{contact.address}</span>
-                </GlassCard>
+                </div>
               )}
             </div>
             {contact.mapsUrl ? (

@@ -1,5 +1,4 @@
 import { Plus } from "lucide-react";
-import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { FAQS } from "@/lib/landing-data";
@@ -16,7 +15,8 @@ export function Faq() {
         <div className="mt-10 space-y-3">
           {FAQS.map((f, i) => (
             <Reveal key={f.q} delay={i * 0.05}>
-              <GlassCard className="p-0">
+              {/* surface plano: lista densa, glass acá no aporta profundidad */}
+              <div className="surface rounded-xl transition-colors hover:border-primary/40">
                 <details className="group p-5 [&_summary]:list-none">
                   <summary className="flex cursor-pointer items-center justify-between gap-4 font-display font-semibold">
                     {f.q}
@@ -24,7 +24,7 @@ export function Faq() {
                   </summary>
                   <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
                 </details>
-              </GlassCard>
+              </div>
             </Reveal>
           ))}
         </div>

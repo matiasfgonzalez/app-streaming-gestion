@@ -34,13 +34,13 @@ export async function Gallery() {
               ? images.map((img, i) => (
                   <div
                     key={img.id}
-                    className={`relative overflow-hidden rounded-xl ${SPANS[i] ?? ""}`}
+                    className={`group relative overflow-hidden rounded-xl ${SPANS[i] ?? ""}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img.url ?? ""}
                       alt={img.title ?? "Imagen de la galería"}
-                      className="size-full object-cover"
+                      className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                     />
                   </div>
                 ))

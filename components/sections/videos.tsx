@@ -33,15 +33,15 @@ export async function Videos() {
                     rel="noopener noreferrer"
                     className="block"
                   >
-                    <GlassCard className="p-3 transition-transform hover:-translate-y-1">
+                    <GlassCard className="group p-3 hover:-translate-y-1 hover:shadow-xl">
                       <div className="relative aspect-video overflow-hidden rounded-xl bg-black">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
                           alt={v.title ?? "Video"}
-                          className="size-full object-cover"
+                          className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                         />
-                        <span className="ring-glow absolute inset-0 m-auto flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <span className="ring-glow absolute inset-0 m-auto flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:scale-110">
                           <Play className="size-6 translate-x-0.5" />
                         </span>
                       </div>

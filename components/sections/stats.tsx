@@ -11,7 +11,7 @@ export function Stats() {
           {STATS.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.06}>
               <GlassCard className="text-center hover:-translate-y-1">
-                <div className="font-display text-3xl font-bold text-primary text-glow sm:text-4xl">
+                <div className="font-display text-3xl font-bold text-primary tnum sm:text-4xl">
                   {s.value}
                 </div>
                 <div className="mt-1 text-sm text-muted-foreground">{s.label}</div>

@@ -28,7 +28,7 @@ export async function Sponsors() {
           {items.map((s, i) => (
             <div
               key={`${s.id}-${i}`}
-              className="glass flex h-16 w-44 shrink-0 items-center justify-center rounded-xl px-4 text-center text-sm font-semibold text-muted-foreground"
+              className="surface flex h-16 w-44 shrink-0 items-center justify-center rounded-xl px-4 text-center text-sm font-semibold text-muted-foreground"
             >
               {s.logoUrl ? (
                 <div className="relative h-10 w-full">

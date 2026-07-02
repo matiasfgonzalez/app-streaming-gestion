@@ -1,6 +1,5 @@
 import { Check } from "lucide-react";
 import Link from "next/link";
-import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
@@ -58,13 +57,14 @@ export async function ServicesPricing() {
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {SERVICES.map(({ title, description, icon: Icon }, i) => (
             <Reveal key={title} delay={i * 0.05}>
-              <GlassCard className="h-full p-4 hover:-translate-y-1">
+              {/* surface plano: los paquetes (glass + glow) quedan un nivel arriba */}
+              <div className="surface h-full rounded-xl p-4 transition-transform duration-300 hover:-translate-y-1">
                 <span className="mb-2 inline-flex size-10 items-center justify-center rounded-full bg-accent/15 text-accent">
                   <Icon className="size-5" />
                 </span>
                 <h3 className="text-sm font-semibold">{title}</h3>
                 <p className="mt-1 text-xs text-muted-foreground">{description}</p>
-              </GlassCard>
+              </div>
             </Reveal>
           ))}
         </div>

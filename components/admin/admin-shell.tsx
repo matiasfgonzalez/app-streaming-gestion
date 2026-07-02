@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, Radio, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -76,6 +76,7 @@ export function AdminShell({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const links = visibleAdminLinks(role);
+  const reduce = useReducedMotion();
 
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[16rem_1fr]">
@@ -129,7 +130,9 @@ export function AdminShell({
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 26, stiffness: 260 }}
+              transition={
+                reduce ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 260 }
+              }
               className="glass safe-top fixed inset-y-0 left-0 z-50 flex w-72 max-w-[80vw] flex-col p-4 lg:hidden"
             >
               <div className="flex items-center justify-between">

@@ -48,9 +48,10 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 
 ### 2.2 Altos (afectan jerarquía y personalidad)
 
-- [ ] **A1 · Microinteracciones casi ausentes.**
-  Framer Motion se importa en solo 3 archivos (2 drawers + `Reveal`). La landing es estática;
-  sin hover states ricos en cards, sin stagger, sin transiciones de página. → Capa 12.4
+- [x] **A1 · Microinteracciones casi ausentes.** ✅ 12.4: hero orquestado en carga (`FadeUp`
+  escalonado), hover rico en cards (news/eventos/videos/galería: lift + zoom + detalles),
+  transición de página del sitio público (`template.tsx`, fade breve). Todo respeta
+  `prefers-reduced-motion` (incluidos ambos drawers).
 - [x] **A2 · Listas admin no son tablas.** ✅ 12.3: `DataTable` (header sticky, row hover,
   responsive→cards en mobile) adoptado en noticias, eventos, sponsors, paquetes, banners,
   usuarios, publicidad, radio, podcasts y auditoría. Se dejan como cards a propósito las vistas
@@ -58,10 +59,10 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 - [x] **A3 · Dashboard plano.** ✅ 12.3: jerarquía real — 3 KPIs principales (glass + `ring-glow`)
   con delta de tendencia y `Sparkline` (14 días), 6 secundarios compactos (`surface` plano), y
   `BarList` multicolor por serie (paleta marca) y por estado (color semántico).
-- [ ] **A4 · Glass sin jerarquía de profundidad.**
-  `.glass` está en navbar, sidebar, header y **todas** las cards por igual. Cuando todo es
-  glass, nada destaca. Neumorphism quedó solo en botones; aurora solo en el hero. Falta una
-  escala de elevación (surface → glass → glow) usada con intención. → Capa 12.1 (tokens) + 12.4
+- [x] **A4 · Glass sin jerarquía de profundidad.** ✅ 12.1 (tokens) + 12.4: escala
+  surface → glass → glow aplicada con intención en la landing — servicios/FAQ/datos de
+  contacto/tiles de sponsors en `surface` plano, cards protagonistas en glass, glow reservado
+  al hero y al paquete destacado. Glow de eyebrows eliminado (`.text-eyebrow` unificado).
 
 ### 2.3 Medios (pulido)
 
@@ -71,9 +72,9 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 - [ ] **M2 · Accesibilidad.**
   Checkboxes nativos `size-4` (target <44px en mobile, contra el propio DS), `text-foreground/80`
   sobre glass puede no pasar AA, focus-visible inconsistente entre inputs y botones. → Capa 12.5
-- [ ] **M3 · `reduced-motion` incompleto.**
-  Respetado en aurora y `Reveal`, pero no en las animaciones de drawer (Framer) ni en futuros
-  hovers. → Capa 12.5
+- [~] **M3 · `reduced-motion` incompleto.** 12.4 cubrió drawers (`useReducedMotion` en
+  MobileDrawer y AdminShell), `FadeUp` y `template.tsx`. Falta: hovers CSS con
+  `motion-reduce:` y revisión final. → Capa 12.5
 
 ---
 
@@ -136,7 +137,7 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
       íconos atenuados en inactivos).
 - [x] Resuelve: **A2**, **A3**.
 
-### Capa 12.4 — Landing & público `[~]`
+### Capa 12.4 — Landing & público `[x]`
 > La cara comercial, sobre base ya sólida.
 
 - [x] **Identidad de marca configurable** (agregado a la capa): nombre del sitio dinámico en
@@ -147,10 +148,14 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - [x] Motion intencional: hero orquestado en carga (`FadeUp` escalonado, respeta
       `prefers-reduced-motion`), reveals con stagger (ya existentes), hover rico en cards
       (lift + zoom de imagen + flecha en news/eventos).
-- [ ] Jerarquía de glass/elevación aplicada (usar la escala de 12.1; no todo glass).
-- [ ] Refinamiento sección por sección (Stats, Radio, Publicidad, Sponsors, Galería, Contacto)
-      manteniendo estructura y contenido; transiciones de página.
-- [ ] Resuelve: **A1** (parcial), cierra **A4**.
+- [x] Jerarquía de glass/elevación aplicada: `surface` en contextos densos (servicios de
+      publicidad, FAQ, datos de contacto, tiles del marquee de sponsors); glass para cards
+      protagonistas; glow solo hero + paquete destacado. Eyebrows → `.text-eyebrow` sin glow
+      (SectionHeading + Sports); stats sin `text-glow` (con `.tnum`).
+- [x] Refinamiento sección por sección: hover zoom en galería y videos (play que escala),
+      transición de página pública (`template.tsx`, fade 0.25s), drawers con
+      `useReducedMotion`.
+- [x] Resuelve: **A1**, cierra **A4**; adelanta drawers de **M3**.
 
 ### Capa 12.5 — Pulido de accesibilidad + docs `[ ]`
 > Quality floor + documentación al día.
@@ -251,4 +256,21 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   Pendiente: verificación visual en navegador.
 - **Pendiente (12.4 parte b):** jerarquía glass/elevación sección por sección + refinamiento
   fino de secciones restantes + transiciones de página.
+
+### 2026-07-02 — Capa 12.4 (parte b: jerarquía de elevación + pulido) — **capa cerrada**
+- **Jerarquía de elevación (A4):** `surface` plano en contextos densos — servicios de
+  publicidad (los paquetes glass+glow quedan un nivel arriba), FAQ, datos de contacto (el form
+  glass es protagonista), tiles del marquee de sponsors. Glow reservado: hero + paquete
+  destacado.
+- **Tipografía (base M1):** eyebrows de `SectionHeading` y Sports → `.text-eyebrow` en accent,
+  sin `text-glow` (patrón template eliminado). Números de Stats sin glow, con `.tnum`.
+- **Microinteracciones (A1):** hover zoom de imagen en galería (tiles bento) y videos
+  (thumbnail + play que escala 1.1); `template.tsx` público con fade de 0.25s por navegación
+  (sin desplazamiento, no compite con FadeUp/Reveal).
+- **Reduced-motion:** drawers (MobileDrawer + AdminShell) con `useReducedMotion`
+  (transición duration 0); `template.tsx` y `FadeUp` idem. Adelanta parte de M3.
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (7 warnings RHF `watch` conocidos). Pendiente: verificación visual en navegador.
+- **Siguiente:** Capa 12.5 — Accesibilidad + docs (contraste AA, targets ≥44px, `motion-reduce:`
+  en hovers CSS, actualizar 04-design-system.md).
 </content>

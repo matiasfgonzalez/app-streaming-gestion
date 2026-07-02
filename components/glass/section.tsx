@@ -36,7 +36,7 @@ export function SectionHeading({
   return (
     <div className={cn("mx-auto max-w-2xl text-center", className)}>
       {eyebrow && (
-        <p className="text-glow mb-2 text-sm font-semibold tracking-widest text-accent uppercase">
+        <p className="text-eyebrow mb-3 text-accent">
           {eyebrow}
         </p>
       )}

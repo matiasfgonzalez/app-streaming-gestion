@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { LayoutDashboard, LogIn, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,6 +21,7 @@ export function MobileDrawer({
 }) {
   const pathname = usePathname();
   const { isSignedIn } = useUser();
+  const reduce = useReducedMotion();
 
   return (
     <AnimatePresence>
@@ -38,7 +39,9 @@ export function MobileDrawer({
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 26, stiffness: 260 }}
+            transition={
+              reduce ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 260 }
+            }
             className="glass safe-top fixed inset-y-0 right-0 z-50 flex w-72 max-w-[80vw] flex-col gap-2 p-5 lg:hidden"
             role="dialog"
             aria-label="Menú de navegación"
