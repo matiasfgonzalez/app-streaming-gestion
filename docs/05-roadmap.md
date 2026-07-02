@@ -96,9 +96,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** admin enciende/apaga secciones y edita datos/SEO sin tocar código. ✅
 - **Deviaciones:** logo/favicon, tipografías y paleta = Fase 9 (theme-engine); persistencia del form de contacto (`ContactMessage`) sigue en backlog; Hero siempre visible (no toggleable). Revalidación con `revalidatePath("/", "layout")`.
 
-## Fase 9 — Theme Engine
-- [ ] Paleta, tipografías, modo claro/oscuro configurable, loader, animaciones desde DB → CSS variables.
-- **Entregable:** admin cambia colores/tipografías y el sitio lo refleja.
+## Fase 9 — Theme Engine ✅
+- [x] Config de tema en `SiteSetting["theme"]` (`lib/theme.ts`): paleta claro/oscuro (primary/secondary/accent), radius, tipografías (display/body) y toggle de animaciones. Merge sobre defaults.
+- [x] `ThemeStyle` (server, en el root layout) inyecta un `<style>` que sobrescribe los tokens de `globals.css` (`:root`/`.dark`) y un `<link>` a Google Fonts según las familias elegidas.
+- [x] Admin `/admin/configuracion/tema` (tab en Configuración): color pickers, selects de fuentes (10 familias), radius, animaciones on/off, "Restaurar por defecto".
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`). Verificado: el HTML prerenderizado incluye el override de vars + fonts.
+- **Entregable:** admin cambia colores/tipografías y el sitio lo refleja (claro y oscuro). ✅
+- **Deviaciones:** colores en HEX (los defaults de `globals.css` son OKLCH; los tokens editables lo sobrescriben); tipografías vía Google Fonts CDN (las locales Inter/Space Grotesk siguen como fallback); loader configurable = pendiente (backlog); la marca en navbar sigue con ícono fijo.
 
 ## Fase 10 — Analytics + Auditoría + PWA
 - [ ] Dashboard KPIs (Tremor/Recharts), AuditLog visible, contadores reales, CTR publicidad.

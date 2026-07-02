@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { href: "/admin/configuracion", label: "General" },
   { href: "/admin/configuracion/secciones", label: "Secciones" },
+  { href: "/admin/configuracion/tema", label: "Tema" },
 ];
 
 export function SettingsTabs() {

@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { esES } from "@clerk/localizations";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeStyle } from "@/components/theme/theme-style";
 import { getSiteConfig } from "@/server/queries/settings";
 
 const inter = Inter({
@@ -51,6 +52,7 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
       >
         <body className="min-h-full">
+          <ThemeStyle />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

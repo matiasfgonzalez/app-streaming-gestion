@@ -6,6 +6,25 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 9] 2026-07-02 — Theme Engine
+- `lib/theme.ts`: `ThemeConfig` (paleta claro/oscuro, radius, fuentes, animaciones),
+  `DEFAULT_THEME`, `mergeTheme`, `fontStack`, `googleFontsHref`, `themeCss`
+  (genera el override de vars). `lib/validations/theme.ts` (colores HEX, radius 0–2,
+  fuentes de una lista de 10).
+- Persistencia en `SiteSetting["theme"]`: `getThemeConfig` (query) y `updateTheme`
+  (action con `revalidatePath("/", "layout")`).
+- `components/theme/theme-style.tsx` (server) en el root `<body>`: inyecta
+  `<style>` con `:root`/`.dark` (primary/secondary/accent/ring/glow/radius/fuentes)
+  y `<link>` a Google Fonts; apaga `.animate-aurora` si las animaciones están off.
+  El `<style>` plano queda inline tras los globals → gana la cascada.
+- Admin: `/admin/configuracion/tema` (tab en Configuración) con `ThemeForm`
+  (color pickers claro/oscuro, selects de tipografía, radius, toggle de animaciones,
+  botón "Restaurar por defecto").
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores (warnings RHF `watch`);
+  el HTML prerenderizado del home incluye el override de vars, el link de fonts y la
+  regla de animaciones.
+- **Siguiente:** Fase 10 — Analytics + Auditoría + PWA.
+
 ## [Fase 8] 2026-07-02 — CMS Landing + Configuración
 - Config global en `SiteSetting["site"]`: `lib/site-config.ts` (`SiteConfig`,
   `DEFAULT_SITE_CONFIG`, `mergeSiteConfig`) — identidad, contacto (+ Maps embed),

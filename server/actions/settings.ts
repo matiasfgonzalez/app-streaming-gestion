@@ -11,6 +11,7 @@ import {
   type SiteConfigInput,
   type SectionFlagsInput,
 } from "@/lib/validations/settings";
+import { themeSchema, type ThemeInput } from "@/lib/validations/theme";
 
 type ActionResult = { ok: false; error: string } | { ok: true };
 
@@ -51,4 +52,20 @@ export async function updateSectionFlags(input: SectionFlagsInput): Promise<Acti
   revalidatePublic();
   revalidatePath("/admin/configuracion/secciones");
   redirect("/admin/configuracion/secciones");
+}
+
+export async function updateTheme(input: ThemeInput): Promise<ActionResult> {
+  await requireRole("ADMIN");
+  const parsed = themeSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+  }
+  await db.siteSetting.upsert({
+    where: { key: "theme" },
+    create: { key: "theme", value: parsed.data },
+    update: { value: parsed.data },
+  });
+  revalidatePublic();
+  revalidatePath("/admin/configuracion/tema");
+  redirect("/admin/configuracion/tema");
 }
