@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { logAudit } from "@/lib/audit";
 import { mergeSectionFlags } from "@/lib/sections";
 import {
   siteConfigSchema,
@@ -21,7 +22,7 @@ function revalidatePublic() {
 }
 
 export async function updateSiteConfig(input: SiteConfigInput): Promise<ActionResult> {
-  await requireRole("ADMIN");
+  const admin = await requireRole("ADMIN");
   const parsed = siteConfigSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
@@ -31,13 +32,20 @@ export async function updateSiteConfig(input: SiteConfigInput): Promise<ActionRe
     create: { key: "site", value: parsed.data },
     update: { value: parsed.data },
   });
+  await logAudit({
+    action: "update",
+    entity: "SiteSetting",
+    entityId: "site",
+    summary: "Configuración general actualizada",
+    actor: admin,
+  });
   revalidatePublic();
   revalidatePath("/admin/configuracion");
   redirect("/admin/configuracion");
 }
 
 export async function updateSectionFlags(input: SectionFlagsInput): Promise<ActionResult> {
-  await requireRole("ADMIN");
+  const admin = await requireRole("ADMIN");
   const parsed = sectionFlagsSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
@@ -49,13 +57,20 @@ export async function updateSectionFlags(input: SectionFlagsInput): Promise<Acti
     create: { key: "sections", value },
     update: { value },
   });
+  await logAudit({
+    action: "update",
+    entity: "SiteSetting",
+    entityId: "sections",
+    summary: `Secciones actualizadas (${Object.values(value).filter(Boolean).length} activas)`,
+    actor: admin,
+  });
   revalidatePublic();
   revalidatePath("/admin/configuracion/secciones");
   redirect("/admin/configuracion/secciones");
 }
 
 export async function updateTheme(input: ThemeInput): Promise<ActionResult> {
-  await requireRole("ADMIN");
+  const admin = await requireRole("ADMIN");
   const parsed = themeSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
@@ -64,6 +79,13 @@ export async function updateTheme(input: ThemeInput): Promise<ActionResult> {
     where: { key: "theme" },
     create: { key: "theme", value: parsed.data },
     update: { value: parsed.data },
+  });
+  await logAudit({
+    action: "update",
+    entity: "SiteSetting",
+    entityId: "theme",
+    summary: "Tema del sitio actualizado",
+    actor: admin,
   });
   revalidatePublic();
   revalidatePath("/admin/configuracion/tema");

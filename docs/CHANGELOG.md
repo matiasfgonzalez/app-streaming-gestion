@@ -6,6 +6,26 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 10] 2026-07-02 — Analytics + Auditoría + PWA
+- Modelo `AuditLog` (action/entity/entityId/summary/userId/userEmail). Migración
+  `audit_log`. `lib/audit.ts` (`logAudit`, tolerante a fallos) + `lib/logger.ts`
+  (logger mínimo sin dependencias).
+- Auditoría wired: `createPayment`/`reviewPayment` (pagos) y `updateSiteConfig`/
+  `updateSectionFlags`/`updateTheme` (configuración) registran la acción.
+- `server/queries/analytics.ts`: `getDashboardData` (conteos, ingresos aprobados,
+  CTR banners/sponsors, top noticias/eventos por vistas, quotes/contratos por estado)
+  y `getAuditLogs`.
+- Dashboard `/admin` reescrito con KPIs reales, tarjetas CTR y `BarList`
+  (`components/admin/bar-list.tsx`, barras horizontales en CSS puro, sin librería).
+- `/admin/auditoria` (ADMIN) muestra el registro; ítem agregado a `admin-nav.ts`.
+- PWA: `app/manifest.ts`, `public/sw.js` (fallback offline solo en navegaciones,
+  no cachea chunks), `public/offline.html`, `public/icon.svg`,
+  `components/pwa/sw-register.tsx` (registro en producción) + `appleWebApp` en el
+  `generateMetadata` del root.
+- **Verificado:** `npm run build` OK (rutas `/admin/auditoria` y
+  `/manifest.webmanifest` presentes), `npm run lint` 0 errores (warnings RHF `watch`).
+- **Siguiente:** Fase 11 — Tienda (preparada, inactiva).
+
 ## [Fase 9] 2026-07-02 — Theme Engine
 - `lib/theme.ts`: `ThemeConfig` (paleta claro/oscuro, radius, fuentes, animaciones),
   `DEFAULT_THEME`, `mergeTheme`, `fontStack`, `googleFontsHref`, `themeCss`

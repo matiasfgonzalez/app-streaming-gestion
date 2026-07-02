@@ -5,6 +5,7 @@ import { esES } from "@clerk/localizations";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeStyle } from "@/components/theme/theme-style";
+import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
 import { getSiteConfig } from "@/server/queries/settings";
 
 const inter = Inter({
@@ -26,6 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${site.brandName}`,
     },
     description: site.seo.description,
+    appleWebApp: {
+      capable: true,
+      title: site.brandName,
+      statusBarStyle: "black-translucent",
+    },
   };
 }
 
@@ -53,6 +59,7 @@ export default function RootLayout({
       >
         <body className="min-h-full">
           <ThemeStyle />
+          <ServiceWorkerRegister />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

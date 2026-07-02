@@ -12,6 +12,7 @@ import {
   Users,
   Image as ImageIcon,
   Settings,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 import type { Role } from "@prisma/client";
@@ -41,6 +42,7 @@ export const ADMIN_LINKS: AdminLink[] = [
   { href: "/admin/banners", label: "Banners", icon: GalleryHorizontalEnd, roles: ["ADMIN"] },
   { href: "/admin/media", label: "Galería", icon: ImageIcon },
   { href: "/admin/usuarios", label: "Usuarios", icon: Users, roles: ["ADMIN"] },
+  { href: "/admin/auditoria", label: "Auditoría", icon: ShieldCheck, roles: ["ADMIN"] },
   { href: "/admin/configuracion", label: "Configuración", icon: Settings, roles: ["ADMIN"] },
 ];
 

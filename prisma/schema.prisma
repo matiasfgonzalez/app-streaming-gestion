@@ -342,6 +342,21 @@ model Banner {
   @@index([placement, active, order])
 }
 
+/// Registro de acciones sensibles (quién, qué, cuándo). Ver docs/06.
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String // create | update | delete | approve | reject | ...
+  entity    String // Payment | SiteSetting | News | ...
+  entityId  String?
+  summary   String
+  userId    String?
+  userEmail String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entity, createdAt])
+}
+
 /// Programa de radio: conductores, invitados, y sus horarios semanales.
 model RadioProgram {
   id          String   @id @default(cuid())

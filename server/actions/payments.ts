@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentUser, requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { logAudit } from "@/lib/audit";
 import { formatMoney } from "@/lib/format";
 import { computeEndDate } from "@/lib/ads";
 import { paymentSchema, type PaymentInput } from "@/lib/validations/ads";
@@ -29,7 +30,7 @@ export async function createPayment(input: PaymentInput): Promise<ActionResult> 
     return { ok: false, error: "No autorizado" };
   }
 
-  await db.payment.create({
+  const payment = await db.payment.create({
     data: {
       contractId: d.contractId,
       amount: d.amount,
@@ -38,6 +39,13 @@ export async function createPayment(input: PaymentInput): Promise<ActionResult> 
       notes: d.notes || null,
       status: "PENDING",
     },
+  });
+  await logAudit({
+    action: "create",
+    entity: "Payment",
+    entityId: payment.id,
+    summary: `Pago informado ${formatMoney(d.amount)} (contrato ${d.contractId})`,
+    actor: user,
   });
 
   revalidatePath(`/cliente/contrataciones/${d.contractId}`);
@@ -83,6 +91,14 @@ export async function reviewPayment(
       },
     });
   }
+
+  await logAudit({
+    action: approve ? "approve" : "reject",
+    entity: "Payment",
+    entityId: payment.id,
+    summary: `Pago ${approve ? "aprobado" : "rechazado"} ${formatMoney(payment.amount)} — "${payment.contract.title}"`,
+    actor: admin,
+  });
 
   const clientEmail = payment.contract.client?.email;
   if (clientEmail) {

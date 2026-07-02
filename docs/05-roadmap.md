@@ -104,10 +104,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** admin cambia colores/tipografías y el sitio lo refleja (claro y oscuro). ✅
 - **Deviaciones:** colores en HEX (los defaults de `globals.css` son OKLCH; los tokens editables lo sobrescriben); tipografías vía Google Fonts CDN (las locales Inter/Space Grotesk siguen como fallback); loader configurable = pendiente (backlog); la marca en navbar sigue con ícono fijo.
 
-## Fase 10 — Analytics + Auditoría + PWA
-- [ ] Dashboard KPIs (Tremor/Recharts), AuditLog visible, contadores reales, CTR publicidad.
-- [ ] PWA (manifest + SW), Sentry, Pino.
-- **Entregable:** panel con métricas reales y app instalable.
+## Fase 10 — Analytics + Auditoría + PWA ✅
+- [x] Modelo `AuditLog`; `lib/audit.ts` (`logAudit`, tolerante) + `lib/logger.ts`. Wired en pagos (informar/aprobar/rechazar) y configuración (general/secciones/tema). Migración `audit_log`.
+- [x] Dashboard `/admin` con KPIs reales (usuarios, noticias, eventos, presupuestos, ingresos aprobados, contratos activos, sponsors, pagos pendientes), CTR de banners/sponsors, rankings de vistas y distribuciones por estado. Charts con `BarList` (SVG/CSS puro, sin dependencia).
+- [x] `/admin/auditoria` (solo ADMIN) lista las acciones registradas; ítem en nav.
+- [x] PWA: `app/manifest.ts`, `public/sw.js` (fallback offline en navegaciones), `public/offline.html`, `public/icon.svg`, `ServiceWorkerRegister` (registra en prod) + `appleWebApp` en metadata.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** panel con métricas reales, auditoría visible y app instalable. ✅
+- **Deviaciones:** charts propios en vez de Tremor/Recharts (evita dependencia pesada); Sentry y Pino = backlog (requieren DSN/infra, se dejó `logger` mínimo); ícono PWA en SVG (raster 192/512 PNG = follow-up para instalabilidad estricta); SW conservador (no cachea chunks de Next para no servir assets obsoletos).
 
 ## Fase 11 — Tienda (preparada, inactiva)
 - [ ] Modelos + UI base detrás de feature flag; pago manual.
