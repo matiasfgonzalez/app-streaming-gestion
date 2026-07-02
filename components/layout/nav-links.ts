@@ -3,6 +3,7 @@ import {
   Newspaper,
   Radio,
   CalendarDays,
+  Image as ImageIcon,
   Megaphone,
   type LucideIcon,
 } from "lucide-react";
@@ -19,5 +20,6 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/noticias", label: "Noticias", icon: Newspaper },
   { href: "/radio", label: "Radio", icon: Radio },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
+  { href: "/galeria", label: "Galería", icon: ImageIcon },
   { href: "/#publicidad", label: "Publicidad", icon: Megaphone },
 ];

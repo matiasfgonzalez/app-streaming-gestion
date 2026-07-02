@@ -4,7 +4,8 @@
       "PowerShell(npx prisma migrate dev --name radio_streaming --skip-generate)",
       "PowerShell(npx prisma migrate dev --name radio_streaming)",
       "PowerShell(npm run build)",
-      "PowerShell(npx prisma migrate dev --name audit_log)"
+      "PowerShell(npx prisma migrate dev --name audit_log)",
+      "PowerShell(npx prisma migrate dev --name media_items)"
     ]
   }
 }

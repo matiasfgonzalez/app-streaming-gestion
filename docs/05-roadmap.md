@@ -113,6 +113,15 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** panel con métricas reales, auditoría visible y app instalable. ✅
 - **Deviaciones:** charts propios en vez de Tremor/Recharts (evita dependencia pesada); Sentry y Pino = backlog (requieren DSN/infra, se dejó `logger` mínimo); ícono PWA en SVG (raster 192/512 PNG = follow-up para instalabilidad estricta); SW conservador (no cachea chunks de Next para no servir assets obsoletos).
 
+## Fase 10.1 — Galería / Videos (módulo Media) ✅
+- [x] Modelo `MediaItem` (enum `MediaType` IMAGE/VIDEO; url, youtubeId, title, caption, featured, order). Migración `media_items`.
+- [x] Backend: `lib/validations/media.ts` (refine por tipo), `server/queries/media.ts`, `server/actions/media.ts` (CRUD + auditoría).
+- [x] Admin `/admin/media` (grilla con thumbnails, badge de tipo/destacada) + nuevo/editar; `MediaForm` conmuta entre subir imagen (UploadThing `newsImage`) o ID de YouTube con vista previa.
+- [x] Público: página `/galeria` (masonry de fotos + grilla de videos con embeds) + ítem en nav; secciones `Gallery` y `Videos` de la landing conectadas a DB (fallback a placeholders seed), con link "Ver galería completa".
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** admin sube/organiza fotos y videos → aparecen en la landing y en `/galeria`. ✅
+- **Deviaciones:** este módulo faltaba en el roadmap original (`/admin/media` estaba en la nav sin página); podcasts se gestionan aparte (Fase 7), acá solo IMAGE/VIDEO; asociación de media a noticias/eventos = backlog (por ahora standalone).
+
 ## Fase 11 — Tienda (preparada, inactiva)
 - [ ] Modelos + UI base detrás de feature flag; pago manual.
 - **Entregable:** tienda lista para activar a futuro.

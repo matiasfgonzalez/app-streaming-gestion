@@ -6,6 +6,24 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 10.1] 2026-07-02 — Galería / Videos (módulo Media)
+- Modelo `MediaItem` (enum `MediaType`): imágenes de galería y videos de YouTube
+  reutilizables (url, youtubeId, title, caption, featured, order). Migración
+  `media_items`.
+- `lib/validations/media.ts` (refine: IMAGE exige url, VIDEO exige youtubeId);
+  `server/queries/media.ts` (`getGalleryImages`, `getVideos`, admin, byId);
+  `server/actions/media.ts` (create/update/delete con `logAudit`).
+- Admin `/admin/media` (grilla con thumbnails — para VIDEO usa
+  `img.youtube.com/vi/<id>/hqdefault.jpg`) + nuevo/editar con `MediaForm`
+  (conmuta imagen/YouTube, vista previa) y `DeleteMediaButton`.
+- Público: `/galeria` (masonry de fotos + embeds de video); secciones `Gallery`
+  y `Videos` de la landing ahora async y conectadas a DB con fallback a los
+  placeholders seed; `/galeria` agregada a `NAV_LINKS` (navbar/drawer/bottom-nav/footer).
+- **Verificado:** `npm run build` OK (rutas `/admin/media` y `/galeria` presentes),
+  `npm run lint` 0 errores (warnings RHF `watch`).
+- **Nota:** módulo que faltaba en el roadmap (la nav apuntaba a `/admin/media` sin
+  página). Asociar media a noticias/eventos queda en backlog.
+
 ## [Fase 10] 2026-07-02 — Analytics + Auditoría + PWA
 - Modelo `AuditLog` (action/entity/entityId/summary/userId/userEmail). Migración
   `audit_log`. `lib/audit.ts` (`logAudit`, tolerante a fallos) + `lib/logger.ts`
