@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Megaphone, Plus } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -8,6 +8,7 @@ import { getClientContracts } from "@/server/queries/ads";
 import { CONTRACT_STATUS_LABEL } from "@/lib/ads";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Mi cuenta" };
 
@@ -37,12 +38,17 @@ export default async function ClienteDashboard() {
         </div>
 
         {contracts.length === 0 ? (
-          <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-            Todavía no contrataste publicidad.{" "}
-            <Link href="/cliente/contratar" className="text-primary underline">
-              Elegí un paquete
-            </Link>
-            .
+          <GlassCard className="mt-10 p-0">
+            <EmptyState
+              icon={Megaphone}
+              title="Todavía no contrataste publicidad"
+              description="Elegí un paquete y empezá a mostrar tu marca en Viva La Mañana."
+              action={
+                <Link href="/cliente/contratar" className={neuButton()}>
+                  <Plus /> Elegí un paquete
+                </Link>
+              }
+            />
           </GlassCard>
         ) : (
           <div className="mt-10 grid gap-4">

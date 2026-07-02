@@ -6,6 +6,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeStyle } from "@/components/theme/theme-style";
 import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
+import { Toaster } from "@/components/ui";
 import { getSiteConfig } from "@/server/queries/settings";
 
 const inter = Inter({
@@ -67,6 +68,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

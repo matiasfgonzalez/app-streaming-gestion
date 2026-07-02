@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,12 @@ export function SectionsForm({ defaults }: { defaults: SectionFlags }) {
   async function onSubmit(values: SectionFlags) {
     setServerError(null);
     const res = await updateSectionFlags(values);
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    } else {
+      toast.success("Secciones actualizadas.");
+    }
   }
 
   return (

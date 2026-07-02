@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { useState } from "react";
@@ -43,8 +45,13 @@ export function QuoteForm({
   async function onSubmit(values: QuoteInput) {
     setServerError(null);
     const res = await createQuoteRequest(values);
-    if (res.ok) setSent(true);
-    else setServerError(res.error);
+    if (res.ok) {
+      setSent(true);
+      toast.success("Solicitud enviada. Te contactamos a la brevedad.");
+    } else {
+      setServerError(res.error);
+      toast.error(res.error);
+    }
   }
 
   if (sent) {

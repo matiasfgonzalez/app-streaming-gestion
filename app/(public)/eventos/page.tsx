@@ -5,6 +5,8 @@ import { EventCard, type CardEvent } from "@/components/events/event-card";
 import { QuoteForm } from "@/components/events/quote-form";
 import { getPublicEvents, getEventOptions } from "@/server/queries/events";
 import { formatDateTime, hueFrom } from "@/lib/format";
+import { CalendarDays } from "lucide-react";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = {
   title: "Eventos",
@@ -37,8 +39,12 @@ export default async function EventosPage() {
         <Container>
           <SectionHeading eyebrow="Agenda" title="Eventos" />
           {!hasAny && (
-            <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-              Todavía no hay eventos cargados.
+            <GlassCard className="mt-10 p-0">
+              <EmptyState
+                icon={CalendarDays}
+                title="Todavía no hay eventos"
+                description="Muy pronto vas a ver acá la agenda y las coberturas."
+              />
             </GlassCard>
           )}
         </Container>

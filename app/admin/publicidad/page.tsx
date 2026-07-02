@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Megaphone, Plus } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -7,6 +7,7 @@ import { requireRole } from "@/lib/auth";
 import { getAllContractsAdmin } from "@/server/queries/ads";
 import { BILLING_CYCLE_LABEL } from "@/lib/ads";
 import { formatDate } from "@/lib/format";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Publicidad" };
 
@@ -29,8 +30,17 @@ export default async function AdminAdsPage() {
       </div>
 
       {contracts.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay contrataciones.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={Megaphone}
+            title="Todavía no hay contrataciones"
+            description="Cuando un cliente contrate un paquete, o cargues una de palabra, aparecerá acá."
+            action={
+              <Link href="/admin/publicidad/nueva" className={neuButton()}>
+                <Plus /> Nueva contratación
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <div className="space-y-4">

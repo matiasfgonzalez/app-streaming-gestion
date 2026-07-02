@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -34,8 +36,13 @@ export function ClientProfileForm({
     setServerError(null);
     setSaved(false);
     const res = await updateClientProfile(userId, values);
-    if (res && !res.ok) setServerError(res.error);
-    else setSaved(true);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    } else {
+      setSaved(true);
+      toast.success("Perfil guardado.");
+    }
   }
 
   return (

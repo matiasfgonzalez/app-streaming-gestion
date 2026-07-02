@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, FileUp, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -41,8 +43,13 @@ export function PaymentForm({
   async function onSubmit(values: PaymentInput) {
     setServerError(null);
     const res = await createPayment({ ...values, proofUrl });
-    if (res.ok) setSent(true);
-    else setServerError(res.error);
+    if (res.ok) {
+      setSent(true);
+      toast.success("Pago informado. Te avisamos cuando lo revisemos.");
+    } else {
+      setServerError(res.error);
+      toast.error(res.error);
+    }
   }
 
   if (sent) {

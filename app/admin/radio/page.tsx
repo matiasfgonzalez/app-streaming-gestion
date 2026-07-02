@@ -8,6 +8,7 @@ import { requireRole } from "@/lib/auth";
 import { getAllProgramsAdmin } from "@/server/queries/radio";
 import { WEEKDAY_SHORT } from "@/lib/radio";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Radio" };
 
@@ -30,8 +31,17 @@ export default async function AdminRadioPage() {
       <RadioTabs />
 
       {programs.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay programas. Creá el primero.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={RadioIcon}
+            title="Todavía no hay programas"
+            description="Creá el primer programa con sus conductores y horarios semanales."
+            action={
+              <Link href="/admin/radio/nuevo" className={neuButton()}>
+                <Plus /> Nuevo programa
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <GlassCard className="p-0">

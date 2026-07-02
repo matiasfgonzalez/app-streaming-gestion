@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Package } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -7,6 +7,7 @@ import { requireRole } from "@/lib/auth";
 import { getActivePackages } from "@/server/queries/ads";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Contratar publicidad" };
 
@@ -23,8 +24,12 @@ export default async function ContratarPage() {
           subtitle="Seleccioná un plan para empezar. Después completás los datos y el pago."
         />
         {packages.length === 0 ? (
-          <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-            No hay paquetes disponibles por el momento.
+          <GlassCard className="mt-10 p-0">
+            <EmptyState
+              icon={Package}
+              title="No hay paquetes disponibles"
+              description="Volvé pronto o escribinos para armar una propuesta a medida."
+            />
           </GlassCard>
         ) : (
           <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-3">

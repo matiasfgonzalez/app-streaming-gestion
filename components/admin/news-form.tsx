@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useState } from "react";
@@ -53,7 +55,10 @@ export function NewsForm({
       ? await updateNews(newsId, values)
       : await createNews(values);
     // En éxito, la action hace redirect (no retorna). Si retorna, es error.
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    }
   }
 
   return (

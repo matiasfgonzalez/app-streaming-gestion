@@ -1,10 +1,11 @@
-import { CalendarDays, Clock, MapPin } from "lucide-react";
+import { CalendarDays, Clock, Inbox, MapPin } from "lucide-react";
 import { GlassCard } from "@/components/glass/glass-card";
 import { QuoteStatusSelect } from "@/components/admin/quote-status-select";
 import { requireRole } from "@/lib/auth";
 import { getAllQuotes } from "@/server/queries/quotes";
 import { QUOTE_SERVICE_LABEL } from "@/lib/events";
 import { formatDate } from "@/lib/format";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Presupuestos" };
 
@@ -22,8 +23,12 @@ export default async function AdminQuotesPage() {
       </div>
 
       {quotes.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay solicitudes.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={Inbox}
+            title="Todavía no hay solicitudes"
+            description="Las solicitudes de presupuesto del sitio público van a llegar acá."
+          />
         </GlassCard>
       ) : (
         <div className="space-y-4">

@@ -12,7 +12,9 @@
       "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --help 2>&1)",
       "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --global --yes)",
       "PowerShell(npx --yes skills ls -g -a claude-code)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(Object.keys\\({...p.dependencies,...p.devDependencies}\\).filter\\(d=>/sonner|toast|react-hot/.test\\(d\\)\\).join\\(','\\)||'NONE toast lib'\\)\")",
+      "Bash(npm i *)"
     ]
   }
 }

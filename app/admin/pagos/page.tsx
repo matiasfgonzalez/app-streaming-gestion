@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { CreditCard, ExternalLink } from "lucide-react";
 import { GlassCard } from "@/components/glass/glass-card";
 import { PaymentReview } from "@/components/admin/payment-review";
 import { requireRole } from "@/lib/auth";
@@ -6,6 +6,7 @@ import { getAllPayments } from "@/server/queries/ads";
 import { PAYMENT_METHOD_LABEL, PAYMENT_STATUS_LABEL } from "@/lib/ads";
 import { formatDate, formatMoney } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Pagos" };
 
@@ -29,8 +30,12 @@ export default async function AdminPaymentsPage() {
       </div>
 
       {payments.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay pagos informados.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={CreditCard}
+            title="Todavía no hay pagos informados"
+            description="Cuando un cliente informe un pago, aparecerá acá para aprobar o rechazar."
+          />
         </GlassCard>
       ) : (
         <div className="space-y-4">

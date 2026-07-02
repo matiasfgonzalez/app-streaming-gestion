@@ -3,6 +3,8 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { NewsCard, type CardNews } from "@/components/news/news-card";
 import { formatDate, hueFrom } from "@/lib/format";
 import { getPublishedNews } from "@/server/queries/news";
+import { Newspaper } from "lucide-react";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = {
   title: "Noticias",
@@ -26,8 +28,12 @@ export default async function NoticiasPage() {
       <Container>
         <SectionHeading eyebrow="Actualidad" title="Noticias" />
         {items.length === 0 ? (
-          <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-            Todavía no hay noticias publicadas.
+          <GlassCard className="mt-10 p-0">
+            <EmptyState
+              icon={Newspaper}
+              title="Todavía no hay noticias"
+              description="Estamos preparando las primeras publicaciones. Volvé pronto."
+            />
           </GlassCard>
         ) : (
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

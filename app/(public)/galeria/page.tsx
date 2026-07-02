@@ -2,6 +2,8 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { getGalleryImages, getVideos } from "@/server/queries/media";
+import { ImageIcon } from "lucide-react";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = {
   title: "Galería",
@@ -18,8 +20,12 @@ export default async function GaleriaPage() {
         <Container>
           <SectionHeading eyebrow="Multimedia" title="Galería" />
           {!hasAny && (
-            <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-              Todavía no hay contenido cargado.
+            <GlassCard className="mt-10 p-0">
+              <EmptyState
+                icon={ImageIcon}
+                title="Todavía no hay contenido"
+                description="Estamos subiendo fotos y videos. Volvé pronto."
+              />
             </GlassCard>
           )}
         </Container>

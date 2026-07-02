@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useState } from "react";
@@ -46,7 +48,10 @@ export function BannerForm({
     const res = bannerId
       ? await updateBanner(bannerId, values)
       : await createBanner(values);
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    }
   }
 
   return (

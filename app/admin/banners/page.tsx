@@ -1,4 +1,4 @@
-import { Pencil, Plus } from "lucide-react";
+import { ImageIcon, Pencil, Plus } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -7,6 +7,7 @@ import { requireRole } from "@/lib/auth";
 import { getAllBannersAdmin } from "@/server/queries/banners";
 import { BANNER_PLACEMENT_LABEL } from "@/lib/banners";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Banners" };
 
@@ -27,8 +28,17 @@ export default async function AdminBannersPage() {
       </div>
 
       {banners.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay banners.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={ImageIcon}
+            title="Todavía no hay banners"
+            description="Creá un banner para mostrarlo en las ubicaciones del sitio."
+            action={
+              <Link href="/admin/banners/nuevo" className={neuButton()}>
+                <Plus /> Nuevo banner
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <div className="space-y-3">

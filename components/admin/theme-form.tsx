@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, RotateCcw } from "lucide-react";
 import { useState } from "react";
@@ -44,7 +46,12 @@ export function ThemeForm({ defaults }: { defaults: ThemeInput }) {
   async function onSubmit(values: ThemeInput) {
     setServerError(null);
     const res = await updateTheme(values);
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    } else {
+      toast.success("Tema actualizado.");
+    }
   }
 
   return (

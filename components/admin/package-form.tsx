@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -44,7 +46,10 @@ export function PackageForm({
     const res = packageId
       ? await updatePackage(packageId, values)
       : await createPackage(values);
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    }
   }
 
   return (

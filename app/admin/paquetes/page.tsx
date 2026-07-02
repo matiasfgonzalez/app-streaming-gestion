@@ -1,4 +1,4 @@
-import { Pencil, Plus } from "lucide-react";
+import { Package, Pencil, Plus } from "lucide-react";
 import Link from "next/link";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
@@ -6,6 +6,7 @@ import { DeletePackageButton } from "@/components/admin/delete-package-button";
 import { requireRole } from "@/lib/auth";
 import { getAllPackagesAdmin } from "@/server/queries/ads";
 import { formatMoney } from "@/lib/format";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Paquetes" };
 
@@ -26,8 +27,17 @@ export default async function AdminPackagesPage() {
       </div>
 
       {packages.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay paquetes. Creá el primero.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={Package}
+            title="Todavía no hay paquetes"
+            description="Creá el primer paquete de publicidad para que los clientes puedan contratarlo."
+            action={
+              <Link href="/admin/paquetes/nuevo" className={neuButton()}>
+                <Plus /> Nuevo paquete
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <GlassCard className="p-0">

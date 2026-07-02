@@ -7,6 +7,7 @@ import { DeletePodcastButton } from "@/components/admin/delete-podcast-button";
 import { requireRole } from "@/lib/auth";
 import { getAllPodcastsAdmin } from "@/server/queries/radio";
 import { formatDate } from "@/lib/format";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Podcasts" };
 
@@ -29,8 +30,17 @@ export default async function AdminPodcastsPage() {
       <RadioTabs />
 
       {podcasts.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay podcasts.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={Mic}
+            title="Todavía no hay podcasts"
+            description="Subí un audio o enlazá un video de YouTube para publicar el primer episodio."
+            action={
+              <Link href="/admin/radio/podcasts/nuevo" className={neuButton()}>
+                <Plus /> Nuevo podcast
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <GlassCard className="p-0">

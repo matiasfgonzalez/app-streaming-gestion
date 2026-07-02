@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -29,7 +31,12 @@ export function StreamingForm({ defaults }: { defaults: StreamingInput }) {
   async function onSubmit(values: StreamingInput) {
     setServerError(null);
     const res = await updateStreaming(values);
-    if (res && !res.ok) setServerError(res.error);
+    if (res && !res.ok) {
+      setServerError(res.error);
+      toast.error(res.error);
+    } else {
+      toast.success("Streaming actualizado.");
+    }
   }
 
   return (

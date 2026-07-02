@@ -5,6 +5,7 @@ import { neuButton } from "@/components/glass/neu-button";
 import { DeleteMediaButton } from "@/components/admin/delete-media-button";
 import { requireRole } from "@/lib/auth";
 import { getAllMediaAdmin } from "@/server/queries/media";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = { title: "Galería" };
 
@@ -27,8 +28,17 @@ export default async function AdminMediaPage() {
       </div>
 
       {items.length === 0 ? (
-        <GlassCard className="py-16 text-center text-muted-foreground">
-          Todavía no hay elementos. Agregá imágenes o videos.
+        <GlassCard className="p-0">
+          <EmptyState
+            icon={ImageIcon}
+            title="Todavía no hay contenido"
+            description="Agregá imágenes o videos para armar la galería del sitio."
+            action={
+              <Link href="/admin/media/nuevo" className={neuButton()}>
+                <Plus /> Nuevo
+              </Link>
+            }
+          />
         </GlassCard>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

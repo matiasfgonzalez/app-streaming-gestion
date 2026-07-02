@@ -38,15 +38,13 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
   en los 18 formularios (0 definiciones locales), y el badge de estado se unificó en `<Badge>`.
   Pendiente menor (12.1b): adopción a nivel de elemento de `<Select>`/`<Checkbox>`/`<Field>`
   (hoy los controles nativos ya usan el estilo compartido refinado).
-- [ ] **C2 · Cero estados de carga.**
-  No hay ni un `loading.tsx` en toda la app, pese a que el DS exige "Skeletons en toda carga
-  de datos". Cada página admin/pública bloquea sin feedback. → Capa 12.2
-- [ ] **C3 · Sin sistema de notificaciones.**
-  No hay toast/sonner. Los formularios muestran error como texto rojo inline y el éxito es un
-  `redirect` mudo (creás una noticia y no hay confirmación). El DS lista "Toast" — no está. → Capa 12.2
-- [ ] **C4 · Sin límites de error / vacío.**
-  Cero `error.tsx` y cero `not-found.tsx`. Los estados vacíos son frases sueltas
-  ("Todavía no hay noticias") sin ilustración ni CTA. → Capa 12.2
+- [x] **C2 · Cero estados de carga.** ✅ 12.2: `Skeleton` + `CardGridSkeleton`; `loading.tsx` en
+  admin (segmento) y en noticias/eventos/galería públicas.
+- [x] **C3 · Sin sistema de notificaciones.** ✅ 12.2: `Toaster` (sonner, sigue tema + tokens) en el
+  root; toast.error en los 17 formularios y toast.success en los que no redirigen (config, tema,
+  streaming, secciones, perfil, pago, presupuesto).
+- [x] **C4 · Sin límites de error / vacío.** ✅ 12.2: `app/error.tsx` + `app/not-found.tsx` branded;
+  los 14 estados vacíos restantes (8 admin + 6 públicos) migrados a `EmptyState` con CTA.
 
 ### 2.2 Altos (afectan jerarquía y personalidad)
 
@@ -112,15 +110,20 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - [x] `npm run build` OK y `npm run lint` 0 errores (solo warnings RHF `watch` esperados).
 - Resuelve: **C1** ✅; sienta base de **A4** (elevación) y **M1** (eyebrow/tnum). 12.1b cierra la capa.
 
-### Capa 12.2 — Feedback (carga, error, vacío, notificaciones) `[ ]`
+### Capa 12.2 — Feedback (carga, error, vacío, notificaciones) `[x]`
 > Cierra los huecos de UX más visibles.
 
-- [ ] `Toaster` global (sonner con tokens del proyecto) + helper `toast` en actions/forms.
-- [ ] Conectar formularios: éxito → toast de confirmación; error → toast + estado inline.
-- [ ] `loading.tsx` con skeletons por ruta (admin y público con datos).
-- [ ] `error.tsx` y `not-found.tsx` premium (con la identidad, no defaults de Next).
-- [ ] Componente `EmptyState` aplicado a todos los estados vacíos, con ilustración/ícono + CTA.
-- [ ] Resuelve: **C2**, **C3**, **C4**.
+- [x] `Toaster` global (`components/ui/toaster.tsx`, sonner + `richColors`, sigue el tema y usa los
+      tokens) en el root layout; `toast` reexportado desde el barrel.
+- [x] Formularios conectados: `toast.error` en los 17 forms (además del inline); `toast.success`
+      en los que no redirigen (site-config, tema, streaming, secciones, perfil, pago, presupuesto).
+- [x] `loading.tsx` con skeletons: admin (segmento, `app/admin/loading.tsx`) y público
+      (noticias/eventos/galería con `CardGridSkeleton`). `Skeleton` respeta `reduced-motion`.
+- [x] `app/error.tsx` (client, reintentar + inicio) y `app/not-found.tsx` (404 branded), ambos con
+      AuroraBackground + GlassCard.
+- [x] `EmptyState` en los 14 vacíos restantes (8 admin con CTA + 6 públicos informativos).
+- [x] `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores.
+- Resuelve: **C2** ✅, **C3** ✅, **C4** ✅.
 
 ### Capa 12.3 — Admin Enterprise `[ ]`
 > Densidad, orden y jerarquía. Usa los primitivos de 12.1.
@@ -185,4 +188,20 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   (6 warnings RHF `watch`, preexistentes).
 - **Siguiente:** Capa 12.2 — feedback (Toaster, `loading.tsx`+skeletons, `error.tsx`/`not-found.tsx`,
   EmptyState en el resto).
+
+### 2026-07-02 — Capa 12.2 (feedback) — **capa cerrada**
+- **Notificaciones (C3):** `sonner` instalado; `components/ui/toaster.tsx` (sigue tema + tokens,
+  `richColors`) montado en el root layout; `toast` reexportado desde `@/components/ui`. Los 17
+  formularios toastean error; los que no redirigen (site-config, tema, streaming, secciones,
+  perfil de cliente, pago, presupuesto) toastean éxito.
+- **Carga (C2):** `components/ui/skeleton.tsx` + `card-grid-skeleton.tsx`; `app/admin/loading.tsx`
+  (skeleton de dashboard) y `loading.tsx` en noticias/eventos/galería públicas.
+- **Error/404 (C4):** `app/error.tsx` (client: reintentar + inicio) y `app/not-found.tsx` (404
+  branded), con AuroraBackground + GlassCard.
+- **Vacíos (C4):** 14 estados vacíos restantes → `EmptyState`. Admin con CTA (banners, paquetes,
+  media, radio, podcasts, publicidad; pagos/presupuestos informativos). Públicos informativos
+  (noticias, eventos, sponsors, galería, cliente, contratar).
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (6 warnings RHF `watch`, preexistentes). Fix en el camino: `else` colgante en payment/quote.
+- **Siguiente:** Capa 12.3 — Admin Enterprise (listas→DataTable, dashboard con jerarquía/sparklines).
 </content>

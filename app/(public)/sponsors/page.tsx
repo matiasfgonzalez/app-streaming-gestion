@@ -3,6 +3,7 @@ import Image from "next/image";
 import { GlassCard } from "@/components/glass/glass-card";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { getActiveSponsors, bumpSponsorImpressions } from "@/server/queries/banners";
+import { EmptyState } from "@/components/ui";
 
 export const metadata = {
   title: "Sponsors",
@@ -24,8 +25,12 @@ export default async function SponsorsPage() {
         />
 
         {sponsors.length === 0 ? (
-          <GlassCard className="mt-10 py-16 text-center text-muted-foreground">
-            Todavía no hay sponsors cargados.
+          <GlassCard className="mt-10 p-0">
+            <EmptyState
+              icon={Handshake}
+              title="Todavía no hay sponsors"
+              description="Las marcas que nos acompañan van a aparecer acá."
+            />
           </GlassCard>
         ) : (
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
