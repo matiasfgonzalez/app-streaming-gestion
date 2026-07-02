@@ -30,6 +30,21 @@ export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   REJECTED: "Rechazado",
 };
 
+/** Fecha de fin de vigencia según el ciclo, a partir de la fecha de inicio. */
+export function computeEndDate(start: Date, cycle: BillingCycle): Date {
+  const d = new Date(start);
+  if (cycle === "DAILY") d.setDate(d.getDate() + 1);
+  else if (cycle === "WEEKLY") d.setDate(d.getDate() + 7);
+  else d.setMonth(d.getMonth() + 1);
+  return d;
+}
+
+/** Sugerencias de tamaño para las creatividades. */
+export const IMAGE_HINTS = {
+  logo: "Logo cuadrado, ~500×500px, PNG con fondo transparente. Máx 4MB.",
+  image: "Imágenes horizontales ~1200×675px (16:9), JPG/PNG. Máx 4MB c/u, hasta 6.",
+} as const;
+
 /** Precio del paquete según el ciclo elegido (cae a mensual si no hay). */
 export function priceForCycle(
   pkg: { priceMonthly: number; priceWeekly: number | null; priceDaily: number | null },

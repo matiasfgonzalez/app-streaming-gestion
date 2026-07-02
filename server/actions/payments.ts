@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser, requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
+import { computeEndDate } from "@/lib/ads";
 import { paymentSchema, type PaymentInput } from "@/lib/validations/ads";
 import { sendEmailSafe } from "@/server/emails/resend";
 import { paymentResultEmail } from "@/server/emails/templates";
@@ -72,9 +73,14 @@ export async function reviewPayment(
   });
 
   if (approve) {
+    const start = payment.contract.startDate ?? new Date();
     await db.adContract.update({
       where: { id: payment.contractId },
-      data: { status: "ACTIVE", startDate: payment.contract.startDate ?? new Date() },
+      data: {
+        status: "ACTIVE",
+        startDate: start,
+        endDate: computeEndDate(start, payment.contract.billingCycle),
+      },
     });
   }
 

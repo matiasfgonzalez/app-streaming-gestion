@@ -52,6 +52,18 @@ export function getAllContractsAdmin() {
   });
 }
 
+export function getContractAdmin(id: string) {
+  return db.adContract.findUnique({
+    where: { id },
+    include: {
+      package: true,
+      client: { select: { name: true, email: true } },
+      creatives: true,
+      payments: { orderBy: { createdAt: "desc" } },
+    },
+  });
+}
+
 // ---------- Payments ----------
 export function getAllPayments() {
   return db.payment.findMany({

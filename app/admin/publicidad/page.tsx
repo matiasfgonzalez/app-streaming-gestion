@@ -38,18 +38,20 @@ export default async function AdminAdsPage() {
             const paid = c.payments.some((p) => p.status === "APPROVED");
             return (
               <GlassCard key={c.id} className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-display font-semibold">{c.title}</p>
+                <Link href={`/admin/publicidad/${c.id}`} className="min-w-0 flex-1">
+                  <p className="font-display font-semibold hover:text-primary">{c.title}</p>
                   <p className="text-sm text-muted-foreground">
                     {c.package.name} · {BILLING_CYCLE_LABEL[c.billingCycle]} ·{" "}
                     {c.client?.name ?? c.client?.email ?? "Sin cliente (de palabra)"}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {formatDate(c.createdAt)} ·{" "}
-                    {c.payments.length} pago(s) ·{" "}
+                    {formatDate(c.createdAt)} · {c.payments.length} pago(s) ·{" "}
                     {paid ? "pago aprobado" : "sin pago aprobado"}
+                    {c.status === "ACTIVE" && c.endDate
+                      ? ` · vigente hasta ${formatDate(c.endDate)}`
+                      : ""}
                   </p>
-                </div>
+                </Link>
                 <ContractStatusSelect id={c.id} value={c.status} />
               </GlassCard>
             );

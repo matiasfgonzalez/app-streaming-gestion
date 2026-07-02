@@ -56,10 +56,16 @@ export default async function ClienteDashboard() {
                       <p className="text-sm text-muted-foreground">
                         {c.package.name} · {formatDate(c.createdAt)}
                       </p>
-                      {lastPayment && (
-                        <p className="text-xs text-muted-foreground">
-                          Último pago: {lastPayment.status}
+                      {c.status === "ACTIVE" && c.endDate ? (
+                        <p className="text-xs text-primary">
+                          Vigente hasta el {formatDate(c.endDate)}
                         </p>
+                      ) : (
+                        lastPayment && (
+                          <p className="text-xs text-muted-foreground">
+                            Último pago: {lastPayment.status}
+                          </p>
+                        )
                       )}
                     </div>
                     <span

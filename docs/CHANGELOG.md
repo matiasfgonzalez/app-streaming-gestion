@@ -6,6 +6,18 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 5.1] 2026-07-02 — Mejoras publicidad (feedback)
+- Vigencia: `computeEndDate` (día/semana/mes) en `lib/ads.ts`; se setea `endDate`
+  al activar (aprobar pago, admin cambia a ACTIVE, admin crea ACTIVE).
+- Vigencia visible: detalle y dashboard del cliente + lista y detalle admin.
+- Carga de imágenes arreglada: `CreativesUploader` reutilizable con `UploadButton`
+  múltiple (reemplaza el dropzone) + sugerencias de tamaño (`IMAGE_HINTS`).
+- Editar creatividades post-creación: acción `updateContractCreatives` (dueño o
+  admin) + `EditCreatives` en el detalle del cliente.
+- Detalle admin de contrato `/admin/publicidad/[id]`: datos, cliente, vigencia,
+  creatividades y pagos con comprobante + aprobar/rechazar; lista enlaza al detalle.
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores.
+
 ## [Fase 5] 2026-07-01 — Publicidad: paquetes, contratación, pagos
 - Schema: enums `ContractStatus`, `BillingCycle`, `PaymentMethod`, `PaymentStatus`,
   `CreativeType`; modelos `Package`, `AdContract`, `Creative`, `Payment`.

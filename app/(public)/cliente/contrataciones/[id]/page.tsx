@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { GlassCard } from "@/components/glass/glass-card";
 import { Container, Section } from "@/components/glass/section";
 import { PaymentForm } from "@/components/client/payment-form";
+import { EditCreatives } from "@/components/client/edit-creatives";
 import { requireRole } from "@/lib/auth";
 import { getContractForClient } from "@/server/queries/ads";
 import {
@@ -59,6 +60,13 @@ export default async function ContratacionDetallePage({
           </span>
         </div>
 
+        {contract.status === "ACTIVE" && contract.endDate && (
+          <p className="mt-3 rounded-xl bg-primary/10 px-4 py-2 text-sm text-primary">
+            Vigente {contract.startDate ? `desde el ${formatDate(contract.startDate)} ` : ""}
+            hasta el <strong>{formatDate(contract.endDate)}</strong>.
+          </p>
+        )}
+
         {contract.description && (
           <GlassCard className="mt-6">
             <p className="text-sm">{contract.description}</p>
@@ -68,22 +76,16 @@ export default async function ContratacionDetallePage({
           </GlassCard>
         )}
 
-        {contract.creatives.length > 0 && (
-          <div className="mt-6">
-            <h2 className="mb-3 font-display font-semibold">Creatividades</h2>
-            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-              {contract.creatives.map((cr) => (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  key={cr.id}
-                  src={cr.url}
-                  alt={cr.alt ?? "Creatividad"}
-                  className="aspect-square w-full rounded-lg object-cover"
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="mt-6">
+          <h2 className="mb-3 font-display font-semibold">Creatividades</h2>
+          <EditCreatives
+            contractId={contract.id}
+            initialLogo={contract.creatives.find((c) => c.type === "LOGO")?.url ?? ""}
+            initialImages={contract.creatives
+              .filter((c) => c.type === "IMAGE")
+              .map((c) => c.url)}
+          />
+        </div>
 
         {/* Pagos */}
         <div className="mt-8">

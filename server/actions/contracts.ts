@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import type { ContractStatus } from "@prisma/client";
 import { getCurrentUser, requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { computeEndDate } from "@/lib/ads";
 import {
   contractSchema,
   adminContractSchema,
@@ -82,6 +83,7 @@ export async function adminCreateContract(
   }
   const d = parsed.data;
 
+  const now = new Date();
   await db.adContract.create({
     data: {
       packageId: d.packageId,
@@ -90,7 +92,8 @@ export async function adminCreateContract(
       description: d.description || null,
       socials: d.socials || null,
       status: d.status,
-      startDate: d.status === "ACTIVE" ? new Date() : null,
+      startDate: d.status === "ACTIVE" ? now : null,
+      endDate: d.status === "ACTIVE" ? computeEndDate(now, d.billingCycle) : null,
       creatives: {
         create: creativesCreate(
           d.logoUrl && d.logoUrl.length > 0 ? d.logoUrl : undefined,
@@ -104,19 +107,61 @@ export async function adminCreateContract(
   redirect("/admin/publicidad");
 }
 
+/** Cliente/Admin: reemplaza las creatividades (logo + imágenes) de un contrato. */
+export async function updateContractCreatives(
+  contractId: string,
+  logoUrl: string | undefined,
+  imageUrls: string[],
+): Promise<ActionResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "No autorizado" };
+
+  const contract = await db.adContract.findUnique({ where: { id: contractId } });
+  if (!contract) return { ok: false, error: "Contrato no encontrado" };
+  if (contract.clientId !== user.id && user.role !== "ADMIN") {
+    return { ok: false, error: "No autorizado" };
+  }
+
+  const items = creativesCreate(
+    logoUrl && logoUrl.length > 0 ? logoUrl : undefined,
+    imageUrls.slice(0, 6),
+  );
+
+  await db.$transaction([
+    db.creative.deleteMany({ where: { contractId } }),
+    ...(items.length > 0
+      ? [db.creative.createMany({ data: items.map((i) => ({ ...i, contractId })) })]
+      : []),
+  ]);
+
+  revalidatePath(`/cliente/contrataciones/${contractId}`);
+  revalidatePath(`/admin/publicidad/${contractId}`);
+  return { ok: true };
+}
+
 /** Admin: cambia el estado de una contratación. */
 export async function updateContractStatus(
   id: string,
   status: ContractStatus,
 ): Promise<void> {
   await requireRole("ADMIN");
-  await db.adContract.update({
-    where: { id },
-    data: {
-      status,
-      startDate: status === "ACTIVE" ? new Date() : undefined,
-    },
-  });
+
+  let data: {
+    status: ContractStatus;
+    startDate?: Date;
+    endDate?: Date;
+  } = { status };
+
+  if (status === "ACTIVE") {
+    const current = await db.adContract.findUnique({ where: { id } });
+    if (current) {
+      const start = current.startDate ?? new Date();
+      data = { status, startDate: start, endDate: computeEndDate(start, current.billingCycle) };
+    }
+  }
+
+  await db.adContract.update({ where: { id }, data });
   revalidatePath("/admin/publicidad");
+  revalidatePath(`/admin/publicidad/${id}`);
   revalidatePath("/cliente");
 }

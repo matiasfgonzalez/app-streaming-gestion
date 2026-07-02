@@ -1,12 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ImagePlus, Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
-import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import { CreativesUploader } from "@/components/client/creatives-uploader";
 import { contractSchema } from "@/lib/validations/ads";
 import { createClientContract } from "@/server/actions/contracts";
 import { cn } from "@/lib/utils";
@@ -76,66 +76,14 @@ export function ClientContractForm({ packageId }: { packageId: string }) {
         </div>
       </GlassCard>
 
-      <GlassCard className="space-y-4">
-        <div>
-          <span className={labelCls}>Logo</span>
-          {logoUrl ? (
-            <div className="relative w-40">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logoUrl} alt="Logo" className="aspect-square w-40 rounded-lg object-contain" />
-              <button
-                type="button"
-                onClick={() => setLogoUrl("")}
-                className="glass absolute right-2 top-2 inline-flex size-8 items-center justify-center rounded-full"
-                aria-label="Quitar logo"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border py-6 text-muted-foreground">
-              <ImagePlus className="size-6" />
-              <UploadButton
-                endpoint="adCreative"
-                onClientUploadComplete={(res) => {
-                  const url = res?.[0]?.ufsUrl;
-                  if (url) setLogoUrl(url);
-                }}
-                onUploadError={(e) => setServerError(e.message)}
-              />
-            </div>
-          )}
-        </div>
-
-        <div>
-          <span className={labelCls}>Imágenes de la publicidad</span>
-          {imageUrls.length > 0 && (
-            <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {imageUrls.map((url) => (
-                <div key={url} className="relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="Creatividad" className="aspect-square w-full rounded-lg object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => setImageUrls((prev) => prev.filter((u) => u !== url))}
-                    className="glass absolute right-1 top-1 inline-flex size-6 items-center justify-center rounded-full"
-                    aria-label="Quitar imagen"
-                  >
-                    <X className="size-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          <UploadDropzone
-            endpoint="adCreative"
-            onClientUploadComplete={(res) => {
-              const urls = (res ?? []).map((f) => f.ufsUrl).filter(Boolean);
-              setImageUrls((prev) => [...prev, ...urls].slice(0, 6));
-            }}
-            onUploadError={(e) => setServerError(e.message)}
-          />
-        </div>
+      <GlassCard>
+        <CreativesUploader
+          logoUrl={logoUrl}
+          imageUrls={imageUrls}
+          onLogoChange={setLogoUrl}
+          onImagesChange={setImageUrls}
+          onError={setServerError}
+        />
       </GlassCard>
 
       {serverError && (
