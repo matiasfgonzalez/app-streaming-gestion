@@ -122,6 +122,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** admin sube/organiza fotos y videos → aparecen en la landing y en `/galeria`. ✅
 - **Deviaciones:** este módulo faltaba en el roadmap original (`/admin/media` estaba en la nav sin página); podcasts se gestionan aparte (Fase 7), acá solo IMAGE/VIDEO; asociación de media a noticias/eventos = backlog (por ahora standalone).
 
+## Fase 10.2 — Usuarios / Roles ✅
+- [x] Backend: `lib/users.ts` (labels/estilos de rol), `lib/validations/users.ts`, `server/queries/users.ts` (lista con conteos, detalle con contratos) y `server/actions/users.ts` (`updateUserRole`, `updateClientProfile`) con auditoría.
+- [x] Admin `/admin/usuarios`: lista con rol editable inline (`UserRoleSelect`), empresa y conteos; `/admin/usuarios/[id]`: detalle con rol, perfil de cliente editable (`ClientProfileForm`) y contrataciones del usuario.
+- [x] Guard: un ADMIN no puede cambiar su propio rol (evita autobloqueo); el select se deshabilita para el usuario actual.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** ADMIN ve usuarios, cambia roles y gestiona perfiles de cliente. ✅
+- **Deviaciones:** los usuarios se crean vía Clerk (lazy-sync), no hay alta manual; sin borrado (al reloguear, Clerk re-sincroniza como CLIENTE); email/nombre vienen de Clerk (no editables acá).
+
 ## Fase 11 — Tienda (preparada, inactiva)
 - [ ] Modelos + UI base detrás de feature flag; pago manual.
 - **Entregable:** tienda lista para activar a futuro.

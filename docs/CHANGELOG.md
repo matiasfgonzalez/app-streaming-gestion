@@ -6,6 +6,22 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 10.2] 2026-07-02 — Usuarios / Roles
+- Backend: `lib/users.ts` (`ROLE_LABEL`/`ROLE_CLS`/`ROLES`), `lib/validations/users.ts`
+  (rol + perfil de cliente), `server/queries/users.ts` (`getAllUsers` con `_count`
+  news/contracts, `getUserById` con contratos) y `server/actions/users.ts`
+  (`updateUserRole`, `updateClientProfile`) con `logAudit`.
+- Admin `/admin/usuarios`: lista con `UserRoleSelect` (cambia rol inline vía
+  `useTransition`, revierte en error) + empresa/conteos. `/admin/usuarios/[id]`:
+  header con rol, `ClientProfileForm` (empresa/teléfono/CUIT/notas) y lista de
+  contrataciones enlazadas a `/admin/publicidad/[id]`.
+- Seguridad: `updateUserRole` bloquea el auto-cambio de rol del ADMIN actual y el
+  select se deshabilita para "Vos".
+- **Verificado:** `npm run build` OK (rutas `/admin/usuarios` y `/admin/usuarios/[id]`
+  presentes), `npm run lint` 0 errores (warnings RHF `watch`).
+- **Nota:** módulo que faltaba (la nav apuntaba a `/admin/usuarios` sin página).
+  Altas por Clerk (lazy-sync); sin borrado manual.
+
 ## [Fase 10.1] 2026-07-02 — Galería / Videos (módulo Media)
 - Modelo `MediaItem` (enum `MediaType`): imágenes de galería y videos de YouTube
   reutilizables (url, youtubeId, title, caption, featured, order). Migración
