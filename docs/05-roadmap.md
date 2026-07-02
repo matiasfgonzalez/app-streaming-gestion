@@ -70,10 +70,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** flujo completo Cliente → Pendiente → Aprobación → Activa. ✅
 - **Deviaciones:** montos con `z.number()` + `valueAsNumber` (evita el problema de tipos de `z.coerce`); UploadThing rutas `adCreative`/`paymentProof` para clientes; portal cliente bajo grupo `(public)` para reusar navbar/footer.
 
-## Fase 6 — Sponsors + Banners
-- [ ] Módulo sponsors (clicks/impresiones) gestionable + render.
-- [ ] Banners por ubicación, gestionables + render en el sitio.
-- **Entregable:** sponsors/banners dinámicos en las ubicaciones definidas.
+## Fase 6 — Sponsors + Banners ✅
+- [x] Módulo sponsors (CRUD admin, logo, estado, orden, clicks/impresiones) + render: marquee en landing (DB, fallback seed) y página pública `/sponsors`.
+- [x] Banners por ubicación (CRUD admin, `BannerPlacement`) + `BannerSlot` renderizado en landing (HOME).
+- [x] Tracking de clicks: `/api/track/[kind]/[id]` incrementa y redirige (sponsor→web, banner→link). Impresiones de sponsors en `/sponsors`.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** sponsors/banners dinámicos y medibles. ✅
+- **Deviaciones:** imágenes de logo/banner con endpoint `newsImage` (staff); impresiones como proxy simple (no por-render); banners renderizados por ahora en HOME (otras ubicaciones listas para conectar con `<BannerSlot placement=... />`).
 
 ## Fase 7 — Radio + Streaming
 - [ ] Programación, conductores, programas, horarios, invitados, repeticiones, podcasts.

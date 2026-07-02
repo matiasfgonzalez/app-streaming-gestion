@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/hero";
+import { BannerSlot } from "@/components/banners/banner-slot";
 import { Stats } from "@/components/sections/stats";
 import { About } from "@/components/sections/about";
 import { RadioPlayer } from "@/components/sections/radio-player";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <BannerSlot placement="HOME" className="pb-4" />
       <Stats />
       <About />
       <RadioPlayer />

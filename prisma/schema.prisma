@@ -80,6 +80,24 @@ enum CreativeType {
   IMAGE
 }
 
+enum SponsorStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
+enum BannerPlacement {
+  HOME
+  NEWS
+  EVENTS
+  SIDEBAR
+  FOOTER
+  HEADER
+  POPUP
+  INLINE
+  LANDING
+}
+
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -273,4 +291,43 @@ model Payment {
   createdAt DateTime @default(now())
 
   @@index([status, createdAt])
+}
+
+model Sponsor {
+  id          String        @id @default(cuid())
+  name        String
+  logoUrl     String?
+  description String?
+  website     String?
+  socials     String?
+  status      SponsorStatus @default(ACTIVE)
+  startDate   DateTime?
+  endDate     DateTime?
+  clicks      Int           @default(0)
+  impressions Int           @default(0)
+  order       Int           @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, order])
+}
+
+model Banner {
+  id          String          @id @default(cuid())
+  title       String?
+  imageUrl    String
+  link        String?
+  placement   BannerPlacement @default(HOME)
+  active      Boolean         @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  clicks      Int             @default(0)
+  impressions Int             @default(0)
+  order       Int             @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([placement, active, order])
 }

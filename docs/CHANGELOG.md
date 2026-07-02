@@ -6,6 +6,21 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 6] 2026-07-02 — Sponsors + Banners
+- Schema: enums `SponsorStatus`, `BannerPlacement`; modelos `Sponsor` (logo,
+  web, redes, estado, clicks/impresiones, orden) y `Banner` (imagen, link,
+  ubicación, activo, clicks/impresiones, orden). Migración `sponsors_banners`.
+- `lib/banners.ts` (labels), `lib/validations/banners.ts`.
+- Queries/actions `server/{queries,actions}/banners.ts` (CRUD sponsors y banners).
+- Tracking: `app/api/track/[kind]/[id]/route.ts` (incrementa clicks y redirige).
+- Admin: `/admin/sponsors` y `/admin/banners` (lista/nuevo/editar/borrar) con
+  `SponsorForm`/`BannerForm` (UploadThing `newsImage`); nav actualizado.
+- Público: `/sponsors` (grilla + click tracking + bump impresiones), sección
+  `Sponsors` de la landing conectada a DB (marquee con logos, fallback seed),
+  `BannerSlot` en la landing (placement HOME).
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores.
+- **Siguiente:** Fase 7 — Radio + Streaming.
+
 ## [Fase 5.1] 2026-07-02 — Mejoras publicidad (feedback)
 - Vigencia: `computeEndDate` (día/semana/mes) en `lib/ads.ts`; se setea `endDate`
   al activar (aprobar pago, admin cambia a ACTIVE, admin crea ACTIVE).
