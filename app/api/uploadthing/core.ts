@@ -38,6 +38,11 @@ export const ourFileRouter = {
   })
     .middleware(requireAuth)
     .onUploadComplete(({ file }) => ({ url: file.ufsUrl })),
+
+  // Audio de podcasts / programas anteriores (staff).
+  podcastAudio: f({ audio: { maxFileSize: "32MB", maxFileCount: 1 } })
+    .middleware(requireEditor)
+    .onUploadComplete(({ file }) => ({ url: file.ufsUrl })),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

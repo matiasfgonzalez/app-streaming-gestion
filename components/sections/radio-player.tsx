@@ -1,6 +1,7 @@
 "use client";
 
-import { Pause, Play, Radio, Volume2 } from "lucide-react";
+import { CalendarClock, Pause, Play, Radio, Volume2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
@@ -23,6 +24,14 @@ export function RadioPlayer() {
           title="Sintonizá el vivo"
           subtitle="Dale play y acompañanos cada mañana. Muy pronto, la radio directamente desde el sitio."
         />
+        <div className="mt-6 text-center">
+          <Link
+            href="/radio"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          >
+            <CalendarClock className="size-4" /> Ver programación semanal
+          </Link>
+        </div>
         <Reveal className="mt-10">
           <GlassCard className="mx-auto flex max-w-2xl flex-col items-center gap-6 p-6 sm:flex-row sm:p-8">
             <button

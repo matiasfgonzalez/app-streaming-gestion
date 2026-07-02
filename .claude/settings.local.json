@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npx prisma migrate dev --name radio_streaming --skip-generate)",
+      "PowerShell(npx prisma migrate dev --name radio_streaming)",
+      "PowerShell(npm run build)"
+    ]
+  }
+}

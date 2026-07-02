@@ -86,6 +86,16 @@ enum SponsorStatus {
   EXPIRED
 }
 
+enum Weekday {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
+}
+
 enum BannerPlacement {
   HOME
   NEWS
@@ -330,4 +340,57 @@ model Banner {
   updatedAt DateTime @updatedAt
 
   @@index([placement, active, order])
+}
+
+/// Programa de radio: conductores, invitados, y sus horarios semanales.
+model RadioProgram {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  hosts       String[] @default([]) // conductores
+  guests      String[] @default([]) // invitados
+  coverUrl    String?
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  schedules RadioSchedule[]
+  podcasts  Podcast[]
+
+  @@index([active, order])
+}
+
+/// Franja horaria de un programa. `isRerun` marca repeticiones.
+model RadioSchedule {
+  id        String       @id @default(cuid())
+  programId String
+  program   RadioProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  day       Weekday
+  startTime String // "08:00"
+  endTime   String // "11:00"
+  isRerun   Boolean      @default(false)
+
+  @@index([programId])
+  @@index([day, startTime])
+}
+
+/// Programa anterior / podcast: audio propio (audioUrl) o YouTube (youtubeId).
+model Podcast {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?
+  audioUrl    String?
+  youtubeId   String?
+  coverUrl    String?
+  programId   String?
+  program     RadioProgram? @relation(fields: [programId], references: [id], onDelete: SetNull)
+  publishedAt DateTime      @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([publishedAt])
 }

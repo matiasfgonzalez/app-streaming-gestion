@@ -14,8 +14,10 @@ import { Videos } from "@/components/sections/videos";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
 import { ContactMap } from "@/components/sections/contact-map";
+import { getStreamingConfig } from "@/server/queries/radio";
 
-export default function Home() {
+export default async function Home() {
+  const streaming = await getStreamingConfig();
   return (
     <>
       <Hero />
@@ -23,7 +25,7 @@ export default function Home() {
       <Stats />
       <About />
       <RadioPlayer />
-      <Streaming />
+      <Streaming youtubeId={streaming.youtubeId} />
       <LatestNews />
       <UpcomingEvents />
       <Sports />

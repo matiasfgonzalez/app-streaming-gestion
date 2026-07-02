@@ -1,11 +1,11 @@
 import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
+import { DEFAULT_STREAMING } from "@/lib/radio";
 
-// Fase 1: streaming = embed YouTube. En admin (Fase 7/8) será configurable.
-const YT_ID = "jfKfPfyJRdk"; // stream demo (lofi)
-
-export function Streaming() {
+// El ID del stream se configura desde /admin/radio/streaming (Fase 7).
+export function Streaming({ youtubeId = DEFAULT_STREAMING.youtubeId }: { youtubeId?: string }) {
+  const YT_ID = youtubeId;
   return (
     <Section id="streaming">
       <Container>

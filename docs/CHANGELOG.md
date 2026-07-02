@@ -6,6 +6,26 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 7] 2026-07-02 — Radio + Streaming
+- Schema: enum `Weekday`; modelos `RadioProgram` (conductores/invitados como
+  `String[]`, portada, activo, orden), `RadioSchedule` (día + horario + repetición,
+  `onDelete: Cascade`) y `Podcast` (audio propio o `youtubeId`, programa opcional).
+  Migración `radio_streaming`.
+- `lib/radio.ts` (labels de días, WEEKDAYS, `StreamingConfig`/`DEFAULT_STREAMING`),
+  `lib/validations/radio.ts` (programa con horarios anidados, podcast, streaming).
+- Queries/actions `server/{queries,actions}/radio.ts`: CRUD de programas (horarios
+  por reemplazo transaccional), podcasts, grilla semanal (`getWeeklyGrid`),
+  streaming en `SiteSetting["streaming"]` (`getStreamingConfig`/`updateStreaming`).
+- UploadThing: endpoint `podcastAudio` (audio 32MB, staff).
+- Admin: `/admin/radio` (programas), `/admin/radio/podcasts`, `/admin/radio/streaming`
+  con `RadioTabs`; forms `RadioProgramForm` (`useFieldArray` para horarios),
+  `PodcastForm`, `StreamingForm` (vista previa del embed).
+- Público: `/radio` (grilla lun–dom, programas+conductores, programas anteriores);
+  sección `Streaming` de la landing lee el ID configurado (fallback demo); link
+  "Ver programación" desde el reproductor.
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores (warnings RHF `watch`).
+- **Siguiente:** Fase 8 — CMS Landing + Configuración.
+
 ## [Fase 6] 2026-07-02 — Sponsors + Banners
 - Schema: enums `SponsorStatus`, `BannerPlacement`; modelos `Sponsor` (logo,
   web, redes, estado, clicks/impresiones, orden) y `Banner` (imagen, link,

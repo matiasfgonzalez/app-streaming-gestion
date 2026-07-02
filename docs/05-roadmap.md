@@ -78,10 +78,15 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** sponsors/banners dinámicos y medibles. ✅
 - **Deviaciones:** imágenes de logo/banner con endpoint `newsImage` (staff); impresiones como proxy simple (no por-render); banners renderizados por ahora en HOME (otras ubicaciones listas para conectar con `<BannerSlot placement=... />`).
 
-## Fase 7 — Radio + Streaming
-- [ ] Programación, conductores, programas, horarios, invitados, repeticiones, podcasts.
-- [ ] Streaming YouTube gestionable desde admin.
-- **Entregable:** sección Radio completa con programación dinámica.
+## Fase 7 — Radio + Streaming ✅
+- [x] Modelos `RadioProgram`, `RadioSchedule` (horarios semanales + repeticiones), `Podcast`; enum `Weekday`. Migración `radio_streaming`.
+- [x] CRUD admin de programas (conductores/invitados por CSV, portada, horarios anidados con `useFieldArray`, borrado+recreación transaccional) en `/admin/radio`.
+- [x] CRUD admin de podcasts (`/admin/radio/podcasts`): audio propio (UploadThing `podcastAudio`) o YouTube, asociable a programa.
+- [x] Streaming gestionable (`/admin/radio/streaming`): ID de YouTube en `SiteSetting["streaming"]` con vista previa; landing conectada (fallback a demo).
+- [x] Público `/radio`: grilla semanal (lun–dom), programas+conductores, programas anteriores (podcasts). Link desde el reproductor de la landing.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** sección Radio completa con programación dinámica y streaming editable. ✅
+- **Deviaciones:** horarios editados dentro del form del programa (no CRUD aparte); streaming en `SiteSetting` (no modelo propio); tab Streaming visible a EDITOR pero la página exige ADMIN (redirige); reproductor de radio sigue placeholder (transmisión propia = backlog).
 
 ## Fase 8 — CMS Landing + Configuración
 - [ ] Secciones de landing on/off y textos editables (`SiteSetting`/`SectionConfig`).
