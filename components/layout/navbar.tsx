@@ -9,11 +9,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { neuButton } from "@/components/glass/neu-button";
 import { Container } from "@/components/glass/section";
 import { MobileDrawer } from "./mobile-drawer";
+import { useMobileMenu } from "./mobile-menu-context";
 import { NAV_LINKS } from "./nav-links";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useMobileMenu();
   const [isStaff, setIsStaff] = useState(false);
   const pathname = usePathname();
   const { isSignedIn } = useUser();
