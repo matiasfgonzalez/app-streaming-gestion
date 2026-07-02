@@ -134,6 +134,40 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - [ ] Modelos + UI base detrás de feature flag; pago manual.
 - **Entregable:** tienda lista para activar a futuro.
 
+## Fase 12 — Rediseño UI / Auditoría de interfaz (skill `/frontend-design`)
+> Tarea de **mejora de interfaz** ejecutada con la skill `/frontend-design`. No cambia
+> la esencia del producto ni la identidad ya definida en [04-design-system.md](04-design-system.md):
+> **evoluciona** el diseño existente para llevarlo a nivel SaaS profesional, moderno,
+> elegante e innovador, manteniendo coherencia visual.
+>
+> **Auditoría detallada, hallazgos y plan por capas (12.1–12.5) con checklist de avance en
+> [07-auditoria-ui.md](07-auditoria-ui.md).**
+
+**Objetivo:** auditoría completa de la interfaz y rediseño del frontend a un estándar
+comparable a Linear, Vercel, Stripe Dashboard, Raycast, Notion y Clerk, adaptado a la
+identidad de Viva La Mañana.
+
+- [ ] **Auditoría** de toda la interfaz: Landing, páginas públicas, dashboard, panel admin,
+      componentes, layouts, navegación, formularios, tablas, cards, modales, métricas,
+      estados vacíos, loaders/skeletons, notificaciones, gráficos, responsive y accesibilidad.
+- [ ] **Rediseño** aplicando las guías de identidad (sin reemplazarlas):
+  - Glassmorphism elegante y sutil.
+  - Neumorphism solo donde aporte profundidad.
+  - Aurora Gradients como acento.
+  - Microinteracciones fluidas con Framer Motion.
+  - Toques muy suaves de Cyberpunk (glow/neón solo en elementos destacados).
+  - Dashboard Enterprise: limpio, denso, ordenado y profesional.
+- [ ] **Optimizar**: jerarquía visual, tipografía, espaciados, paleta, iconografía,
+      contraste, UX, accesibilidad (AA, focus visible, `prefers-reduced-motion`),
+      consistencia del Design System, reutilización de componentes y rendimiento del frontend.
+- [ ] **Consistencia**: unificar patrones repetidos (cards, tablas, formularios, badges,
+      estados) en primitivos reutilizables; documentar cambios en [04-design-system.md](04-design-system.md).
+- [ ] `npm run build` y `npm run lint` sin errores; verificación visual en claro/oscuro y mobile.
+- **Entregable:** frontend rediseñado a nivel SaaS premium, coherente con la identidad,
+  sin regresiones funcionales.
+- **Skill usada:** `/frontend-design` (guía de dirección estética, tipografía y decisiones
+  no-templadas).
+
 ---
 
 ## Backlog (post-MVP)

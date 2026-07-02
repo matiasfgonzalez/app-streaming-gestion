@@ -69,6 +69,7 @@ Detalle en [02-arquitectura.md](02-arquitectura.md).
 | [04-design-system.md](04-design-system.md) | Identidad visual, tokens, mobile-first. |
 | [05-roadmap.md](05-roadmap.md) | Fases/MVPs con checklist. |
 | [06-modulos.md](06-modulos.md) | Spec funcional por módulo. |
+| [07-auditoria-ui.md](07-auditoria-ui.md) | Auditoría de interfaz + plan de rediseño (Fase 12). |
 | [CHANGELOG.md](CHANGELOG.md) | Bitácora de avance. |
 
 ## 7. Regla de oro para quien programe
