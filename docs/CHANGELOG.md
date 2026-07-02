@@ -6,6 +6,23 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 8] 2026-07-02 — CMS Landing + Configuración
+- Config global en `SiteSetting["site"]`: `lib/site-config.ts` (`SiteConfig`,
+  `DEFAULT_SITE_CONFIG`, `mergeSiteConfig`) — identidad, contacto (+ Maps embed),
+  redes, SEO. Toggles en `SiteSetting["sections"]`: `lib/sections.ts`
+  (`LANDING_SECTIONS`, `SectionFlags`, `mergeSectionFlags`).
+- `lib/validations/settings.ts`; queries/actions `server/{queries,actions}/settings.ts`
+  (`getSiteConfig`/`getSectionFlags`, `updateSiteConfig`/`updateSectionFlags` con
+  `revalidatePath("/", "layout")`).
+- Admin: `/admin/configuracion` (form general con identidad/contacto/redes/SEO) y
+  `/admin/configuracion/secciones` (toggles) con `SettingsTabs`; forms
+  `SiteConfigForm`, `SectionsForm`.
+- Wiring landing: home renderiza secciones según flags y pasa contacto a `ContactMap`
+  (con embed de Maps o placeholder); `Footer` async lee marca/contacto/redes (oculta
+  redes sin URL); `generateMetadata` en el root layout usa el SEO configurado.
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores (warnings RHF `watch`).
+- **Siguiente:** Fase 9 — Theme Engine.
+
 ## [Fase 7] 2026-07-02 — Radio + Streaming
 - Schema: enum `Weekday`; modelos `RadioProgram` (conductores/invitados como
   `String[]`, portada, activo, orden), `RadioSchedule` (día + horario + repetición,

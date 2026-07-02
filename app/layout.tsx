@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { esES } from "@clerk/localizations";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { getSiteConfig } from "@/server/queries/settings";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -16,14 +17,16 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Viva La Mañana — Radio, Streaming y Eventos",
-    template: "%s | Viva La Mañana",
-  },
-  description:
-    "Viva La Mañana: radio, streaming, cobertura de eventos y publicidad. Todo en un solo lugar.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSiteConfig();
+  return {
+    title: {
+      default: site.seo.title,
+      template: `%s | ${site.brandName}`,
+    },
+    description: site.seo.description,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [

@@ -88,10 +88,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** sección Radio completa con programación dinámica y streaming editable. ✅
 - **Deviaciones:** horarios editados dentro del form del programa (no CRUD aparte); streaming en `SiteSetting` (no modelo propio); tab Streaming visible a EDITOR pero la página exige ADMIN (redirige); reproductor de radio sigue placeholder (transmisión propia = backlog).
 
-## Fase 8 — CMS Landing + Configuración
-- [ ] Secciones de landing on/off y textos editables (`SiteSetting`/`SectionConfig`).
-- [ ] Config global: logo, contacto, redes, SEO/OpenGraph, mapa.
-- **Entregable:** admin enciende/apaga y edita secciones sin tocar código.
+## Fase 8 — CMS Landing + Configuración ✅
+- [x] Config global en `SiteSetting["site"]` (`lib/site-config.ts`: identidad, contacto, redes, SEO) con merge sobre defaults. Form `/admin/configuracion`.
+- [x] Toggles de secciones en `SiteSetting["sections"]` (`lib/sections.ts`) — 14 bloques on/off. Form `/admin/configuracion/secciones` con `SettingsTabs`.
+- [x] Landing conectada: home renderiza cada sección según flag; `ContactMap` usa contacto + embed de Maps; `Footer` (server) usa marca/contacto/redes; `generateMetadata` (root) usa SEO.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** admin enciende/apaga secciones y edita datos/SEO sin tocar código. ✅
+- **Deviaciones:** logo/favicon, tipografías y paleta = Fase 9 (theme-engine); persistencia del form de contacto (`ContactMessage`) sigue en backlog; Hero siempre visible (no toggleable). Revalidación con `revalidatePath("/", "layout")`.
 
 ## Fase 9 — Theme Engine
 - [ ] Paleta, tipografías, modo claro/oscuro configurable, loader, animaciones desde DB → CSS variables.

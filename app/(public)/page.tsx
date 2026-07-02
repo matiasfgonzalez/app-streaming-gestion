@@ -15,27 +15,32 @@ import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
 import { ContactMap } from "@/components/sections/contact-map";
 import { getStreamingConfig } from "@/server/queries/radio";
+import { getSectionFlags, getSiteConfig } from "@/server/queries/settings";
 
 export default async function Home() {
-  const streaming = await getStreamingConfig();
+  const [streaming, sections, site] = await Promise.all([
+    getStreamingConfig(),
+    getSectionFlags(),
+    getSiteConfig(),
+  ]);
   return (
     <>
       <Hero />
       <BannerSlot placement="HOME" className="pb-4" />
-      <Stats />
-      <About />
-      <RadioPlayer />
-      <Streaming youtubeId={streaming.youtubeId} />
-      <LatestNews />
-      <UpcomingEvents />
-      <Sports />
-      <ServicesPricing />
-      <Sponsors />
-      <Gallery />
-      <Videos />
-      <Testimonials />
-      <Faq />
-      <ContactMap />
+      {sections.stats && <Stats />}
+      {sections.about && <About />}
+      {sections.radio && <RadioPlayer />}
+      {sections.streaming && <Streaming youtubeId={streaming.youtubeId} />}
+      {sections.news && <LatestNews />}
+      {sections.events && <UpcomingEvents />}
+      {sections.sports && <Sports />}
+      {sections.services && <ServicesPricing />}
+      {sections.sponsors && <Sponsors />}
+      {sections.gallery && <Gallery />}
+      {sections.videos && <Videos />}
+      {sections.testimonials && <Testimonials />}
+      {sections.faq && <Faq />}
+      {sections.contact && <ContactMap contact={site.contact} />}
     </>
   );
 }
