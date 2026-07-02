@@ -74,7 +74,7 @@ export default async function AdminMediaPage() {
                     <Link
                       href={`/admin/media/${m.id}/editar`}
                       aria-label="Editar"
-                      className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+                      className="inline-flex size-11 items-center justify-center rounded-lg md:size-9 text-foreground/80 transition-colors hover:bg-muted"
                     >
                       <Pencil className="size-4" />
                     </Link>

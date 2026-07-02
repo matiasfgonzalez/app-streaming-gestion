@@ -30,7 +30,8 @@
   --accent-foreground: oklch(0.22 0.03 250);
 
   --muted: oklch(0.96 0.01 260);
-  --muted-foreground: oklch(0.50 0.02 260);
+  /* 0.46: AA (≥4.5:1) también sobre glass claro, no solo sobre background */
+  --muted-foreground: oklch(0.46 0.02 260);
 
   --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.99 0.01 90);
@@ -76,7 +77,8 @@
   --accent-foreground: oklch(0.18 0.02 250);
 
   --muted: oklch(0.26 0.02 265);
-  --muted-foreground: oklch(0.68 0.02 260);
+  /* 0.72: AA sobre glass oscuro translúcido (aurora detrás) */
+  --muted-foreground: oklch(0.72 0.02 260);
 
   --destructive: oklch(0.64 0.21 25);
   --destructive-foreground: oklch(0.98 0.01 90);
@@ -149,6 +151,13 @@
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
+  /* Focus visible unificado (12.5): anillo de marca para todo elemento enfocable
+     que no traiga un estilo de foco propio (los inputs/botones del DS usan ring). */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -218,8 +227,18 @@
   animation: aurora-drift 18s ease-in-out infinite;
 }
 
+/* Reduced motion completo (12.5): frena animaciones y transiciones decorativas
+   (aurora, marquee, hovers de lift/zoom). Framer Motion se maneja aparte con
+   useReducedMotion en cada componente. */
 @media (prefers-reduced-motion: reduce) {
-  .animate-aurora { animation: none; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Marquee for sponsors strip */

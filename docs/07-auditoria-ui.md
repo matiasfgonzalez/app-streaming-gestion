@@ -66,15 +66,15 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 
 ### 2.3 Medios (pulido)
 
-- [ ] **M1 · Tipografía de una sola marcha.**
-  Space Grotesk + Inter con saltos de escala gruesos (2xl→3xl→4xl) y `tabular-nums` a mano.
-  Los eyebrows son siempre `.text-glow` uppercase → patrón que ya se lee como plantilla. → Capa 12.1
-- [ ] **M2 · Accesibilidad.**
-  Checkboxes nativos `size-4` (target <44px en mobile, contra el propio DS), `text-foreground/80`
-  sobre glass puede no pasar AA, focus-visible inconsistente entre inputs y botones. → Capa 12.5
-- [~] **M3 · `reduced-motion` incompleto.** 12.4 cubrió drawers (`useReducedMotion` en
-  MobileDrawer y AdminShell), `FadeUp` y `template.tsx`. Falta: hovers CSS con
-  `motion-reduce:` y revisión final. → Capa 12.5
+- [x] **M1 · Tipografía de una sola marcha.** ✅ 12.1 (utilidades `.text-eyebrow`/`.tnum`) +
+  12.4: eyebrows unificados sin glow (SectionHeading, Sports, tablas), `tnum` en KPIs/stats.
+- [x] **M2 · Accesibilidad.** ✅ 12.1 (checkbox ≥44px, inputs `min-h-11`) + 12.5:
+  `--muted-foreground` recalibrado para AA sobre glass (light 0.46 / dark 0.72),
+  `:focus-visible` global unificado (outline 2px ring), botones de acción icon
+  `size-11 md:size-9` (44px touch) en las 17 ubicaciones.
+- [x] **M3 · `reduced-motion` incompleto.** ✅ 12.4 (drawers, `FadeUp`, `template.tsx` con
+  `useReducedMotion`) + 12.5: kill-switch global en CSS (animaciones/transiciones a 0.01ms)
+  que cubre hovers de lift/zoom, marquee y aurora.
 
 ---
 
@@ -157,15 +157,20 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
       `useReducedMotion`.
 - [x] Resuelve: **A1**, cierra **A4**; adelanta drawers de **M3**.
 
-### Capa 12.5 — Pulido de accesibilidad + docs `[ ]`
+### Capa 12.5 — Pulido de accesibilidad + docs `[x]`
 > Quality floor + documentación al día.
 
-- [ ] Contraste AA en ambos modos (revisar `text-foreground/80` sobre glass y estados).
-- [ ] Targets táctiles ≥44px; focus-visible unificado (inputs y botones).
-- [ ] `prefers-reduced-motion` completo (incluye drawers y hovers nuevos).
-- [ ] Actualizar [04-design-system.md](04-design-system.md) con la capa de componentes real,
-      la escala de elevación y tipografía, y guías de uso.
-- [ ] Resuelve: **M2**, **M3**.
+- [x] Contraste AA en ambos modos: `--muted-foreground` recalibrado (light 0.50→0.46,
+      dark 0.68→0.72) para pasar ≥4.5:1 también sobre glass; `text-foreground/80` verificado
+      (pasa holgado en ambos modos).
+- [x] Targets táctiles ≥44px: acciones icon de listas admin `size-11 md:size-9` (17 archivos);
+      focus-visible unificado con `:focus-visible` global (outline 2px `--ring`, offset 2px).
+- [x] `prefers-reduced-motion` completo: kill-switch global CSS (animaciones + transiciones)
+      además del `useReducedMotion` de Framer (12.4).
+- [x] [04-design-system.md](04-design-system.md) actualizado: tokens reales, escala de
+      elevación (§2.1), tipografía utilitaria (§2.2), componentes implementados (§5),
+      admin real (§6) y nueva sección de accesibilidad (§8).
+- [x] Resuelve: **M2**, **M3** (y cierra **M1** junto a 12.1/12.4).
 
 ---
 
@@ -273,4 +278,28 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   (7 warnings RHF `watch` conocidos). Pendiente: verificación visual en navegador.
 - **Siguiente:** Capa 12.5 — Accesibilidad + docs (contraste AA, targets ≥44px, `motion-reduce:`
   en hovers CSS, actualizar 04-design-system.md).
+
+### 2026-07-02 — Capa 12.5 (accesibilidad + docs) — **capa cerrada · fin de Fase 12**
+- **Contraste AA (M2):** `--muted-foreground` recalibrado — light `oklch(0.46 …)`, dark
+  `oklch(0.72 …)` — para ≥4.5:1 también sobre superficies glass translúcidas (no solo sobre
+  `background`). `text-foreground/80` verificado: pasa holgado en ambos modos.
+- **Focus (M2):** `:focus-visible` global en `globals.css` (outline 2px `--ring`, offset 2px):
+  cualquier link/botón sin estilo de foco propio recibe el anillo de marca; inputs y `NeuButton`
+  conservan su ring coherente.
+- **Targets (M2):** acciones icon de listas admin (editar/eliminar/ver) → `size-11 md:size-9`:
+  44px en mobile/touch, densidad original en desktop. 17 archivos (8 páginas + 8 delete-buttons
+  + usuarios).
+- **Reduced motion (M3):** kill-switch global CSS — `animation-duration`/`transition-duration`
+  a 0.01ms bajo `prefers-reduced-motion` — cubre hovers de lift/zoom, marquee de sponsors y
+  aurora; Framer ya estaba cubierto por `useReducedMotion` (12.4).
+- **Docs:** [04-design-system.md](04-design-system.md) puesto al día con lo implementado:
+  tokens reales, escala de elevación con tabla de uso (§2.1), tipografía utilitaria (§2.2),
+  inventario real de `components/ui`/`glass`/`admin`/`layout` (§5, adiós ShadCN/TanStack/Tremor
+  aspiracionales), estilo admin real (§6), guía de glow ampliada (§7) y **nueva §8 de
+  accesibilidad** como piso de calidad.
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (7 warnings RHF `watch` conocidos).
+- **Cierre de Fase 12:** los 4 críticos (C1–C4), los 4 altos (A1–A4) y los 3 medios (M1–M3)
+  quedan resueltos. Única deuda: verificación visual integral en navegador (claro/oscuro +
+  mobile real) de 12.3/12.4/12.5 — requiere sesión y datos.
 </content>

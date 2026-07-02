@@ -17,7 +17,7 @@ export function DeleteProgramButton({ id }: { id: string }) {
           void deleteProgram(id);
         });
       }}
-      className="inline-flex size-9 items-center justify-center rounded-lg text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+      className="inline-flex size-11 items-center justify-center rounded-lg md:size-9 text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
     >
       {pending ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
     </button>
