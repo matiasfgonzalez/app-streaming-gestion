@@ -12,7 +12,7 @@ import { bannerSchema, type BannerInput } from "@/lib/validations/banners";
 import { createBanner, updateBanner } from "@/server/actions/banners";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select, Checkbox } from "@/components/ui";
 
 export function BannerForm({
   bannerId,
@@ -60,11 +60,11 @@ export function BannerForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="placement">Ubicación</label>
-            <select id="placement" className={inputCls} {...register("placement")}>
+            <Select id="placement" {...register("placement")}>
               {BANNER_PLACEMENTS.map((p) => (
                 <option key={p} value={p}>{BANNER_PLACEMENT_LABEL[p]}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="order">Orden</label>
@@ -76,10 +76,7 @@ export function BannerForm({
           <input id="link" className={inputCls} placeholder="https://..." {...register("link")} />
           {errors.link && <p className="mt-1 text-xs text-destructive">{errors.link.message}</p>}
         </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" className="size-4" {...register("active")} />
-          Activo
-        </label>
+        <Checkbox label="Activo" {...register("active")} />
 
         <div>
           <span className={labelCls}>Imagen del banner</span>

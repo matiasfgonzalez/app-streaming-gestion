@@ -10,7 +10,7 @@ import { adminContractSchema, type AdminContractInput } from "@/lib/validations/
 import { adminCreateContract } from "@/server/actions/contracts";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function AdminContractForm({
   packages,
@@ -51,27 +51,27 @@ export function AdminContractForm({
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <label className={labelCls} htmlFor="packageId">Paquete</label>
-            <select id="packageId" className={inputCls} {...register("packageId")}>
+            <Select id="packageId" {...register("packageId")}>
               {packages.map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="billingCycle">Ciclo</label>
-            <select id="billingCycle" className={inputCls} {...register("billingCycle")}>
+            <Select id="billingCycle" {...register("billingCycle")}>
               <option value="MONTHLY">Mensual</option>
               <option value="WEEKLY">Semanal</option>
               <option value="DAILY">Por día</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="status">Estado</label>
-            <select id="status" className={inputCls} {...register("status")}>
+            <Select id="status" {...register("status")}>
               <option value="ACTIVE">Activa</option>
               <option value="PENDING">Pendiente</option>
               <option value="DRAFT">Borrador</option>
-            </select>
+            </Select>
           </div>
         </div>
         <div>

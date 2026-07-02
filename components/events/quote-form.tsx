@@ -11,7 +11,7 @@ import { quoteSchema, type QuoteInput } from "@/lib/validations/quote";
 import { createQuoteRequest } from "@/server/actions/quotes";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function QuoteForm({
   events = [],
@@ -94,12 +94,12 @@ export function QuoteForm({
         {events.length > 0 && (
           <div>
             <label className={labelCls} htmlFor="q-event">Evento (opcional)</label>
-            <select id="q-event" className={inputCls} {...register("eventId")}>
+            <Select id="q-event" {...register("eventId")}>
               <option value="">— Ninguno / evento nuevo —</option>
               {events.map((e) => (
                 <option key={e.id} value={e.id}>{e.name}</option>
               ))}
-            </select>
+            </Select>
           </div>
         )}
 

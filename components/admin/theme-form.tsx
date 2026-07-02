@@ -11,7 +11,7 @@ import { themeSchema, type ThemeInput } from "@/lib/validations/theme";
 import { updateTheme } from "@/server/actions/settings";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select, Checkbox } from "@/components/ui";
 
 function ColorField({
   label,
@@ -69,19 +69,19 @@ export function ThemeForm({ defaults }: { defaults: ThemeInput }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="fontDisplay">Títulos (display)</label>
-            <select id="fontDisplay" className={inputCls} {...register("fontDisplay")}>
+            <Select id="fontDisplay" {...register("fontDisplay")}>
               {FONT_NAMES.map((f) => (
                 <option key={f} value={f}>{f}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="fontBody">Texto (body)</label>
-            <select id="fontBody" className={inputCls} {...register("fontBody")}>
+            <Select id="fontBody" {...register("fontBody")}>
               {FONT_NAMES.map((f) => (
                 <option key={f} value={f}>{f}</option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
       </GlassCard>
@@ -100,9 +100,7 @@ export function ThemeForm({ defaults }: { defaults: ThemeInput }) {
             {...register("radius", { valueAsNumber: true })}
           />
         </div>
-        <label className="flex items-center gap-2 text-sm font-medium">
-          <input type="checkbox" {...register("animations")} /> Animaciones (aurora de fondo)
-        </label>
+        <Checkbox label="Animaciones (aurora de fondo)" {...register("animations")} />
       </GlassCard>
 
       {serverError && (

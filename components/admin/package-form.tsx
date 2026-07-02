@@ -10,7 +10,7 @@ import { packageSchema, type PackageInput } from "@/lib/validations/ads";
 import { createPackage, updatePackage } from "@/server/actions/packages";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Checkbox } from "@/components/ui";
 
 export function PackageForm({
   packageId,
@@ -84,10 +84,9 @@ export function PackageForm({
             <label className={labelCls} htmlFor="order">Orden</label>
             <input id="order" type="number" className={inputCls} {...register("order", { valueAsNumber: true })} />
           </div>
-          <label className="flex items-center gap-2 self-end pb-2.5 text-sm">
-            <input type="checkbox" className="size-4" {...register("active")} />
-            Activo (visible en la web)
-          </label>
+          <div className="self-end">
+            <Checkbox label="Activo (visible en la web)" {...register("active")} />
+          </div>
         </div>
       </GlassCard>
 

@@ -11,7 +11,7 @@ import { sponsorSchema, type SponsorInput } from "@/lib/validations/banners";
 import { createSponsor, updateSponsor } from "@/server/actions/banners";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function SponsorForm({
   sponsorId,
@@ -74,11 +74,11 @@ export function SponsorForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="status">Estado</label>
-            <select id="status" className={inputCls} {...register("status")}>
+            <Select id="status" {...register("status")}>
               <option value="ACTIVE">Activo</option>
               <option value="INACTIVE">Inactivo</option>
               <option value="EXPIRED">Vencido</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="order">Orden</label>

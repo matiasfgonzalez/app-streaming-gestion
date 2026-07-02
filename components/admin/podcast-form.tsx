@@ -11,7 +11,7 @@ import { podcastSchema, type PodcastInput } from "@/lib/validations/radio";
 import { createPodcast, updatePodcast } from "@/server/actions/radio";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function PodcastForm({
   podcastId,
@@ -110,12 +110,12 @@ export function PodcastForm({
       <div className="space-y-5">
         <GlassCard>
           <label className={labelCls} htmlFor="programId">Programa</label>
-          <select id="programId" className={inputCls} {...register("programId")}>
+          <Select id="programId" {...register("programId")}>
             <option value="">— Sin programa —</option>
             {programs.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
-          </select>
+          </Select>
         </GlassCard>
 
         <GlassCard className="space-y-3">

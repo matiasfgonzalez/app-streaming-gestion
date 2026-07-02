@@ -12,7 +12,7 @@ import { radioProgramSchema, type RadioProgramInput } from "@/lib/validations/ra
 import { createProgram, updateProgram } from "@/server/actions/radio";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select, Checkbox } from "@/components/ui";
 
 export function RadioProgramForm({
   programId,
@@ -97,11 +97,11 @@ export function RadioProgramForm({
             <ul className="space-y-3">
               {fields.map((f, i) => (
                 <li key={f.id} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto] sm:items-center">
-                  <select className={inputCls} {...register(`schedules.${i}.day`)}>
+                  <Select className="min-w-0" {...register(`schedules.${i}.day`)}>
                     {WEEKDAYS.map((d) => (
                       <option key={d} value={d}>{WEEKDAY_LABEL[d]}</option>
                     ))}
-                  </select>
+                  </Select>
                   <input type="time" className={inputCls} {...register(`schedules.${i}.startTime`)} />
                   <input type="time" className={inputCls} {...register(`schedules.${i}.endTime`)} />
                   <label className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-muted-foreground">
@@ -124,9 +124,7 @@ export function RadioProgramForm({
 
       <div className="space-y-5">
         <GlassCard className="space-y-4">
-          <label className="flex items-center gap-2 text-sm font-medium">
-            <input type="checkbox" {...register("active")} /> Activo (visible en el sitio)
-          </label>
+          <Checkbox label="Activo (visible en el sitio)" {...register("active")} />
           <div>
             <label className={labelCls} htmlFor="order">Orden</label>
             <input id="order" type="number" className={inputCls} {...register("order", { valueAsNumber: true })} />

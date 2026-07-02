@@ -9,7 +9,7 @@ import { neuButton } from "@/components/glass/neu-button";
 import { CreativesUploader } from "@/components/client/creatives-uploader";
 import { contractSchema } from "@/lib/validations/ads";
 import { createClientContract } from "@/server/actions/contracts";
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
 
@@ -60,11 +60,11 @@ export function ClientContractForm({ packageId }: { packageId: string }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="billingCycle">Ciclo de facturación</label>
-            <select id="billingCycle" className={inputCls} {...register("billingCycle")}>
+            <Select id="billingCycle" {...register("billingCycle")}>
               <option value="MONTHLY">Mensual</option>
               <option value="WEEKLY">Semanal</option>
               <option value="DAILY">Por día</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="socials">Redes / links</label>

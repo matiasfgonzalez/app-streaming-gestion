@@ -11,7 +11,7 @@ import { paymentSchema, type PaymentInput } from "@/lib/validations/ads";
 import { createPayment } from "@/server/actions/payments";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function PaymentForm({
   contractId,
@@ -67,10 +67,10 @@ export function PaymentForm({
           </div>
           <div>
             <label className={labelCls} htmlFor="method">Método</label>
-            <select id="method" className={inputCls} {...register("method")}>
+            <Select id="method" {...register("method")}>
               <option value="TRANSFER">Transferencia</option>
               <option value="CASH">Efectivo</option>
-            </select>
+            </Select>
           </div>
         </div>
         <div>

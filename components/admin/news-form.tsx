@@ -11,7 +11,7 @@ import { newsSchema, type NewsInput } from "@/lib/validations/news";
 import { createNews, updateNews } from "@/server/actions/news";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select, Checkbox } from "@/components/ui";
 
 export function NewsForm({
   newsId,
@@ -96,19 +96,13 @@ export function NewsForm({
         <GlassCard className="space-y-4">
           <div>
             <label className={labelCls} htmlFor="status">Estado</label>
-            <select id="status" className={inputCls} {...register("status")}>
+            <Select id="status" {...register("status")}>
               <option value="DRAFT">Borrador</option>
               <option value="PUBLISHED">Publicada</option>
-            </select>
+            </Select>
           </div>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" className="size-4" {...register("featured")} />
-            Destacada
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" className="size-4" {...register("breaking")} />
-            Breaking news
-          </label>
+          <Checkbox label="Destacada" {...register("featured")} />
+          <Checkbox label="Breaking news" {...register("breaking")} />
         </GlassCard>
 
         <GlassCard className="space-y-4">

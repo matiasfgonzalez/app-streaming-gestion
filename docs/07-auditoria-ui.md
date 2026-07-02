@@ -86,7 +86,7 @@ Ordenado para que cada capa habilite la siguiente. **Regla de cierre de capa:** 
 y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y marcar aquí +
 [registro de avance](#registro-de-avance).
 
-### Capa 12.1 — Fundaciones del Design System `[~]`
+### Capa 12.1 — Fundaciones del Design System `[x]`
 > Elimina la causa raíz (C1). Habilita todo lo demás. Sin esto, cada refinamiento se duplica ×17.
 
 - [x] Crear `components/ui/` con primitivos tipados sobre los tokens actuales:
@@ -105,9 +105,10 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - [x] Single-source de `inputCls`/`labelCls` en los **18 formularios** (0 defs locales). Verificado por grep.
 - [x] Páginas con badges (noticias, eventos, sponsors, usuarios, auditoría) → `<Badge>` +
       `EmptyState` con CTA en los estados vacíos de listas.
-- [ ] **12.1b** — Adopción a nivel de elemento de `<Input>`/`<Textarea>`/`<Select>`/`<Checkbox>`/
-      `<Field>` dentro de los formularios (hoy usan el estilo compartido refinado vía `inputCls`/
-      `labelCls`; falta conmutar los tags para ganar chevron propio y checkbox ≥44px en todos).
+- [x] **12.1b** — Adopción a nivel de elemento: `<select>` → `<Select>` (chevron propio) en los
+      15 selects de formularios; checkboxes standalone → `<Checkbox>` (≥44px). Nativos que quedan
+      a propósito: chips multi-check de presupuesto, `isRerun` compacto de horarios, toggle
+      `sr-only` de secciones y los selects de acción admin (status/rol) que son controles aparte.
 - [x] `npm run build` OK y `npm run lint` 0 errores (solo warnings RHF `watch` esperados).
 - Resuelve: **C1** ✅; sienta base de **A4** (elevación) y **M1** (eyebrow/tnum). 12.1b cierra la capa.
 
@@ -172,4 +173,16 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   (6 warnings RHF `watch`, preexistentes y esperados).
 - **Pendiente (12.1b):** conmutar los tags nativos de los forms a `<Input>/<Select>/<Checkbox>/<Field>`
   para chevron propio y checkbox ≥44px en todas las pantallas. Luego seguir con Capa 12.2 (feedback).
+
+### 2026-07-02 — Capa 12.1b (adopción a nivel de elemento) — **capa cerrada**
+- **Selects:** 15 `<select>` de formularios → `<Select>` (chevron propio, `appearance-none`) en
+  news, event, sponsor, banner, media, podcast, payment, contract (cliente), quote,
+  admin-contract (×3), theme (×2), radio-program.
+- **Checkboxes:** standalone → `<Checkbox>` (≥44px) en news (×2), banner, media, package, theme,
+  radio-program. Se dejan nativos a propósito: chips multi-check de presupuesto, `isRerun`
+  compacto de horarios, toggle `sr-only` de secciones y los selects de acción admin.
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (6 warnings RHF `watch`, preexistentes).
+- **Siguiente:** Capa 12.2 — feedback (Toaster, `loading.tsx`+skeletons, `error.tsx`/`not-found.tsx`,
+  EmptyState en el resto).
 </content>

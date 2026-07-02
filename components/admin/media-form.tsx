@@ -11,7 +11,7 @@ import { mediaSchema, type MediaInput } from "@/lib/validations/media";
 import { createMedia, updateMedia } from "@/server/actions/media";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select, Checkbox } from "@/components/ui";
 
 export function MediaForm({
   mediaId,
@@ -57,10 +57,10 @@ export function MediaForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="type">Tipo</label>
-            <select id="type" className={inputCls} {...register("type")}>
+            <Select id="type" {...register("type")}>
               <option value="IMAGE">Imagen (galería)</option>
               <option value="VIDEO">Video (YouTube)</option>
-            </select>
+            </Select>
           </div>
           <div>
             <label className={labelCls} htmlFor="order">Orden</label>
@@ -75,9 +75,7 @@ export function MediaForm({
           <label className={labelCls} htmlFor="caption">Descripción</label>
           <textarea id="caption" rows={2} className={inputCls} {...register("caption")} />
         </div>
-        <label className="flex items-center gap-2 text-sm font-medium">
-          <input type="checkbox" {...register("featured")} /> Destacada (primera en la landing)
-        </label>
+        <Checkbox label="Destacada (primera en la landing)" {...register("featured")} />
       </GlassCard>
 
       {type === "VIDEO" ? (

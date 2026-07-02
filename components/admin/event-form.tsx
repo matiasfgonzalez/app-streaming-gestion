@@ -11,7 +11,7 @@ import { eventSchema, type EventInput } from "@/lib/validations/event";
 import { createEvent, updateEvent } from "@/server/actions/events";
 import { cn } from "@/lib/utils";
 
-import { inputCls, labelCls } from "@/components/ui";
+import { inputCls, labelCls, Select } from "@/components/ui";
 
 export function EventForm({
   eventId,
@@ -106,11 +106,11 @@ export function EventForm({
       <div className="space-y-5">
         <GlassCard>
           <label className={labelCls} htmlFor="status">Estado</label>
-          <select id="status" className={inputCls} {...register("status")}>
+          <Select id="status" {...register("status")}>
             <option value="UPCOMING">Próximamente</option>
             <option value="LIVE">En vivo</option>
             <option value="FINISHED">Finalizado</option>
-          </select>
+          </Select>
         </GlassCard>
 
         <GlassCard className="space-y-3">

@@ -39,9 +39,7 @@ export default async function ContratacionDetallePage({
   if (!contract) notFound();
 
   const amount = priceForCycle(contract.package, contract.billingCycle);
-  const hasApproved = contract.payments.some(
-    (p: { status: string }) => p.status === "APPROVED",
-  );
+  const hasApproved = contract.payments.some((p) => p.status === "APPROVED");
 
   return (
     <Section className="pt-24">
