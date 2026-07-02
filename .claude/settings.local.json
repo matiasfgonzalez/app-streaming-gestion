@@ -5,7 +5,13 @@
       "PowerShell(npx prisma migrate dev --name radio_streaming)",
       "PowerShell(npm run build)",
       "PowerShell(npx prisma migrate dev --name audit_log)",
-      "PowerShell(npx prisma migrate dev --name media_items)"
+      "PowerShell(npx prisma migrate dev --name media_items)",
+      "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design)",
+      "PowerShell(npx --yes skills add --help)",
+      "PowerShell(npx --yes skills --help 2>&1)",
+      "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --help 2>&1)",
+      "PowerShell(npx --yes skills add https://github.com/anthropics/skills --skill frontend-design --global --yes)",
+      "PowerShell(npx --yes skills ls -g -a claude-code)"
     ]
   }
 }
