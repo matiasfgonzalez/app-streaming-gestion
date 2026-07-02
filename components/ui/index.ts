@@ -8,6 +8,7 @@ export { Badge, badge } from "./badge";
 export { Skeleton } from "./skeleton";
 export { CardGridSkeleton } from "./card-grid-skeleton";
 export { Table, THead, TBody, TR } from "./table";
+export { DataTable, type Column } from "./data-table";
 export { EmptyState } from "./empty-state";
 export { Toaster } from "./toaster";
 export { toast } from "sonner";

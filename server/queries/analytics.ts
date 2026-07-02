@@ -3,8 +3,38 @@ import { db } from "@/lib/db";
 
 export type DashboardData = Awaited<ReturnType<typeof getDashboardData>>;
 
+const DAYS = 14;
+const DAY_MS = 86_400_000;
+
+/** Inicio (00:00 local) del primer día de la ventana de `DAYS`. */
+function windowStart(): Date {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return new Date(d.getTime() - (DAYS - 1) * DAY_MS);
+}
+
+/** Suma valores en `DAYS` cubetas diarias según `createdAt`. `weight` pondera (p.ej. monto). */
+function bucketize(rows: { createdAt: Date; weight?: number }[], start: Date): number[] {
+  const out = new Array<number>(DAYS).fill(0);
+  for (const r of rows) {
+    const i = Math.floor((r.createdAt.getTime() - start.getTime()) / DAY_MS);
+    if (i >= 0 && i < DAYS) out[i] += r.weight ?? 1;
+  }
+  return out;
+}
+
+/** Delta % entre la última mitad y la anterior de la serie. `null` si no hay base. */
+function deltaOf(series: number[]): number | null {
+  const half = series.length / 2;
+  const prev = series.slice(0, half).reduce((a, b) => a + b, 0);
+  const last = series.slice(half).reduce((a, b) => a + b, 0);
+  if (prev === 0) return last > 0 ? 100 : null;
+  return ((last - prev) / prev) * 100;
+}
+
 /** Métricas del panel: conteos, ingresos, CTR y rankings. */
 export async function getDashboardData() {
+  const since = windowStart();
   const [
     users,
     news,
@@ -21,6 +51,11 @@ export async function getDashboardData() {
     contractsByStatusRaw,
     topNews,
     topEvents,
+    newsDates,
+    eventDates,
+    userDates,
+    quoteDates,
+    revenueDates,
   ] = await Promise.all([
     db.user.count(),
     db.news.count(),
@@ -45,7 +80,33 @@ export async function getDashboardData() {
       take: 5,
       select: { id: true, name: true, slug: true, views: true },
     }),
+    db.news.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
+    db.event.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
+    db.user.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
+    db.quoteRequest.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
+    db.payment.findMany({
+      where: { status: "APPROVED", createdAt: { gte: since } },
+      select: { createdAt: true, amount: true },
+    }),
   ]);
+
+  const series = {
+    news: bucketize(newsDates, since),
+    events: bucketize(eventDates, since),
+    users: bucketize(userDates, since),
+    quotes: bucketize(quoteDates, since),
+    revenue: bucketize(
+      revenueDates.map((p) => ({ createdAt: p.createdAt, weight: p.amount })),
+      since,
+    ),
+  };
+  const deltas = {
+    news: deltaOf(series.news),
+    events: deltaOf(series.events),
+    users: deltaOf(series.users),
+    quotes: deltaOf(series.quotes),
+    revenue: deltaOf(series.revenue),
+  };
 
   const ctr = (clicks: number, impressions: number) =>
     impressions > 0 ? (clicks / impressions) * 100 : 0;
@@ -75,6 +136,8 @@ export async function getDashboardData() {
     contractsByStatus: contractsByStatusRaw.map((c) => ({ key: c.status, value: c._count._all })),
     topNews,
     topEvents,
+    series,
+    deltas,
   };
 }
 

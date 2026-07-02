@@ -11,6 +11,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { visibleAdminLinks, type AdminLink } from "./admin-nav";
 import { cn } from "@/lib/utils";
 
+/** Activo si es la ruta exacta, o una sub-ruta (salvo el Dashboard raíz `/admin`). */
+function isActive(pathname: string, href: string) {
+  if (href === "/admin") return pathname === "/admin";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 function NavItems({
   links,
   pathname,
@@ -21,22 +27,31 @@ function NavItems({
   onNavigate?: () => void;
 }) {
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className="flex flex-col gap-0.5">
+      <p className="text-eyebrow px-3 pb-2 pt-1 text-muted-foreground">Panel</p>
       {links.map(({ href, label, icon: Icon }) => {
-        const active = pathname === href;
+        const active = isActive(pathname, href);
         return (
           <Link
             key={href}
             href={href}
             onClick={onNavigate}
+            aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
               active
                 ? "bg-primary/15 text-primary"
                 : "text-foreground/80 hover:bg-muted",
             )}
           >
-            <Icon className="size-4.5" />
+            <span
+              aria-hidden
+              className={cn(
+                "absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary transition-opacity",
+                active ? "opacity-100" : "opacity-0",
+              )}
+            />
+            <Icon className={cn("size-4.5 shrink-0", active ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
             {label}
           </Link>
         );

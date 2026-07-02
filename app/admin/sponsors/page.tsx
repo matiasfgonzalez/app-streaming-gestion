@@ -6,9 +6,67 @@ import { DeleteSponsorButton } from "@/components/admin/delete-sponsor-button";
 import { requireRole } from "@/lib/auth";
 import { getAllSponsorsAdmin } from "@/server/queries/banners";
 import { SPONSOR_STATUS_LABEL } from "@/lib/banners";
-import { Badge, EmptyState } from "@/components/ui";
+import { Badge, DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Sponsors" };
+
+type SponsorRow = Awaited<ReturnType<typeof getAllSponsorsAdmin>>[number];
+
+const columns: Column<SponsorRow>[] = [
+  {
+    key: "name",
+    header: "Sponsor",
+    primary: true,
+    cell: (s) => (
+      <div className="flex items-center gap-3">
+        {s.logoUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={s.logoUrl} alt={s.name} className="size-10 shrink-0 rounded-lg object-contain" />
+        ) : (
+          <div className="size-10 shrink-0 rounded-lg bg-muted" />
+        )}
+        <span className="min-w-0 truncate font-medium">{s.name}</span>
+      </div>
+    ),
+  },
+  {
+    key: "status",
+    header: "Estado",
+    cell: (s) => (
+      <Badge
+        variant={s.status === "ACTIVE" ? "success" : s.status === "EXPIRED" ? "danger" : "neutral"}
+      >
+        {SPONSOR_STATUS_LABEL[s.status]}
+      </Badge>
+    ),
+  },
+  {
+    key: "perf",
+    header: "Rendimiento",
+    cell: (s) => (
+      <span className="text-xs text-muted-foreground tnum">
+        {s.clicks} clicks · {s.impressions} impresiones
+      </span>
+    ),
+  },
+  {
+    key: "actions",
+    header: "Acciones",
+    action: true,
+    cell: (s) => (
+      <div className="inline-flex items-center gap-1">
+        <Link
+          href={`/admin/sponsors/${s.id}/editar`}
+          aria-label="Editar"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Pencil className="size-4" />
+        </Link>
+        <DeleteSponsorButton id={s.id} />
+      </div>
+    ),
+  },
+];
 
 export default async function AdminSponsorsPage() {
   await requireRole("ADMIN");
@@ -40,49 +98,7 @@ export default async function AdminSponsorsPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {sponsors.map((s) => (
-              <li key={s.id} className="flex items-center gap-4 p-4">
-                {s.logoUrl ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={s.logoUrl} alt={s.name} className="size-12 rounded-lg object-contain" />
-                ) : (
-                  <div className="size-12 rounded-lg bg-muted" />
-                )}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate font-medium">{s.name}</p>
-                    <Badge
-                      variant={
-                        s.status === "ACTIVE"
-                          ? "success"
-                          : s.status === "EXPIRED"
-                            ? "danger"
-                            : "neutral"
-                      }
-                    >
-                      {SPONSOR_STATUS_LABEL[s.status]}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {s.clicks} clicks · {s.impressions} impresiones
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href={`/admin/sponsors/${s.id}/editar`}
-                    aria-label="Editar"
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-                  >
-                    <Pencil className="size-4" />
-                  </Link>
-                  <DeleteSponsorButton id={s.id} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={sponsors} getKey={(s) => s.id} />
       )}
     </div>
   );

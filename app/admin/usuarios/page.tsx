@@ -1,12 +1,62 @@
 import { Eye } from "lucide-react";
 import Link from "next/link";
-import { GlassCard } from "@/components/glass/glass-card";
 import { UserRoleSelect } from "@/components/admin/user-role-select";
 import { requireRole } from "@/lib/auth";
 import { getAllUsers } from "@/server/queries/users";
 import { formatDate } from "@/lib/format";
+import { Badge, DataTable, type Column } from "@/components/ui";
 
 export const metadata = { title: "Usuarios" };
+
+type UserRow = Awaited<ReturnType<typeof getAllUsers>>[number];
+
+function buildColumns(adminId: string): Column<UserRow>[] {
+  return [
+    {
+      key: "user",
+      header: "Usuario",
+      primary: true,
+      cell: (u) => (
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="truncate font-medium">{u.name ?? "Sin nombre"}</span>
+            {u.id === adminId && <Badge variant="primary">Vos</Badge>}
+          </div>
+          <p className="truncate text-xs text-muted-foreground">{u.email}</p>
+        </div>
+      ),
+    },
+    {
+      key: "activity",
+      header: "Actividad",
+      cell: (u) => (
+        <span className="text-xs text-muted-foreground">
+          {u.clientProfile?.company ? `${u.clientProfile.company} · ` : ""}
+          {u._count.contracts} contratos · {u._count.news} noticias · alta {formatDate(u.createdAt)}
+        </span>
+      ),
+    },
+    {
+      key: "role",
+      header: "Rol",
+      cell: (u) => <UserRoleSelect userId={u.id} role={u.role} disabled={u.id === adminId} />,
+    },
+    {
+      key: "actions",
+      header: "Acciones",
+      action: true,
+      cell: (u) => (
+        <Link
+          href={`/admin/usuarios/${u.id}`}
+          aria-label="Ver detalle"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Eye className="size-4" />
+        </Link>
+      ),
+    },
+  ];
+}
 
 export default async function AdminUsersPage() {
   const admin = await requireRole("ADMIN");
@@ -19,37 +69,7 @@ export default async function AdminUsersPage() {
         <p className="text-sm text-muted-foreground">{users.length} usuarios registrados</p>
       </div>
 
-      <GlassCard className="p-0">
-        <ul className="divide-y divide-border">
-          {users.map((u) => (
-            <li key={u.id} className="flex flex-wrap items-center gap-4 p-4">
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="truncate font-medium">{u.name ?? "Sin nombre"}</p>
-                  {u.id === admin.id && (
-                    <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">Vos</span>
-                  )}
-                </div>
-                <p className="truncate text-sm text-muted-foreground">{u.email}</p>
-                <p className="text-xs text-muted-foreground">
-                  {u.clientProfile?.company ? `${u.clientProfile.company} · ` : ""}
-                  {u._count.contracts} contratos · {u._count.news} noticias · alta {formatDate(u.createdAt)}
-                </p>
-              </div>
-
-              <UserRoleSelect userId={u.id} role={u.role} disabled={u.id === admin.id} />
-
-              <Link
-                href={`/admin/usuarios/${u.id}`}
-                aria-label="Ver detalle"
-                className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-              >
-                <Eye className="size-4" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </GlassCard>
+      <DataTable columns={buildColumns(admin.id)} rows={users} getKey={(u) => u.id} />
     </div>
   );
 }

@@ -7,9 +7,57 @@ import { requireRole } from "@/lib/auth";
 import { getAllEventsAdmin } from "@/server/queries/events";
 import { EVENT_STATUS_LABEL } from "@/lib/events";
 import { formatDateTime } from "@/lib/format";
-import { Badge, EmptyState } from "@/components/ui";
+import { Badge, DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Eventos" };
+
+type EventRow = Awaited<ReturnType<typeof getAllEventsAdmin>>[number];
+
+const columns: Column<EventRow>[] = [
+  {
+    key: "name",
+    header: "Evento",
+    primary: true,
+    cell: (e) => (
+      <div className="min-w-0">
+        <p className="truncate font-medium">{e.name}</p>
+        <p className="truncate text-xs text-muted-foreground">
+          {formatDateTime(e.startsAt)} · {e.venue ?? "sin lugar"}
+        </p>
+      </div>
+    ),
+  },
+  {
+    key: "status",
+    header: "Estado",
+    cell: (e) => (
+      <Badge
+        variant={
+          e.status === "LIVE" ? "primary" : e.status === "UPCOMING" ? "warning" : "neutral"
+        }
+      >
+        {EVENT_STATUS_LABEL[e.status]}
+      </Badge>
+    ),
+  },
+  {
+    key: "actions",
+    header: "Acciones",
+    action: true,
+    cell: (e) => (
+      <div className="inline-flex items-center gap-1">
+        <Link
+          href={`/admin/eventos/${e.id}/editar`}
+          aria-label="Editar"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Pencil className="size-4" />
+        </Link>
+        <DeleteEventButton id={e.id} />
+      </div>
+    ),
+  },
+];
 
 export default async function AdminEventsPage() {
   await requireRole("ADMIN", "EDITOR");
@@ -43,41 +91,7 @@ export default async function AdminEventsPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {events.map((e) => (
-              <li key={e.id} className="flex items-center gap-4 p-4">
-                <div className="min-w-0 flex-1">
-                  <Badge
-                    variant={
-                      e.status === "LIVE"
-                        ? "primary"
-                        : e.status === "UPCOMING"
-                          ? "warning"
-                          : "neutral"
-                    }
-                  >
-                    {EVENT_STATUS_LABEL[e.status]}
-                  </Badge>
-                  <p className="mt-1 truncate font-medium">{e.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {formatDateTime(e.startsAt)} · {e.venue ?? "sin lugar"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href={`/admin/eventos/${e.id}/editar`}
-                    aria-label="Editar"
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-                  >
-                    <Pencil className="size-4" />
-                  </Link>
-                  <DeleteEventButton id={e.id} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={events} getKey={(e) => e.id} />
       )}
     </div>
   );

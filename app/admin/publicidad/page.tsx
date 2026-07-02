@@ -7,9 +7,47 @@ import { requireRole } from "@/lib/auth";
 import { getAllContractsAdmin } from "@/server/queries/ads";
 import { BILLING_CYCLE_LABEL } from "@/lib/ads";
 import { formatDate } from "@/lib/format";
-import { EmptyState } from "@/components/ui";
+import { DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Publicidad" };
+
+type ContractRow = Awaited<ReturnType<typeof getAllContractsAdmin>>[number];
+
+const columns: Column<ContractRow>[] = [
+  {
+    key: "title",
+    header: "Contratación",
+    primary: true,
+    cell: (c) => (
+      <Link href={`/admin/publicidad/${c.id}`} className="group min-w-0">
+        <p className="truncate font-medium group-hover:text-primary">{c.title}</p>
+        <p className="truncate text-xs text-muted-foreground">
+          {c.package.name} · {BILLING_CYCLE_LABEL[c.billingCycle]} ·{" "}
+          {c.client?.name ?? c.client?.email ?? "Sin cliente (de palabra)"}
+        </p>
+      </Link>
+    ),
+  },
+  {
+    key: "detail",
+    header: "Detalle",
+    cell: (c) => {
+      const paid = c.payments.some((p) => p.status === "APPROVED");
+      return (
+        <span className="text-xs text-muted-foreground">
+          {formatDate(c.createdAt)} · {c.payments.length} pago(s) ·{" "}
+          {paid ? "pago aprobado" : "sin pago aprobado"}
+          {c.status === "ACTIVE" && c.endDate ? ` · vigente hasta ${formatDate(c.endDate)}` : ""}
+        </span>
+      );
+    },
+  },
+  {
+    key: "status",
+    header: "Estado",
+    cell: (c) => <ContractStatusSelect id={c.id} value={c.status} />,
+  },
+];
 
 export default async function AdminAdsPage() {
   await requireRole("ADMIN");
@@ -43,30 +81,7 @@ export default async function AdminAdsPage() {
           />
         </GlassCard>
       ) : (
-        <div className="space-y-4">
-          {contracts.map((c) => {
-            const paid = c.payments.some((p) => p.status === "APPROVED");
-            return (
-              <GlassCard key={c.id} className="flex flex-wrap items-start justify-between gap-3">
-                <Link href={`/admin/publicidad/${c.id}`} className="min-w-0 flex-1">
-                  <p className="font-display font-semibold hover:text-primary">{c.title}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {c.package.name} · {BILLING_CYCLE_LABEL[c.billingCycle]} ·{" "}
-                    {c.client?.name ?? c.client?.email ?? "Sin cliente (de palabra)"}
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {formatDate(c.createdAt)} · {c.payments.length} pago(s) ·{" "}
-                    {paid ? "pago aprobado" : "sin pago aprobado"}
-                    {c.status === "ACTIVE" && c.endDate
-                      ? ` · vigente hasta ${formatDate(c.endDate)}`
-                      : ""}
-                  </p>
-                </Link>
-                <ContractStatusSelect id={c.id} value={c.status} />
-              </GlassCard>
-            );
-          })}
-        </div>
+        <DataTable columns={columns} rows={contracts} getKey={(c) => c.id} />
       )}
     </div>
   );

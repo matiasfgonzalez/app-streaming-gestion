@@ -5,9 +5,58 @@ import { neuButton } from "@/components/glass/neu-button";
 import { DeleteNewsButton } from "@/components/admin/delete-news-button";
 import { requireRole } from "@/lib/auth";
 import { getAllNewsAdmin } from "@/server/queries/news";
-import { Badge, EmptyState } from "@/components/ui";
+import { Badge, DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Noticias" };
+
+type NewsRow = Awaited<ReturnType<typeof getAllNewsAdmin>>[number];
+
+const columns: Column<NewsRow>[] = [
+  {
+    key: "title",
+    header: "Noticia",
+    primary: true,
+    cell: (n) => (
+      <div className="min-w-0">
+        <p className="truncate font-medium">{n.title}</p>
+        <p className="truncate text-xs text-muted-foreground">
+          {n.author?.name ?? "—"} ·{" "}
+          {n.categories.map((c) => c.name).join(", ") || "sin categoría"}
+        </p>
+      </div>
+    ),
+  },
+  {
+    key: "status",
+    header: "Estado",
+    cell: (n) => (
+      <div className="flex items-center gap-2">
+        <Badge variant={n.status === "PUBLISHED" ? "primary" : "neutral"}>
+          {n.status === "PUBLISHED" ? "Publicada" : "Borrador"}
+        </Badge>
+        {n.featured && <Star className="size-3.5 text-primary" aria-label="Destacada" />}
+        {n.breaking && <Zap className="size-3.5 text-secondary" aria-label="Última hora" />}
+      </div>
+    ),
+  },
+  {
+    key: "actions",
+    header: "Acciones",
+    action: true,
+    cell: (n) => (
+      <div className="inline-flex items-center gap-1">
+        <Link
+          href={`/admin/noticias/${n.id}/editar`}
+          aria-label="Editar"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Pencil className="size-4" />
+        </Link>
+        <DeleteNewsButton id={n.id} />
+      </div>
+    ),
+  },
+];
 
 export default async function AdminNewsPage() {
   await requireRole("ADMIN", "EDITOR");
@@ -41,38 +90,7 @@ export default async function AdminNewsPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {news.map((n) => (
-              <li key={n.id} className="flex items-center gap-4 p-4">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={n.status === "PUBLISHED" ? "primary" : "neutral"}>
-                      {n.status === "PUBLISHED" ? "Publicada" : "Borrador"}
-                    </Badge>
-                    {n.featured && <Star className="size-3.5 text-primary" />}
-                    {n.breaking && <Zap className="size-3.5 text-secondary" />}
-                  </div>
-                  <p className="mt-1 truncate font-medium">{n.title}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {n.author?.name ?? "—"} ·{" "}
-                    {n.categories.map((c) => c.name).join(", ") || "sin categoría"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href={`/admin/noticias/${n.id}/editar`}
-                    aria-label="Editar"
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-                  >
-                    <Pencil className="size-4" />
-                  </Link>
-                  <DeleteNewsButton id={n.id} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={news} getKey={(n) => n.id} />
       )}
     </div>
   );

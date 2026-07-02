@@ -6,9 +6,47 @@ import { DeletePackageButton } from "@/components/admin/delete-package-button";
 import { requireRole } from "@/lib/auth";
 import { getAllPackagesAdmin } from "@/server/queries/ads";
 import { formatMoney } from "@/lib/format";
-import { EmptyState } from "@/components/ui";
+import { Badge, DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Paquetes" };
+
+type PackageRow = Awaited<ReturnType<typeof getAllPackagesAdmin>>[number];
+
+const columns: Column<PackageRow>[] = [
+  {
+    key: "name",
+    header: "Paquete",
+    primary: true,
+    cell: (p) => (
+      <div className="flex items-center gap-2">
+        <span className="truncate font-medium">{p.name}</span>
+        {!p.active && <Badge variant="neutral">Inactivo</Badge>}
+      </div>
+    ),
+  },
+  {
+    key: "price",
+    header: "Precio",
+    cell: (p) => <span className="text-sm tnum">{formatMoney(p.priceMonthly)}/mes</span>,
+  },
+  {
+    key: "actions",
+    header: "Acciones",
+    action: true,
+    cell: (p) => (
+      <div className="inline-flex items-center gap-1">
+        <Link
+          href={`/admin/paquetes/${p.id}/editar`}
+          aria-label="Editar"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Pencil className="size-4" />
+        </Link>
+        <DeletePackageButton id={p.id} />
+      </div>
+    ),
+  },
+];
 
 export default async function AdminPackagesPage() {
   await requireRole("ADMIN");
@@ -40,37 +78,7 @@ export default async function AdminPackagesPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {packages.map((p) => (
-              <li key={p.id} className="flex items-center gap-4 p-4">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate font-medium">{p.name}</p>
-                    {!p.active && (
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                        Inactivo
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {formatMoney(p.priceMonthly)}/mes
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href={`/admin/paquetes/${p.id}/editar`}
-                    aria-label="Editar"
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-                  >
-                    <Pencil className="size-4" />
-                  </Link>
-                  <DeletePackageButton id={p.id} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={packages} getKey={(p) => p.id} />
       )}
     </div>
   );

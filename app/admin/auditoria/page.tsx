@@ -3,7 +3,7 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { requireRole } from "@/lib/auth";
 import { getAuditLogs } from "@/server/queries/analytics";
 import { formatDateTime } from "@/lib/format";
-import { Badge, EmptyState } from "@/components/ui";
+import { Badge, DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Auditoría" };
 
@@ -17,6 +17,40 @@ const ACTION_VARIANT: Record<
   reject: "danger",
   delete: "danger",
 };
+
+type LogRow = Awaited<ReturnType<typeof getAuditLogs>>[number];
+
+const columns: Column<LogRow>[] = [
+  {
+    key: "action",
+    header: "Acción",
+    cell: (l) => <Badge variant={ACTION_VARIANT[l.action] ?? "neutral"}>{l.action}</Badge>,
+    className: "w-28",
+  },
+  {
+    key: "summary",
+    header: "Detalle",
+    primary: true,
+    cell: (l) => (
+      <div className="min-w-0">
+        <p className="text-sm">{l.summary}</p>
+        <p className="truncate text-xs text-muted-foreground">
+          {l.entity}
+          {l.userEmail ? ` · ${l.userEmail}` : ""}
+        </p>
+      </div>
+    ),
+  },
+  {
+    key: "date",
+    header: "Fecha",
+    cell: (l) => (
+      <span className="whitespace-nowrap text-xs text-muted-foreground tnum">
+        {formatDateTime(l.createdAt)}
+      </span>
+    ),
+  },
+];
 
 export default async function AdminAuditPage() {
   await requireRole("ADMIN");
@@ -40,29 +74,7 @@ export default async function AdminAuditPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {logs.map((l) => (
-              <li key={l.id} className="flex items-start gap-3 p-4">
-                <Badge
-                  variant={ACTION_VARIANT[l.action] ?? "neutral"}
-                  className="mt-0.5 shrink-0"
-                >
-                  {l.action}
-                </Badge>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm">{l.summary}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {l.entity}
-                    {l.userEmail ? ` · ${l.userEmail}` : ""}
-                    {" · "}
-                    {formatDateTime(l.createdAt)}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={logs} getKey={(l) => l.id} />
       )}
     </div>
   );

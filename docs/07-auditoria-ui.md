@@ -51,14 +51,13 @@ Cada hallazgo se marca `[x]` cuando queda resuelto por la capa correspondiente d
 - [ ] **A1 · Microinteracciones casi ausentes.**
   Framer Motion se importa en solo 3 archivos (2 drawers + `Reveal`). La landing es estática;
   sin hover states ricos en cards, sin stagger, sin transiciones de página. → Capa 12.4
-- [ ] **A2 · Listas admin no son tablas.**
-  Noticias/eventos/etc. son `<ul>` simples, sin orden/filtro/paginación ni densidad. Para un
-  "Dashboard Enterprise" faltan tablas reales (columnas, sticky header, row hover,
-  responsive→cards). → Capa 12.3
-- [ ] **A3 · Dashboard plano.**
-  8 KPIs idénticos en grilla uniforme, sin jerarquía (métrica principal vs secundaria), sin
-  tendencia/delta ni sparkline. Todas las barras del mismo color primario. Se lee como
-  planilla, no como panel. → Capa 12.3
+- [x] **A2 · Listas admin no son tablas.** ✅ 12.3: `DataTable` (header sticky, row hover,
+  responsive→cards en mobile) adoptado en noticias, eventos, sponsors, paquetes, banners,
+  usuarios, publicidad, radio, podcasts y auditoría. Se dejan como cards a propósito las vistas
+  con detalle expandido (presupuestos, pagos) y la galería (grid visual).
+- [x] **A3 · Dashboard plano.** ✅ 12.3: jerarquía real — 3 KPIs principales (glass + `ring-glow`)
+  con delta de tendencia y `Sparkline` (14 días), 6 secundarios compactos (`surface` plano), y
+  `BarList` multicolor por serie (paleta marca) y por estado (color semántico).
 - [ ] **A4 · Glass sin jerarquía de profundidad.**
   `.glass` está en navbar, sidebar, header y **todas** las cards por igual. Cuando todo es
   glass, nada destaca. Neumorphism quedó solo en botones; aurora solo en el hero. Falta una
@@ -125,15 +124,17 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - [x] `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores.
 - Resuelve: **C2** ✅, **C3** ✅, **C4** ✅.
 
-### Capa 12.3 — Admin Enterprise `[ ]`
+### Capa 12.3 — Admin Enterprise `[x]`
 > Densidad, orden y jerarquía. Usa los primitivos de 12.1.
 
-- [ ] Migrar listas admin (`<ul>`) a `DataTable` (columnas, sticky header, row hover,
-      responsive→cards en mobile). Evaluar orden/filtro donde aporte.
-- [ ] Rediseñar dashboard `/admin`: jerarquía de KPIs (principal vs secundarios), deltas/tendencia,
-      sparklines, `BarList` multicolor por serie.
-- [ ] Refinar `AdminShell` (jerarquía de sidebar, estados activos, densidad de la topbar).
-- [ ] Resuelve: **A2**, **A3**.
+- [x] Migrar listas admin (`<ul>`) a `DataTable` (columnas, header sticky, row hover,
+      responsive→cards en mobile) en las 10 listas tabulares. Cards a propósito donde el detalle
+      manda (presupuestos, pagos) y galería como grid.
+- [x] Rediseñar dashboard `/admin`: jerarquía de KPIs (3 principales con delta+sparkline vs 6
+      secundarios `surface`), tendencia de 14 días, `BarList` multicolor por serie y por estado.
+- [x] Refinar `AdminShell` (eyebrow de sección, activo en sub-rutas con barra indicadora,
+      íconos atenuados en inactivos).
+- [x] Resuelve: **A2**, **A3**.
 
 ### Capa 12.4 — Landing & público `[ ]`
 > La cara comercial, sobre base ya sólida.
@@ -204,4 +205,21 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
   (6 warnings RHF `watch`, preexistentes). Fix en el camino: `else` colgante en payment/quote.
 - **Siguiente:** Capa 12.3 — Admin Enterprise (listas→DataTable, dashboard con jerarquía/sparklines).
+
+### 2026-07-02 — Capa 12.3 (Admin Enterprise) — **capa cerrada**
+- **DataTable (A2):** `components/ui/data-table.tsx` — API tipada por columnas (`Column<T>`),
+  header sticky + hover de fila en desktop y colapso a card en mobile (título = columna `primary`,
+  resto como pares label/valor, acciones al pie). Adoptado en noticias, eventos, sponsors,
+  paquetes, banners, usuarios, publicidad, radio, podcasts y auditoría. Presupuestos/pagos siguen
+  como cards (detalle expandido) y galería como grid visual.
+- **Dashboard (A3):** `components/admin/stat-card.tsx` — `StatCard` (glass + `ring-glow`, delta de
+  tendencia, `Sparkline` SVG server-only), `StatMini` (secundario, `surface` plano), `DeltaBadge`.
+  `getDashboardData` ahora devuelve `series`/`deltas` (ventana de 14 días, medias comparadas).
+  `BarList` multicolor: paleta por serie (marca→violeta→cian) y color semántico por estado.
+- **AdminShell:** eyebrow "Panel", activo en sub-rutas (`startsWith`, salvo `/admin` exacto) con
+  barra indicadora izquierda y `aria-current`; íconos atenuados en inactivos.
+- **Verificado:** `npm install` (faltaba `sonner` en node_modules) → `npm run build`
+  `✓ Compiled successfully`; `npm run lint` 0 errores (6 warnings RHF `watch`, preexistentes).
+  Pendiente: verificación visual claro/oscuro y mobile en navegador (requiere sesión Clerk).
+- **Siguiente:** Capa 12.4 — Landing & público (motion intencional, jerarquía de glass/elevación).
 </content>

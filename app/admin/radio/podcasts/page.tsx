@@ -7,9 +7,59 @@ import { DeletePodcastButton } from "@/components/admin/delete-podcast-button";
 import { requireRole } from "@/lib/auth";
 import { getAllPodcastsAdmin } from "@/server/queries/radio";
 import { formatDate } from "@/lib/format";
-import { EmptyState } from "@/components/ui";
+import { DataTable, EmptyState, type Column } from "@/components/ui";
 
 export const metadata = { title: "Podcasts" };
+
+type PodcastRow = Awaited<ReturnType<typeof getAllPodcastsAdmin>>[number];
+
+const columns: Column<PodcastRow>[] = [
+  {
+    key: "title",
+    header: "Episodio",
+    primary: true,
+    cell: (p) => (
+      <div className="flex items-center gap-3">
+        {p.coverUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={p.coverUrl} alt={p.title} className="size-11 shrink-0 rounded-lg object-cover" />
+        ) : (
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+            {p.youtubeId ? <Video className="size-5" /> : <Mic className="size-5" />}
+          </div>
+        )}
+        <span className="min-w-0 truncate font-medium">{p.title}</span>
+      </div>
+    ),
+  },
+  {
+    key: "published",
+    header: "Publicado",
+    cell: (p) => (
+      <span className="text-xs text-muted-foreground tnum">
+        {formatDate(p.publishedAt)}
+        {p.program ? ` · ${p.program.name}` : ""}
+      </span>
+    ),
+  },
+  {
+    key: "actions",
+    header: "Acciones",
+    action: true,
+    cell: (p) => (
+      <div className="inline-flex items-center gap-1">
+        <Link
+          href={`/admin/radio/podcasts/${p.id}/editar`}
+          aria-label="Editar"
+          className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
+        >
+          <Pencil className="size-4" />
+        </Link>
+        <DeletePodcastButton id={p.id} />
+      </div>
+    ),
+  },
+];
 
 export default async function AdminPodcastsPage() {
   await requireRole("ADMIN", "EDITOR");
@@ -43,39 +93,7 @@ export default async function AdminPodcastsPage() {
           />
         </GlassCard>
       ) : (
-        <GlassCard className="p-0">
-          <ul className="divide-y divide-border">
-            {podcasts.map((p) => (
-              <li key={p.id} className="flex items-center gap-4 p-4">
-                {p.coverUrl ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={p.coverUrl} alt={p.title} className="size-14 rounded-lg object-cover" />
-                ) : (
-                  <div className="flex size-14 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                    {p.youtubeId ? <Video className="size-5" /> : <Mic className="size-5" />}
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{p.title}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {formatDate(p.publishedAt)}
-                    {p.program ? ` · ${p.program.name}` : ""}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Link
-                    href={`/admin/radio/podcasts/${p.id}/editar`}
-                    aria-label="Editar"
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-foreground/80 transition-colors hover:bg-muted"
-                  >
-                    <Pencil className="size-4" />
-                  </Link>
-                  <DeletePodcastButton id={p.id} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </GlassCard>
+        <DataTable columns={columns} rows={podcasts} getKey={(p) => p.id} />
       )}
     </div>
   );
