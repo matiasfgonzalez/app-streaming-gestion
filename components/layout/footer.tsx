@@ -34,9 +34,18 @@ export async function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
             <Link href="/" className="flex items-center gap-2 font-display text-lg font-bold">
-              <span className="inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Radio className="size-5" />
-              </span>
+              {site.logoUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={site.logoUrl}
+                  alt={site.brandName}
+                  className="size-9 rounded-full object-contain"
+                />
+              ) : (
+                <span className="inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <Radio className="size-5" />
+                </span>
+              )}
               {site.brandName}
             </Link>
             <p className="text-sm text-muted-foreground">{site.description}</p>

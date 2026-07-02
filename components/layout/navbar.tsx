@@ -13,11 +13,21 @@ import { useMobileMenu } from "./mobile-menu-context";
 import { NAV_LINKS } from "./nav-links";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export function Navbar({
+  brandName,
+  logoUrl,
+}: {
+  brandName: string;
+  logoUrl?: string;
+}) {
   const { open, setOpen } = useMobileMenu();
   const [isStaff, setIsStaff] = useState(false);
   const pathname = usePathname();
   const { isSignedIn } = useUser();
+  // Última palabra en color primario: "Viva La Mañana" → "Viva La" + "Mañana".
+  const words = brandName.trim().split(" ");
+  const last = words.pop();
+  const lead = words.join(" ");
 
   // Rol vive en la DB (no en Clerk): lo consultamos solo con sesión, así el
   // landing anónimo sigue siendo estático (no forzamos render dinámico).
@@ -43,11 +53,21 @@ export function Navbar() {
       <div className="glass border-x-0 border-t-0">
         <Container className="flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2 font-display text-lg font-bold">
-            <span className="ring-glow inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Radio className="size-5" />
-            </span>
+            {logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={logoUrl}
+                alt={brandName}
+                className="ring-glow size-9 rounded-full object-contain"
+              />
+            ) : (
+              <span className="ring-glow inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Radio className="size-5" />
+              </span>
+            )}
             <span className="hidden sm:inline">
-              Viva La <span className="text-primary">Mañana</span>
+              {lead ? `${lead} ` : ""}
+              <span className="text-primary">{last}</span>
             </span>
           </Link>
 

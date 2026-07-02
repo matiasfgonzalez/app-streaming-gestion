@@ -3,27 +3,82 @@
 import { toast } from "sonner";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { ImagePlus, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
+import { UploadButton } from "@/lib/uploadthing";
 import { siteConfigSchema, type SiteConfigInput } from "@/lib/validations/settings";
 import { updateSiteConfig } from "@/server/actions/settings";
 import { cn } from "@/lib/utils";
 
 import { inputCls, labelCls } from "@/components/ui";
 
+/** Campo de imagen de marca: preview + subir/quitar, con hint de tamaño. */
+function BrandImageField({
+  label,
+  hint,
+  value,
+  onChange,
+  onError,
+  previewClass,
+}: {
+  label: string;
+  hint: string;
+  value: string;
+  onChange: (url: string) => void;
+  onError: (msg: string) => void;
+  previewClass: string;
+}) {
+  return (
+    <div>
+      <span className={labelCls}>{label}</span>
+      <p className="mb-2 text-xs text-muted-foreground">{hint}</p>
+      {value ? (
+        <div className="relative w-fit">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={value} alt={label} className={cn("rounded-lg", previewClass)} />
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="glass absolute right-2 top-2 inline-flex size-8 items-center justify-center rounded-full"
+            aria-label={`Quitar ${label.toLowerCase()}`}
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border py-6 text-muted-foreground">
+          <ImagePlus className="size-6" />
+          <UploadButton
+            endpoint="brandAsset"
+            onClientUploadComplete={(res) => {
+              const url = res?.[0]?.ufsUrl;
+              if (url) onChange(url);
+            }}
+            onUploadError={(e) => onError(e.message)}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteConfigForm({ defaults }: { defaults: SiteConfigInput }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<SiteConfigInput>({
     resolver: zodResolver(siteConfigSchema),
     defaultValues: defaults,
   });
+  const logoUrl = watch("logoUrl") ?? "";
+  const coverUrl = watch("coverUrl") ?? "";
 
   async function onSubmit(values: SiteConfigInput) {
     setServerError(null);
@@ -54,6 +109,28 @@ export function SiteConfigForm({ defaults }: { defaults: SiteConfigInput }) {
         <div>
           <label className={labelCls} htmlFor="description">Descripción</label>
           <textarea id="description" rows={2} className={inputCls} {...register("description")} />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          El nombre se usa en toda la web (navbar, footer, títulos): si mañana el proyecto pasa a
+          llamarse de otra forma, cambialo acá y se actualiza en todos lados.
+        </p>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <BrandImageField
+            label="Logo"
+            hint="Cuadrado, fondo transparente (PNG). Recomendado: 512×512 px, máx. 4 MB. Se muestra en navbar, footer y panel."
+            value={logoUrl}
+            onChange={(url) => setValue("logoUrl", url, { shouldDirty: true })}
+            onError={(msg) => toast.error(msg)}
+            previewClass="size-24 bg-muted/50 object-contain p-2"
+          />
+          <BrandImageField
+            label="Portada"
+            hint="Apaisada 16:9 (JPG/PNG). Recomendado: 1920×1080 px, máx. 4 MB. Se muestra como imagen principal del hero de la landing."
+            value={coverUrl}
+            onChange={(url) => setValue("coverUrl", url, { shouldDirty: true })}
+            onError={(msg) => toast.error(msg)}
+            previewClass="aspect-video w-full max-w-64 object-cover"
+          />
         </div>
       </GlassCard>
 

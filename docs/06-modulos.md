@@ -59,6 +59,20 @@ Media reutilizable (`MediaItem`) asociable a noticias/eventos o standalone. Admi
 **Admin (ADMIN):** logo, título, descripción, tipografías, paleta, modo claro/oscuro, navbar, footer, redes, dirección, email, teléfono, Google Maps, SEO/OpenGraph, favicon, loader, animaciones. Persistido en `SiteSetting`.
 **Notas:** datos/contacto/SEO editables en Fase 8; colores/tipografías (theme-engine) en Fase 9.
 
+### Identidad de marca (Fase 12.4)
+El **nombre del proyecto es configurable** desde `/admin/configuracion` (campo "Nombre"): hoy es
+"Viva La Mañana", mañana puede ser "Viva La Radio" — se actualiza en navbar, footer, hero, panel
+admin, metadata SEO y todos los textos que lo mencionan. No hardcodear el nombre en componentes
+nuevos: recibirlo por prop (`brandName`) o leer `getSiteConfig()`.
+
+Imágenes de marca (subida en Configuración → Identidad, endpoint `brandAsset`, solo ADMIN):
+- **Logo** (`logoUrl`): cuadrado, PNG con fondo transparente, **512×512 px recomendado**, máx. 4 MB.
+  Se muestra en navbar, footer, hero ("al aire") y sidebar del panel. Vacío → ícono Radio por defecto.
+- **Portada** (`coverUrl`): apaisada **16:9, 1920×1080 px recomendado**, JPG/PNG, máx. 4 MB.
+  Se muestra como imagen principal del hero de la landing. Vacío → card "al aire" sola.
+
+A futuro: favicon/OG image derivados del logo, y variantes de logo por tema (claro/oscuro).
+
 ## CMS de Landing
 **Admin:** habilitar/deshabilitar y (a futuro) reordenar secciones; editar textos/CTAs de cada sección. Flags en `SiteSetting`.
 

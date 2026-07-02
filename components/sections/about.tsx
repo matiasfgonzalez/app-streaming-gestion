@@ -10,12 +10,12 @@ const PILLARS = [
   { icon: Users, title: "Comunidad", text: "Miles de oyentes cada día." },
 ];
 
-export function About() {
+export function About({ brandName = "Viva La Mañana" }: { brandName?: string }) {
   return (
     <Section id="quienes-somos">
       <Container>
         <SectionHeading
-          eyebrow="Qué es Viva La Mañana"
+          eyebrow={`Qué es ${brandName}`}
           title="Un medio, muchas voces"
           subtitle="Nucleamos la radio, el streaming, la cobertura de eventos y la publicidad de todo el programa en una sola plataforma."
         />

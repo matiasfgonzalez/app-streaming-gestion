@@ -25,12 +25,14 @@ export default async function Home() {
   ]);
   return (
     <>
-      <Hero />
+      <Hero site={site} />
       <BannerSlot placement="HOME" className="pb-4" />
       {sections.stats && <Stats />}
-      {sections.about && <About />}
-      {sections.radio && <RadioPlayer />}
-      {sections.streaming && <Streaming youtubeId={streaming.youtubeId} />}
+      {sections.about && <About brandName={site.brandName} />}
+      {sections.radio && <RadioPlayer brandName={site.brandName} />}
+      {sections.streaming && (
+        <Streaming youtubeId={streaming.youtubeId} brandName={site.brandName} />
+      )}
       {sections.news && <LatestNews />}
       {sections.events && <UpcomingEvents />}
       {sections.sports && <Sports />}
@@ -38,7 +40,7 @@ export default async function Home() {
       {sections.sponsors && <Sponsors />}
       {sections.gallery && <Gallery />}
       {sections.videos && <Videos />}
-      {sections.testimonials && <Testimonials />}
+      {sections.testimonials && <Testimonials brandName={site.brandName} />}
       {sections.faq && <Faq />}
       {sections.contact && <ContactMap contact={site.contact} />}
     </>

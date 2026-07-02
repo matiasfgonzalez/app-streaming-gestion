@@ -2,13 +2,17 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { getGalleryImages, getVideos } from "@/server/queries/media";
+import { getSiteConfig } from "@/server/queries/settings";
 import { ImageIcon } from "lucide-react";
 import { EmptyState } from "@/components/ui";
 
-export const metadata = {
-  title: "Galería",
-  description: "Fotos y videos de Viva La Mañana: eventos, coberturas y detrás de escena.",
-};
+export async function generateMetadata() {
+  const site = await getSiteConfig();
+  return {
+    title: "Galería",
+    description: `Fotos y videos de ${site.brandName}: eventos, coberturas y detrás de escena.`,
+  };
+}
 
 export default async function GaleriaPage() {
   const [images, videos] = await Promise.all([getGalleryImages(), getVideos()]);

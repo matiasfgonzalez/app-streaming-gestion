@@ -3,13 +3,17 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { NewsCard, type CardNews } from "@/components/news/news-card";
 import { formatDate, hueFrom } from "@/lib/format";
 import { getPublishedNews } from "@/server/queries/news";
+import { getSiteConfig } from "@/server/queries/settings";
 import { Newspaper } from "lucide-react";
 import { EmptyState } from "@/components/ui";
 
-export const metadata = {
-  title: "Noticias",
-  description: "Todas las noticias de Viva La Mañana.",
-};
+export async function generateMetadata() {
+  const site = await getSiteConfig();
+  return {
+    title: "Noticias",
+    description: `Todas las noticias de ${site.brandName}.`,
+  };
+}
 
 export default async function NoticiasPage() {
   const dbNews = await getPublishedNews();

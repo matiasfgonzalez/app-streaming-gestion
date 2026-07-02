@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * Reproductor placeholder (Fase 1). No hay audio real todavía; el play/pause
  * es visual. La radio propia embebida llega en Fase 7 / backlog.
  */
-export function RadioPlayer() {
+export function RadioPlayer({ brandName = "Viva La Mañana" }: { brandName?: string }) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -51,7 +51,7 @@ export function RadioPlayer() {
 
             <div className="min-w-0 flex-1 text-center sm:text-left">
               <div className="flex items-center justify-center gap-2 text-sm text-primary sm:justify-start">
-                <Radio className="size-4" /> Viva La Mañana FM
+                <Radio className="size-4" /> {brandName} FM
               </div>
               <p className="mt-1 font-display text-lg font-semibold">
                 {playing ? "Al aire · en vivo" : "En pausa"}

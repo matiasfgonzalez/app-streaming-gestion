@@ -4,14 +4,18 @@ import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { EventCard, type CardEvent } from "@/components/events/event-card";
 import { QuoteForm } from "@/components/events/quote-form";
 import { getPublicEvents, getEventOptions } from "@/server/queries/events";
+import { getSiteConfig } from "@/server/queries/settings";
 import { formatDateTime, hueFrom } from "@/lib/format";
 import { CalendarDays } from "lucide-react";
 import { EmptyState } from "@/components/ui";
 
-export const metadata = {
-  title: "Eventos",
-  description: "Agenda de eventos y coberturas de Viva La Mañana.",
-};
+export async function generateMetadata() {
+  const site = await getSiteConfig();
+  return {
+    title: "Eventos",
+    description: `Agenda de eventos y coberturas de ${site.brandName}.`,
+  };
+}
 
 function toCard(e: Event): CardEvent {
   return {

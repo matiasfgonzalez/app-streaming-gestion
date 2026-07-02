@@ -3,13 +3,17 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { getActivePrograms, getRecentPodcasts, getWeeklyGrid } from "@/server/queries/radio";
+import { getSiteConfig } from "@/server/queries/settings";
 import { WEEKDAYS, WEEKDAY_LABEL } from "@/lib/radio";
 import { formatDate } from "@/lib/format";
 
-export const metadata = {
-  title: "Radio",
-  description: "Programación semanal, conductores y podcasts de Viva La Mañana.",
-};
+export async function generateMetadata() {
+  const site = await getSiteConfig();
+  return {
+    title: "Radio",
+    description: `Programación semanal, conductores y podcasts de ${site.brandName}.`,
+  };
+}
 
 export default async function RadioPage() {
   const [grid, programs, podcasts] = await Promise.all([

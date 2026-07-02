@@ -136,15 +136,21 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
       íconos atenuados en inactivos).
 - [x] Resuelve: **A2**, **A3**.
 
-### Capa 12.4 — Landing & público `[ ]`
+### Capa 12.4 — Landing & público `[~]`
 > La cara comercial, sobre base ya sólida.
 
-- [ ] Motion intencional: hero orquestado en carga, reveals con stagger, hover rico en cards,
-      transiciones suaves (todo con `prefers-reduced-motion`).
+- [x] **Identidad de marca configurable** (agregado a la capa): nombre del sitio dinámico en
+      toda la web (navbar, footer, hero, secciones, metadata, panel admin) + subida de **logo**
+      (512×512 PNG transparente) y **portada** (1920×1080, 16:9) desde
+      `/admin/configuracion` → Identidad, con hints de tamaño. Endpoint `brandAsset` (ADMIN).
+      Ver [06-modulos.md](06-modulos.md#identidad-de-marca-fase-124).
+- [x] Motion intencional: hero orquestado en carga (`FadeUp` escalonado, respeta
+      `prefers-reduced-motion`), reveals con stagger (ya existentes), hover rico en cards
+      (lift + zoom de imagen + flecha en news/eventos).
 - [ ] Jerarquía de glass/elevación aplicada (usar la escala de 12.1; no todo glass).
-- [ ] Refinamiento sección por sección (Hero, Stats, Noticias, Eventos, Radio, Publicidad,
-      Sponsors, Galería, Contacto) manteniendo estructura y contenido.
-- [ ] Resuelve: **A1**, cierra **A4**.
+- [ ] Refinamiento sección por sección (Stats, Radio, Publicidad, Sponsors, Galería, Contacto)
+      manteniendo estructura y contenido; transiciones de página.
+- [ ] Resuelve: **A1** (parcial), cierra **A4**.
 
 ### Capa 12.5 — Pulido de accesibilidad + docs `[ ]`
 > Quality floor + documentación al día.
@@ -222,4 +228,27 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   `✓ Compiled successfully`; `npm run lint` 0 errores (6 warnings RHF `watch`, preexistentes).
   Pendiente: verificación visual claro/oscuro y mobile en navegador (requiere sesión Clerk).
 - **Siguiente:** Capa 12.4 — Landing & público (motion intencional, jerarquía de glass/elevación).
+
+### 2026-07-02 — Capa 12.4 (parte a: identidad de marca + motion base)
+- **Identidad configurable:** `SiteConfig` suma `logoUrl` y `coverUrl` (merge + defaults + zod).
+  Form de `/admin/configuracion` con subida de logo y portada (`BrandImageField`, preview +
+  quitar) y hints de tamaño: logo 512×512 PNG transparente, portada 1920×1080 (16:9), máx. 4 MB.
+  Endpoint uploadthing `brandAsset` (solo ADMIN).
+- **Nombre dinámico en toda la web:** navbar (última palabra en primary), footer, hero, About,
+  Testimonials, Streaming (title del iframe), RadioPlayer, dashboard y sidebar del admin
+  (iniciales, ej. "VLM Admin"), EmptyState de cliente, subtítulo de sponsors, y metadata de
+  noticias/eventos/radio/galería/sponsors vía `generateMetadata` + `getSiteConfig`.
+  Cero hardcodes de "Viva La Mañana" en componentes públicos.
+- **Motion:** `FadeUp` (client, entrada al montar con `useReducedMotion`) orquesta el hero
+  (badge→h1→p→CTAs→card, delays 0–0.24s). Hover rico en `NewsCard`/`EventCard`: lift +
+  `shadow-xl` + zoom 1.04 de imagen (500ms) + flecha que se desplaza.
+- **Hero con identidad:** eslogan como badge, nombre como h1, descripción, portada (16:9) y logo
+  en la card "al aire" — todo desde la config.
+- **Docs:** [06-modulos.md](06-modulos.md) § "Identidad de marca (Fase 12.4)" con tamaños y
+  regla "no hardcodear el nombre".
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (7 warnings RHF `watch`: 6 preexistentes + 1 nuevo esperado en site-config-form).
+  Pendiente: verificación visual en navegador.
+- **Pendiente (12.4 parte b):** jerarquía glass/elevación sección por sección + refinamiento
+  fino de secciones restantes + transiciones de página.
 </content>

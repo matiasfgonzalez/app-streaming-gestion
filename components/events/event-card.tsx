@@ -25,7 +25,7 @@ const STATUS_CLS: Record<EventStatus, string> = {
 
 export function EventCard({ event }: { event: CardEvent }) {
   const inner = (
-    <GlassCard className="flex h-full flex-col gap-4 p-4 hover:-translate-y-1">
+    <GlassCard className="group flex h-full flex-col gap-4 p-4 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
         {event.coverUrl ? (
           <Image
@@ -33,7 +33,7 @@ export function EventCard({ event }: { event: CardEvent }) {
             alt={event.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
           <MediaPlaceholder hue={event.hue} icon={CalendarDays} className="size-full" />

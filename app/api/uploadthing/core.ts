@@ -20,6 +20,15 @@ async function requireAuth() {
   return { userId: user.id };
 }
 
+/** Solo ADMIN (identidad del sitio: logo, portada). */
+async function requireAdmin() {
+  const user = await getCurrentUser();
+  if (!hasRole(user, "ADMIN")) {
+    throw new UploadThingError("No autorizado");
+  }
+  return { userId: user!.id };
+}
+
 export const ourFileRouter = {
   // Portada e imágenes de noticias/eventos (staff).
   newsImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
@@ -42,6 +51,11 @@ export const ourFileRouter = {
   // Audio de podcasts / programas anteriores (staff).
   podcastAudio: f({ audio: { maxFileSize: "32MB", maxFileCount: 1 } })
     .middleware(requireEditor)
+    .onUploadComplete(({ file }) => ({ url: file.ufsUrl })),
+
+  // Identidad del sitio: logo y portada (solo ADMIN, desde Configuración).
+  brandAsset: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    .middleware(requireAdmin)
     .onUploadComplete(({ file }) => ({ url: file.ufsUrl })),
 } satisfies FileRouter;
 

@@ -16,6 +16,7 @@ import { BarList } from "@/components/admin/bar-list";
 import { StatCard, StatMini } from "@/components/admin/stat-card";
 import { requireRole } from "@/lib/auth";
 import { getDashboardData } from "@/server/queries/analytics";
+import { getSiteConfig } from "@/server/queries/settings";
 import { formatMoney } from "@/lib/format";
 
 export const metadata = { title: "Dashboard" };
@@ -74,14 +75,14 @@ function CtrCard({
 
 export default async function AdminDashboard() {
   const user = await requireRole("ADMIN", "EDITOR");
-  const d = await getDashboardData();
+  const [d, site] = await Promise.all([getDashboardData(), getSiteConfig()]);
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-2xl font-bold">Hola, {user.name ?? "bienvenido"} 👋</h1>
         <p className="text-sm text-muted-foreground">
-          Panel de métricas de Viva La Mañana · últimos 14 días.
+          Panel de métricas de {site.brandName} · últimos 14 días.
         </p>
       </div>
 

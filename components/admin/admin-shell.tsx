@@ -63,10 +63,14 @@ function NavItems({
 export function AdminShell({
   role,
   userName,
+  brandName,
+  logoUrl,
   children,
 }: {
   role: Role;
   userName: string | null;
+  brandName: string;
+  logoUrl?: string;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -77,7 +81,7 @@ export function AdminShell({
     <div className="min-h-dvh lg:grid lg:grid-cols-[16rem_1fr]">
       {/* Sidebar desktop */}
       <aside className="glass sticky top-0 hidden h-dvh flex-col border-y-0 border-l-0 p-4 lg:flex">
-        <Brand />
+        <Brand brandName={brandName} logoUrl={logoUrl} />
         <div className="mt-6 flex-1 overflow-y-auto">
           <NavItems links={links} pathname={pathname} />
         </div>
@@ -129,7 +133,7 @@ export function AdminShell({
               className="glass safe-top fixed inset-y-0 left-0 z-50 flex w-72 max-w-[80vw] flex-col p-4 lg:hidden"
             >
               <div className="flex items-center justify-between">
-                <Brand />
+                <Brand brandName={brandName} logoUrl={logoUrl} />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -155,14 +159,26 @@ export function AdminShell({
   );
 }
 
-function Brand() {
+function Brand({ brandName, logoUrl }: { brandName: string; logoUrl?: string }) {
+  // Iniciales del nombre ("Viva La Mañana" → "VLM") para mantener el sidebar compacto.
+  const initials = brandName
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 4);
   return (
     <Link href="/admin" className="flex items-center gap-2 font-display text-lg font-bold">
-      <span className="inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-        <Radio className="size-5" />
-      </span>
+      {logoUrl ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={logoUrl} alt={brandName} className="size-9 rounded-full object-contain" />
+      ) : (
+        <span className="inline-flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Radio className="size-5" />
+        </span>
+      )}
       <span>
-        VLM <span className="text-primary">Admin</span>
+        {initials} <span className="text-primary">Admin</span>
       </span>
     </Link>
   );

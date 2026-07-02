@@ -4,14 +4,14 @@ import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { TESTIMONIALS } from "@/lib/landing-data";
 
-export function Testimonials() {
+export function Testimonials({ brandName = "Viva La Mañana" }: { brandName?: string }) {
   return (
     <Section id="testimonios">
       <Container>
         <SectionHeading
           eyebrow="Testimonios"
           title="Clientes que confían"
-          subtitle="Lo que dicen las marcas que ya son parte de Viva La Mañana."
+          subtitle={`Lo que dicen las marcas que ya son parte de ${brandName}.`}
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (

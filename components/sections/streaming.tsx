@@ -4,7 +4,13 @@ import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { DEFAULT_STREAMING } from "@/lib/radio";
 
 // El ID del stream se configura desde /admin/radio/streaming (Fase 7).
-export function Streaming({ youtubeId = DEFAULT_STREAMING.youtubeId }: { youtubeId?: string }) {
+export function Streaming({
+  youtubeId = DEFAULT_STREAMING.youtubeId,
+  brandName = "Viva La Mañana",
+}: {
+  youtubeId?: string;
+  brandName?: string;
+}) {
   const YT_ID = youtubeId;
   return (
     <Section id="streaming">
@@ -20,7 +26,7 @@ export function Streaming({ youtubeId = DEFAULT_STREAMING.youtubeId }: { youtube
               <iframe
                 className="size-full"
                 src={`https://www.youtube-nocookie.com/embed/${YT_ID}`}
-                title="Streaming Viva La Mañana"
+                title={`Streaming ${brandName}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 loading="lazy"

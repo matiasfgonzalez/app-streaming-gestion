@@ -5,6 +5,7 @@ import { neuButton } from "@/components/glass/neu-button";
 import { Container, Section } from "@/components/glass/section";
 import { requireRole } from "@/lib/auth";
 import { getClientContracts } from "@/server/queries/ads";
+import { getSiteConfig } from "@/server/queries/settings";
 import { CONTRACT_STATUS_LABEL } from "@/lib/ads";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ const STATUS_CLS: Record<string, string> = {
 
 export default async function ClienteDashboard() {
   const user = await requireRole();
-  const contracts = await getClientContracts(user.id);
+  const [contracts, site] = await Promise.all([getClientContracts(user.id), getSiteConfig()]);
 
   return (
     <Section className="pt-24">
@@ -42,7 +43,7 @@ export default async function ClienteDashboard() {
             <EmptyState
               icon={Megaphone}
               title="Todavía no contrataste publicidad"
-              description="Elegí un paquete y empezá a mostrar tu marca en Viva La Mañana."
+              description={`Elegí un paquete y empezá a mostrar tu marca en ${site.brandName}.`}
               action={
                 <Link href="/cliente/contratar" className={neuButton()}>
                   <Plus /> Elegí un paquete

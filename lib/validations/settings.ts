@@ -7,6 +7,8 @@ export const siteConfigSchema = z.object({
   brandName: z.string().min(1, "Requerido").max(80),
   tagline: z.string().max(120).optional().or(z.literal("")),
   description: z.string().max(400).optional().or(z.literal("")),
+  logoUrl: optUrl,
+  coverUrl: optUrl,
   contact: z.object({
     email: z.email("Email inválido").optional().or(z.literal("")),
     phone: z.string().max(60).optional().or(z.literal("")),

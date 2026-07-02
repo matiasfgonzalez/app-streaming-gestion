@@ -3,15 +3,19 @@ import Image from "next/image";
 import { GlassCard } from "@/components/glass/glass-card";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { getActiveSponsors, bumpSponsorImpressions } from "@/server/queries/banners";
+import { getSiteConfig } from "@/server/queries/settings";
 import { EmptyState } from "@/components/ui";
 
-export const metadata = {
-  title: "Sponsors",
-  description: "Las marcas que confían en Viva La Mañana.",
-};
+export async function generateMetadata() {
+  const site = await getSiteConfig();
+  return {
+    title: "Sponsors",
+    description: `Las marcas que confían en ${site.brandName}.`,
+  };
+}
 
 export default async function SponsorsPage() {
-  const sponsors = await getActiveSponsors();
+  const [sponsors, site] = await Promise.all([getActiveSponsors(), getSiteConfig()]);
   // Métrica simple de impresiones (no bloqueante).
   bumpSponsorImpressions().catch(() => {});
 
@@ -21,7 +25,7 @@ export default async function SponsorsPage() {
         <SectionHeading
           eyebrow="Confían en nosotros"
           title="Nuestros sponsors"
-          subtitle="Marcas que acompañan a Viva La Mañana."
+          subtitle={`Marcas que acompañan a ${site.brandName}.`}
         />
 
         {sponsors.length === 0 ? (
