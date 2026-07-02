@@ -30,6 +30,18 @@ export function toDatetimeLocal(date: Date | string | null | undefined): string 
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+const moneyFmt = new Intl.NumberFormat("es-AR", {
+  style: "currency",
+  currency: "ARS",
+  maximumFractionDigits: 0,
+});
+
+/** Formatea un entero de pesos como moneda ARS ($30.000). */
+export function formatMoney(n: number | null | undefined): string {
+  if (n == null) return "";
+  return moneyFmt.format(n);
+}
+
 /** Hue estable (0-359) derivado de un string, para placeholders de color. */
 export function hueFrom(seed: string): number {
   let h = 0;

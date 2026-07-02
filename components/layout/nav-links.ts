@@ -19,5 +19,5 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/noticias", label: "Noticias", icon: Newspaper },
   { href: "/radio", label: "Radio", icon: Radio },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
-  { href: "/publicidad", label: "Publicidad", icon: Megaphone },
+  { href: "/#publicidad", label: "Publicidad", icon: Megaphone },
 ];

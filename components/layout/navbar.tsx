@@ -52,7 +52,15 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             {isSignedIn ? (
-              <UserButton appearance={{ elements: { avatarBox: "size-9" } }} />
+              <>
+                <Link
+                  href="/cliente"
+                  className={cn(neuButton({ variant: "glass", size: "sm" }), "hidden sm:inline-flex")}
+                >
+                  Mi cuenta
+                </Link>
+                <UserButton appearance={{ elements: { avatarBox: "size-9" } }} />
+              </>
             ) : (
               <Link
                 href="/sign-in"

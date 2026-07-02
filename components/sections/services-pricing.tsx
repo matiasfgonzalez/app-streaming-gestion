@@ -5,9 +5,46 @@ import { neuButton } from "@/components/glass/neu-button";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
 import { PLANS, SERVICES } from "@/lib/landing-data";
+import { formatMoney } from "@/lib/format";
+import { getActivePackages } from "@/server/queries/ads";
 import { cn } from "@/lib/utils";
 
-export function ServicesPricing() {
+type PlanCard = {
+  id?: string;
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  featured: boolean;
+};
+
+export async function ServicesPricing() {
+  const dbPackages = await getActivePackages();
+
+  let plans: PlanCard[];
+  if (dbPackages.length > 0) {
+    const maxPrice = Math.max(...dbPackages.map((p) => p.priceMonthly));
+    plans = dbPackages.map((p) => ({
+      id: p.id,
+      name: p.name,
+      price: formatMoney(p.priceMonthly),
+      period: "/mes",
+      description: p.description,
+      features: p.features,
+      featured: p.priceMonthly === maxPrice,
+    }));
+  } else {
+    plans = PLANS.map((p) => ({
+      name: p.name,
+      price: p.price,
+      period: p.period,
+      description: p.description,
+      features: p.features,
+      featured: !!p.featured,
+    }));
+  }
+
   return (
     <Section id="publicidad">
       <Container>
@@ -34,8 +71,8 @@ export function ServicesPricing() {
 
         {/* Paquetes */}
         <div className="mt-12 grid items-stretch gap-5 lg:grid-cols-3">
-          {PLANS.map((p, i) => (
-            <Reveal key={p.id} delay={i * 0.08} className="h-full">
+          {plans.map((p, i) => (
+            <Reveal key={p.id ?? p.name} delay={i * 0.08} className="h-full">
               <div
                 className={cn(
                   "relative flex h-full flex-col rounded-2xl p-6",
@@ -50,22 +87,12 @@ export function ServicesPricing() {
                   </span>
                 )}
                 <h3 className="font-display text-lg font-bold">{p.name}</h3>
-                <p
-                  className={cn(
-                    "mt-1 text-sm",
-                    p.featured ? "text-primary-foreground/80" : "text-muted-foreground",
-                  )}
-                >
+                <p className={cn("mt-1 text-sm", p.featured ? "text-primary-foreground/80" : "text-muted-foreground")}>
                   {p.description}
                 </p>
                 <div className="mt-5 flex items-end gap-1">
                   <span className="font-display text-4xl font-bold">{p.price}</span>
-                  <span
-                    className={cn(
-                      "pb-1 text-sm",
-                      p.featured ? "text-primary-foreground/80" : "text-muted-foreground",
-                    )}
-                  >
+                  <span className={cn("pb-1 text-sm", p.featured ? "text-primary-foreground/80" : "text-muted-foreground")}>
                     {p.period}
                   </span>
                 </div>
@@ -78,11 +105,8 @@ export function ServicesPricing() {
                   ))}
                 </ul>
                 <Link
-                  href="/publicidad"
-                  className={cn(
-                    neuButton({ variant: p.featured ? "glass" : "primary" }),
-                    "mt-6 w-full",
-                  )}
+                  href={p.id ? `/cliente/contratar/${p.id}` : "/cliente/contratar"}
+                  className={cn(neuButton({ variant: p.featured ? "glass" : "primary" }), "mt-6 w-full")}
                 >
                   Contratar
                 </Link>

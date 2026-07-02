@@ -6,6 +6,27 @@ Formato: `## [Fase X] AAAA-MM-DD — Título`
 
 ---
 
+## [Fase 5] 2026-07-01 — Publicidad: paquetes, contratación, pagos
+- Schema: enums `ContractStatus`, `BillingCycle`, `PaymentMethod`, `PaymentStatus`,
+  `CreativeType`; modelos `Package`, `AdContract`, `Creative`, `Payment`.
+  Migración `ads_payments` + `prisma generate`.
+- UploadThing: rutas `adCreative` (logo/imágenes, cliente) y `paymentProof`
+  (imagen/PDF, cliente). `newsImage` sigue restringida a staff.
+- `lib/ads.ts` (labels + `priceForCycle`), `lib/format.ts` (`formatMoney`),
+  `lib/validations/ads.ts` (package/contract/payment; números con `z.number()`).
+- Actions: `packages.ts` (CRUD), `contracts.ts` (cliente contrata, admin crea sin
+  cliente, cambiar estado), `payments.ts` (informar pago, aprobar/rechazar →
+  activa contrato + email). Emails: `newContractEmail`, `paymentResultEmail`.
+- Admin: `/admin/paquetes` (CRUD), `/admin/publicidad` (contratos + `ContractStatusSelect`
+  + crear sin cliente), `/admin/pagos` (`PaymentReview`). Nav ya incluía los ítems.
+- Cliente (grupo `(public)`): `/cliente` (mis contrataciones), `/cliente/contratar`
+  (elegir paquete), `/cliente/contratar/[packageId]` (form con creatividades),
+  `/cliente/contrataciones/[id]` (detalle + informar pago). Navbar con "Mi cuenta".
+- Landing `ServicesPricing` conectada a DB (fallback a seed); links de contratar
+  apuntan a `/cliente/contratar`; `Publicidad` del menú → ancla `/#publicidad`.
+- **Verificado:** `npm run build` OK, `npm run lint` 0 errores.
+- **Siguiente:** Fase 6 — Sponsors + Banners.
+
 ## [Fase 4] 2026-07-01 — Eventos + Presupuestos + Resend
 - Dep: `resend`. Agregada `RESEND_API_KEY` (y opcional `EMAIL_FROM`) al `.env`.
 - Schema: enums `EventStatus`, `QuoteStatus`, `QuoteService`; modelos `Event`

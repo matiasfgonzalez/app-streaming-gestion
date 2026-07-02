@@ -27,7 +27,7 @@ export function Sports() {
                   <Play /> Ver transmisión
                 </Link>
                 <Link
-                  href="/publicidad"
+                  href="/#publicidad"
                   className={neuButton({ variant: "glass" })}
                 >
                   <Radio /> Sponsorear fútbol

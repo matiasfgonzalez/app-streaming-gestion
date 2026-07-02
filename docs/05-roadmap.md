@@ -61,12 +61,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
 - **Entregable:** evento publicado + presupuesto solicitable y gestionable. ✅
 - **Deviaciones:** galería/sponsors por evento pospuestos (portada + mapa por ahora); mapa vía embed de Google sin API key.
 
-## Fase 5 — Publicidad: Paquetes, Contratación, Pagos
-- [ ] Paquetes editables (precios definidos) + sección pública.
-- [ ] Portal Cliente: contratar → creatividades (logo/imágenes/redes/desc) → informar pago (comprobante).
-- [ ] Admin: aprobar/rechazar contratos y pagos; ADMIN crea publicidad sin solicitud.
-- [ ] Emails de estado de pago.
-- **Entregable:** flujo completo Cliente → Pendiente → Aprobación → Activa.
+## Fase 5 — Publicidad: Paquetes, Contratación, Pagos ✅
+- [x] Paquetes editables (CRUD admin, precios mensual/semanal/día, features) + sección pública conectada a DB.
+- [x] Portal Cliente (`/cliente`): contratar → creatividades (logo + imágenes vía UploadThing) + redes/desc → informar pago (monto, método, comprobante).
+- [x] Admin: publicidad (contratos + estado), pagos (aprobar/rechazar → activa contrato + email al cliente), crear publicidad sin cliente ("de palabra").
+- [x] Emails: nueva contratación (a admin) y resultado de pago (a cliente), tolerantes a fallos.
+- [x] `npm run build` OK; `npm run lint` 0 errores (warnings RHF `watch`).
+- **Entregable:** flujo completo Cliente → Pendiente → Aprobación → Activa. ✅
+- **Deviaciones:** montos con `z.number()` + `valueAsNumber` (evita el problema de tipos de `z.coerce`); UploadThing rutas `adCreative`/`paymentProof` para clientes; portal cliente bajo grupo `(public)` para reusar navbar/footer.
 
 ## Fase 6 — Sponsors + Banners
 - [ ] Módulo sponsors (clicks/impresiones) gestionable + render.

@@ -50,6 +50,36 @@ enum QuoteService {
   COBERTURA
 }
 
+enum ContractStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  REJECTED
+  EXPIRED
+}
+
+enum BillingCycle {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum PaymentMethod {
+  TRANSFER
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CreativeType {
+  LOGO
+  IMAGE
+}
+
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -61,6 +91,7 @@ model User {
 
   clientProfile ClientProfile?
   news          News[]
+  contracts     AdContract[]
 
   @@index([role])
 }
@@ -166,6 +197,78 @@ model QuoteRequest {
 
   eventId String?
   event   Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+}
+
+model Package {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  description  String
+  priceMonthly Int
+  priceWeekly  Int?
+  priceDaily   Int?
+  features     String[] @default([])
+  active       Boolean @default(true)
+  order        Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contracts AdContract[]
+
+  @@index([active, order])
+}
+
+model AdContract {
+  id           String         @id @default(cuid())
+  clientId     String? // null si lo crea el ADMIN "de palabra"
+  client       User?          @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  packageId    String
+  package      Package        @relation(fields: [packageId], references: [id])
+  status       ContractStatus @default(PENDING)
+  billingCycle BillingCycle   @default(MONTHLY)
+  title        String
+  description  String?
+  socials      String? // links de redes (texto libre)
+  startDate    DateTime?
+  endDate      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creatives Creative[]
+  payments  Payment[]
+
+  @@index([status, createdAt])
+  @@index([clientId])
+}
+
+model Creative {
+  id         String       @id @default(cuid())
+  contractId String
+  contract   AdContract   @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  type       CreativeType @default(IMAGE)
+  url        String
+  alt        String?
+  order      Int          @default(0)
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  contractId   String
+  contract     AdContract    @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  amount       Int
+  method       PaymentMethod @default(TRANSFER)
+  status       PaymentStatus @default(PENDING)
+  proofUrl     String?
+  paidAt       DateTime?
+  reviewedById String? // User.id del admin que resolvió
+  reviewedAt   DateTime?
+  notes        String?
 
   createdAt DateTime @default(now())
 
