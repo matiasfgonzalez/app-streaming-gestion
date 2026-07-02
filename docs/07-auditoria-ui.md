@@ -302,4 +302,18 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
 - **Cierre de Fase 12:** los 4 críticos (C1–C4), los 4 altos (A1–A4) y los 3 medios (M1–M3)
   quedan resueltos. Única deuda: verificación visual integral en navegador (claro/oscuro +
   mobile real) de 12.3/12.4/12.5 — requiere sesión y datos.
+
+### 2026-07-02 — Post-fase: rediseño de `/galeria` (muro multimedia)
+- **Antes:** dos secciones separadas ("Fotos" masonry suelto + "Videos" con iframes de YouTube
+  cargados de entrada) — con poco contenido se veía vacío y plano.
+- **Ahora:** `components/gallery/gallery-wall.tsx` (client) — **muro bento unificado** (fotos +
+  videos mezclados, destacados en 2×2, orden featured→cronológico), **filtros** pill
+  Todo/Fotos/Videos con contador, hover con gradiente + título + play, y **lightbox propio**:
+  imagen grande o YouTube on-demand (el iframe recién se monta al abrir, con autoplay),
+  navegación ←/→/Esc por teclado, contador, caption, scroll-lock. Entrada escalonada con
+  Framer `layout` y `useReducedMotion` en todo.
+- **Perf:** videos ya no cargan un iframe por card en el listado — solo thumbnail
+  (`img.youtube.com`).
+- **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
+  (7 warnings RHF conocidos).
 </content>
