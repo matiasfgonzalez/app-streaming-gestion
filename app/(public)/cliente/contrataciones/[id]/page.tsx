@@ -39,30 +39,46 @@ export default async function ContratacionDetallePage({
   if (!contract) notFound();
 
   const amount = priceForCycle(contract.package, contract.billingCycle);
-  const hasApproved = contract.payments.some((p) => p.status === "APPROVED");
+  const hasApproved = contract.payments.some(
+    (p: { status: string }) => p.status === "APPROVED",
+  );
 
   return (
     <Section className="pt-24">
       <Container className="max-w-3xl">
-        <Link href="/cliente" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href="/cliente"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="size-4" /> Volver
         </Link>
 
         <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="font-display text-2xl font-bold">{contract.title}</h1>
+            <h1 className="font-display text-2xl font-bold">
+              {contract.title}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              {contract.package.name} · {BILLING_CYCLE_LABEL[contract.billingCycle]}
+              {contract.package.name} ·{" "}
+              {BILLING_CYCLE_LABEL[contract.billingCycle]}
             </p>
           </div>
-          <span className={cn("rounded-full px-3 py-1 text-xs font-medium", STATUS_CLS[contract.status])}>
+          <span
+            className={cn(
+              "rounded-full px-3 py-1 text-xs font-medium",
+              STATUS_CLS[contract.status],
+            )}
+          >
             {CONTRACT_STATUS_LABEL[contract.status]}
           </span>
         </div>
 
         {contract.status === "ACTIVE" && contract.endDate && (
           <p className="mt-3 rounded-xl bg-primary/10 px-4 py-2 text-sm text-primary">
-            Vigente {contract.startDate ? `desde el ${formatDate(contract.startDate)} ` : ""}
+            Vigente{" "}
+            {contract.startDate
+              ? `desde el ${formatDate(contract.startDate)} `
+              : ""}
             hasta el <strong>{formatDate(contract.endDate)}</strong>.
           </p>
         )}
@@ -71,7 +87,9 @@ export default async function ContratacionDetallePage({
           <GlassCard className="mt-6">
             <p className="text-sm">{contract.description}</p>
             {contract.socials && (
-              <p className="mt-2 text-sm text-muted-foreground">Redes: {contract.socials}</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Redes: {contract.socials}
+              </p>
             )}
           </GlassCard>
         )}
@@ -80,7 +98,9 @@ export default async function ContratacionDetallePage({
           <h2 className="mb-3 font-display font-semibold">Creatividades</h2>
           <EditCreatives
             contractId={contract.id}
-            initialLogo={contract.creatives.find((c) => c.type === "LOGO")?.url ?? ""}
+            initialLogo={
+              contract.creatives.find((c) => c.type === "LOGO")?.url ?? ""
+            }
             initialImages={contract.creatives
               .filter((c) => c.type === "IMAGE")
               .map((c) => c.url)}
@@ -91,21 +111,39 @@ export default async function ContratacionDetallePage({
         <div className="mt-8">
           <h2 className="mb-3 font-display font-semibold">Pagos</h2>
           {contract.payments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Todavía no informaste ningún pago.</p>
+            <p className="text-sm text-muted-foreground">
+              Todavía no informaste ningún pago.
+            </p>
           ) : (
             <div className="space-y-2">
               {contract.payments.map((p) => (
-                <GlassCard key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
+                <GlassCard
+                  key={p.id}
+                  className="flex flex-wrap items-center justify-between gap-2 py-3"
+                >
                   <div className="text-sm">
-                    <span className="font-semibold">{formatMoney(p.amount)}</span> ·{" "}
-                    {PAYMENT_METHOD_LABEL[p.method]} · {formatDate(p.createdAt)}
+                    <span className="font-semibold">
+                      {formatMoney(p.amount)}
+                    </span>{" "}
+                    · {PAYMENT_METHOD_LABEL[p.method]} ·{" "}
+                    {formatDate(p.createdAt)}
                     {p.proofUrl && (
-                      <a href={p.proofUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 text-primary">
+                      <a
+                        href={p.proofUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 inline-flex items-center gap-1 text-primary"
+                      >
                         <ExternalLink className="size-3.5" /> comprobante
                       </a>
                     )}
                   </div>
-                  <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", STATUS_CLS[p.status])}>
+                  <span
+                    className={cn(
+                      "rounded-full px-2.5 py-0.5 text-xs font-medium",
+                      STATUS_CLS[p.status],
+                    )}
+                  >
                     {PAYMENT_STATUS_LABEL[p.status]}
                   </span>
                 </GlassCard>
@@ -117,8 +155,13 @@ export default async function ContratacionDetallePage({
         {/* Informar pago */}
         {!hasApproved && (
           <div className="mt-8">
-            <h2 className="mb-3 font-display font-semibold">Informar un pago</h2>
-            <PaymentForm contractId={contract.id} defaultAmount={amount} />
+            <h2 className="mb-3 font-display font-semibold">
+              Informar un pago
+            </h2>
+            <PaymentForm
+              contractId={contract.id}
+              defaultAmount={amount}
+            />
           </div>
         )}
       </Container>
