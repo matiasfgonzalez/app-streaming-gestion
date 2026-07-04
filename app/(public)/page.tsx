@@ -14,6 +14,7 @@ import { Videos } from "@/components/sections/videos";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Faq } from "@/components/sections/faq";
 import { ContactMap } from "@/components/sections/contact-map";
+import { InstallApp } from "@/components/pwa/install-app";
 import { getStreamingConfig } from "@/server/queries/radio";
 import { getSectionFlags, getSiteConfig } from "@/server/queries/settings";
 
@@ -46,6 +47,7 @@ export default async function Home() {
       {sections.videos && <Videos />}
       {sections.testimonials && <Testimonials brandName={site.brandName} />}
       {sections.faq && <Faq />}
+      <InstallApp brandName={site.brandName} />
       {sections.contact && <ContactMap contact={site.contact} />}
     </>
   );

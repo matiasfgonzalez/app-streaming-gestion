@@ -28,6 +28,13 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${site.brandName}`,
     },
     description: site.seo.description,
+    icons: {
+      icon: [
+        { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icon.svg", type: "image/svg+xml" },
+      ],
+      apple: "/apple-touch-icon.png",
+    },
     appleWebApp: {
       capable: true,
       title: site.brandName,

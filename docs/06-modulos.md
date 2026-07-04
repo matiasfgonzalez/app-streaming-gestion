@@ -80,6 +80,18 @@ A futuro: favicon/OG image derivados del logo, y variantes de logo por tema (cla
 ## CMS de Landing
 **Admin:** habilitar/deshabilitar y (a futuro) reordenar secciones; editar textos/CTAs de cada sección. Flags en `SiteSetting`.
 
+## PWA / App instalable
+**Público:** el sitio es una PWA instalable — sección "Llevá [marca] con vos" en la landing
+(`components/pwa/install-app.tsx`): botón de instalación real en Chrome/Edge (desktop y Android,
+vía `beforeinstallprompt`) e instrucciones paso a paso en iOS Safari (Compartir → Agregar a
+inicio). Se auto-oculta si ya está instalada o el navegador no lo soporta.
+**Assets:** íconos PNG 192/512 (+ maskable + `apple-touch-icon`) generados desde
+`public/icon.svg` con `node scripts/gen-icons.mjs` (regenerar si cambia el logo). Manifest en
+`app/manifest.ts`; service worker conservador (`public/sw.js`, solo fallback offline con
+`offline.html`) registrado en producción.
+**Notas:** la instalabilidad requiere HTTPS (o localhost). Si cambia la marca, actualizar
+nombre en `app/manifest.ts` (es build-time, no lee `SiteConfig`).
+
 ## Analytics (Fase 10)
 **Admin:** usuarios, visitas, noticias/eventos/sponsors más vistos, CTR publicidad, ingresos, conversiones, ventas, presupuestos, clientes nuevos (Tremor/Recharts).
 

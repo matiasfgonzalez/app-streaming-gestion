@@ -19,7 +19,10 @@
       "Bash(grep -E \" \\(○|ƒ\\) /$| \\(○|ƒ\\) /noticias$\")",
       "PowerShell(npm run build 2>&1)",
       "PowerShell(npm install 2>&1)",
-      "PowerShell(npm run lint 2>&1)"
+      "PowerShell(npm run lint 2>&1)",
+      "PowerShell(npm i -D sharp 2>&1)",
+      "PowerShell(node \"C:\\\\Users\\\\matia\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\e--Aplicaciones-app-streaming-gestion\\\\f6c6dc1a-1470-4072-acbc-53a487f43d5d\\\\scratchpad\\\\gen-icons.mjs\")",
+      "PowerShell(node scripts/gen-icons.mjs)"
     ]
   }
 }

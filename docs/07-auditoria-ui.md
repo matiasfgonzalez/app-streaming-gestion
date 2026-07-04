@@ -316,4 +316,17 @@ y `npm run lint` sin errores, verificación visual en claro/oscuro y mobile, y m
   (`img.youtube.com`).
 - **Verificado:** `npm run build` → `✓ Compiled successfully`; `npm run lint` 0 errores
   (7 warnings RHF conocidos).
+
+### 2026-07-04 — Post-fase: PWA instalable + CTA en landing
+- **Instalabilidad corregida:** el manifest solo tenía `icon.svg` (glifo negro) — Chrome/Android
+  exigen PNG 192/512. Generados `icon-192/512.png`, maskable con safe zone y
+  `apple-touch-icon.png` (glifo blanco sobre naranja marca) vía `scripts/gen-icons.mjs` (sharp,
+  devDep). Manifest con `id`/`scope` + los 4 PNG; `icons`/`apple` en metadata del root layout;
+  SW `vlm-v2` (precache actualizado).
+- **CTA de instalación:** `components/pwa/install-app.tsx` en la landing — botón real con
+  `beforeinstallprompt` (Chrome/Edge/Android), instrucciones para iOS Safari, auto-oculto si ya
+  está instalada (`display-mode: standalone`) o no soportado; toast al instalar.
+- **Verificado:** `npm run build` OK (`/manifest.webmanifest` en rutas); `npm run lint` 0
+  errores. Prueba real de instalación: requiere `npm run start` (SW solo en producción) o deploy
+  con HTTPS.
 </content>

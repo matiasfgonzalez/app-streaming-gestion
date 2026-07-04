@@ -1,14 +1,14 @@
 /* Service Worker — Viva La Mañana (Fase 10).
    Estrategia conservadora: solo fallback offline para navegaciones.
    No cacheamos chunks de Next para evitar servir assets obsoletos. */
-const CACHE = "vlm-v1";
+const CACHE = "vlm-v2";
 const OFFLINE_URL = "/offline.html";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll([OFFLINE_URL, "/icon.svg"]))
+      .then((cache) => cache.addAll([OFFLINE_URL, "/icon-192.png"]))
       .then(() => self.skipWaiting()),
   );
 });
