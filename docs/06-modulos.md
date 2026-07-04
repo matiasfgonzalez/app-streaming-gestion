@@ -44,9 +44,13 @@ Detalle de cada módulo: qué hace el público, qué gestiona el admin y notas c
 **Notas:** reproductor placeholder al inicio; transmisión propia = backlog.
 
 ## Streaming
-**Público:** embed de YouTube (en vivo / últimos videos).
-**Admin:** gestionar URL/canal del stream.
-**Notas:** transmisión propia desde la plataforma = backlog.
+**Público:** embed de YouTube y/o **Facebook Live** (`StreamPlayer`): con ambas plataformas
+cargadas muestra pestañas para elegir; con una sola, el player directo.
+**Admin (`/admin/radio/streaming`):** ID de YouTube y/o URL del vivo de Facebook (link público,
+Compartir → Copiar enlace; se embebe con `plugins/video.php`, sin API key), con vista previa de
+ambas. Al menos una plataforma es obligatoria.
+**Notas:** el video de Facebook debe ser público (si no, el embed muestra «contenido no
+disponible»). Transmisión propia desde la plataforma = backlog.
 
 ## Galería / Videos / Podcast
 Media reutilizable (`MediaItem`) asociable a noticias/eventos o standalone. Admin sube y organiza; público navega.

@@ -14,7 +14,7 @@ export default async function AdminStreamingPage() {
       <div>
         <h1 className="font-display text-2xl font-bold">Streaming</h1>
         <p className="text-sm text-muted-foreground">
-          Configurá el video de YouTube que se muestra en el sitio.
+          Configurá las transmisiones de YouTube y/o Facebook que se muestran en el sitio.
         </p>
       </div>
 
@@ -23,6 +23,7 @@ export default async function AdminStreamingPage() {
       <StreamingForm
         defaults={{
           youtubeId: cfg.youtubeId,
+          facebookUrl: cfg.facebookUrl ?? "",
           title: cfg.title ?? "",
           channelUrl: cfg.channelUrl ?? "",
         }}

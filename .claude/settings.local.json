@@ -18,7 +18,8 @@
       "Bash(grep -E \"^\\\\S* \\(○|ƒ\\) /\\(noticias|eventos|$|sign-in\\)\")",
       "Bash(grep -E \" \\(○|ƒ\\) /$| \\(○|ƒ\\) /noticias$\")",
       "PowerShell(npm run build 2>&1)",
-      "PowerShell(npm install 2>&1)"
+      "PowerShell(npm install 2>&1)",
+      "PowerShell(npm run lint 2>&1)"
     ]
   }
 }

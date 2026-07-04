@@ -179,7 +179,8 @@ export async function updateStreaming(input: StreamingInput): Promise<ActionResu
   }
   const d = parsed.data;
   const value = {
-    youtubeId: d.youtubeId,
+    youtubeId: d.youtubeId ?? "",
+    facebookUrl: nullify(d.facebookUrl) ?? undefined,
     title: nullify(d.title) ?? undefined,
     channelUrl: nullify(d.channelUrl) ?? undefined,
   };

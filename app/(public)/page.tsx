@@ -31,7 +31,11 @@ export default async function Home() {
       {sections.about && <About brandName={site.brandName} />}
       {sections.radio && <RadioPlayer brandName={site.brandName} />}
       {sections.streaming && (
-        <Streaming youtubeId={streaming.youtubeId} brandName={site.brandName} />
+        <Streaming
+          youtubeId={streaming.youtubeId}
+          facebookUrl={streaming.facebookUrl}
+          brandName={site.brandName}
+        />
       )}
       {sections.news && <LatestNews />}
       {sections.events && <UpcomingEvents />}

@@ -39,9 +39,22 @@ export const podcastSchema = z
   });
 export type PodcastInput = z.infer<typeof podcastSchema>;
 
-export const streamingSchema = z.object({
-  youtubeId: z.string().min(3, "ID de YouTube requerido").max(40),
-  title: z.string().max(160).optional(),
-  channelUrl: z.url("URL inválida").optional().or(z.literal("")),
-});
+export const streamingSchema = z
+  .object({
+    youtubeId: z.string().max(40).optional().or(z.literal("")),
+    facebookUrl: z
+      .url("URL inválida")
+      .refine(
+        (u) => /(^https:\/\/(www\.|m\.|web\.)?facebook\.com\/)|(^https:\/\/fb\.watch\/)/.test(u),
+        "Debe ser una URL de facebook.com o fb.watch",
+      )
+      .optional()
+      .or(z.literal("")),
+    title: z.string().max(160).optional(),
+    channelUrl: z.url("URL inválida").optional().or(z.literal("")),
+  })
+  .refine((d) => (d.youtubeId && d.youtubeId.length >= 3) || (d.facebookUrl && d.facebookUrl.length > 0), {
+    message: "Cargá al menos una transmisión: ID de YouTube o URL de Facebook",
+    path: ["youtubeId"],
+  });
 export type StreamingInput = z.infer<typeof streamingSchema>;

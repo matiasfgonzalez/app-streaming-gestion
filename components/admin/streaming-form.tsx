@@ -10,6 +10,7 @@ import { GlassCard } from "@/components/glass/glass-card";
 import { neuButton } from "@/components/glass/neu-button";
 import { streamingSchema, type StreamingInput } from "@/lib/validations/radio";
 import { updateStreaming } from "@/server/actions/radio";
+import { facebookEmbedUrl } from "@/lib/radio";
 import { cn } from "@/lib/utils";
 
 import { inputCls, labelCls } from "@/components/ui";
@@ -27,6 +28,9 @@ export function StreamingForm({ defaults }: { defaults: StreamingInput }) {
   });
 
   const youtubeId = watch("youtubeId");
+  const facebookUrl = watch("facebookUrl");
+  const validFacebook =
+    facebookUrl && /(facebook\.com\/|fb\.watch\/)/.test(facebookUrl) ? facebookUrl : "";
 
   async function onSubmit(values: StreamingInput) {
     setServerError(null);
@@ -51,6 +55,21 @@ export function StreamingForm({ defaults }: { defaults: StreamingInput }) {
           {errors.youtubeId && <p className="mt-1 text-xs text-destructive">{errors.youtubeId.message}</p>}
         </div>
         <div>
+          <label className={labelCls} htmlFor="facebookUrl">URL del vivo de Facebook (opcional)</label>
+          <input
+            id="facebookUrl"
+            className={inputCls}
+            placeholder="https://www.facebook.com/tupagina/videos/123456789"
+            {...register("facebookUrl")}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Pegá el link de la transmisión o video <strong>público</strong> (desde Facebook:
+            Compartir → Copiar enlace). Si cargás ambas plataformas, el sitio muestra pestañas
+            para elegir.
+          </p>
+          {errors.facebookUrl && <p className="mt-1 text-xs text-destructive">{errors.facebookUrl.message}</p>}
+        </div>
+        <div>
           <label className={labelCls} htmlFor="title">Título (opcional)</label>
           <input id="title" className={inputCls} {...register("title")} />
         </div>
@@ -63,17 +82,36 @@ export function StreamingForm({ defaults }: { defaults: StreamingInput }) {
 
       {youtubeId && (
         <GlassCard className="p-3">
-          <p className="mb-2 px-1 text-xs text-muted-foreground">Vista previa</p>
+          <p className="mb-2 px-1 text-xs text-muted-foreground">Vista previa · YouTube</p>
           <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
             <iframe
               key={youtubeId}
               className="size-full"
               src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-              title="Vista previa del stream"
+              title="Vista previa del stream de YouTube"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
+        </GlassCard>
+      )}
+
+      {validFacebook && (
+        <GlassCard className="p-3">
+          <p className="mb-2 px-1 text-xs text-muted-foreground">Vista previa · Facebook</p>
+          <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
+            <iframe
+              key={validFacebook}
+              className="size-full"
+              src={facebookEmbedUrl(validFacebook)}
+              title="Vista previa del stream de Facebook"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+          <p className="mt-2 px-1 text-xs text-muted-foreground">
+            Si se ve «contenido no disponible», el video no es público.
+          </p>
         </GlassCard>
       )}
 

@@ -1,37 +1,41 @@
 import { GlassCard } from "@/components/glass/glass-card";
 import { Reveal } from "@/components/glass/reveal";
 import { Container, Section, SectionHeading } from "@/components/glass/section";
+import { StreamPlayer } from "@/components/sections/stream-player";
 import { DEFAULT_STREAMING } from "@/lib/radio";
 
-// El ID del stream se configura desde /admin/radio/streaming (Fase 7).
+// El stream (YouTube y/o Facebook) se configura desde /admin/radio/streaming.
 export function Streaming({
   youtubeId = DEFAULT_STREAMING.youtubeId,
+  facebookUrl,
   brandName = "Viva La Mañana",
 }: {
   youtubeId?: string;
+  facebookUrl?: string;
   brandName?: string;
 }) {
-  const YT_ID = youtubeId;
+  const both = !!youtubeId && !!facebookUrl;
   return (
     <Section id="streaming">
       <Container>
         <SectionHeading
           eyebrow="Ver streaming"
-          title="Mirá el vivo por YouTube"
-          subtitle="Seguí las transmisiones del canal en tiempo real, desde donde estés."
+          title={
+            both
+              ? "Mirá el vivo donde quieras"
+              : facebookUrl
+                ? "Mirá el vivo por Facebook"
+                : "Mirá el vivo por YouTube"
+          }
+          subtitle="Seguí las transmisiones en tiempo real, desde donde estés."
         />
         <Reveal className="mt-10">
           <GlassCard className="mx-auto max-w-4xl p-3">
-            <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
-              <iframe
-                className="size-full"
-                src={`https://www.youtube-nocookie.com/embed/${YT_ID}`}
-                title={`Streaming ${brandName}`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              />
-            </div>
+            <StreamPlayer
+              youtubeId={youtubeId}
+              facebookUrl={facebookUrl}
+              title={`Streaming ${brandName}`}
+            />
           </GlassCard>
         </Reveal>
       </Container>
